@@ -1,0 +1,166 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\proj.win32\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\draw_nodes\\DrawNode.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\core\\label_nodes\\LabelAtlas.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AtlasNode.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\base_nodes\\AtlasNode.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.h",
+              "RelativeToolTip": "..\\..\\..\\core\\base_nodes\\AtlasNode.h",
+              "ViewState": "AQIAAG8AAAAAAAAAAADwvwAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-29T17:59:17.545Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AtlasNode.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\base_nodes\\AtlasNode.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\base_nodes\\AtlasNode.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\base_nodes\\AtlasNode.cpp",
+              "ViewState": "AQIAADMAAAAAAAAAAADwvwAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T17:59:16.44Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EGLView.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\platform\\win32\\EGLView.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\platform\\win32\\EGLView.cpp",
+              "ViewState": "AQIAAEYBAAAAAAAAAAAuwEYBAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T17:56:33.986Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EGLView.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\platform\\win32\\EGLView.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\platform\\win32\\EGLView.h",
+              "RelativeToolTip": "..\\..\\..\\core\\platform\\win32\\EGLView.h",
+              "ViewState": "AQIAACgAAAAAAAAAAAAuwFEAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-29T17:57:46.192Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LabelAtlas.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\label_nodes\\LabelAtlas.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\label_nodes\\LabelAtlas.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\label_nodes\\LabelAtlas.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\label_nodes\\LabelAtlas.cpp",
+              "ViewState": "AQIAAM8AAAAAAAAAAAAuwNkAAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T15:34:22.715Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppDelegate.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
+              "RelativeDocumentMoniker": "..\\Classes\\AppDelegate.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
+              "RelativeToolTip": "..\\Classes\\AppDelegate.cpp",
+              "ViewState": "AQIAAAkAAAAAAAAAAADwvxAAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T17:56:19.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DrawNode.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\core\\draw_nodes\\DrawNode.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\draw_nodes\\DrawNode.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\core\\draw_nodes\\DrawNode.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\draw_nodes\\DrawNode.cpp",
+              "ViewState": "AQIAAMYAAAAAAAAAAAAuwMkAAAAVAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T15:41:01.293Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "HelloWorldScene.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h",
+              "RelativeDocumentMoniker": "..\\Classes\\HelloWorldScene.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h",
+              "RelativeToolTip": "..\\Classes\\HelloWorldScene.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvxIAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-04-29T15:34:59.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "HelloWorldScene.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp",
+              "RelativeDocumentMoniker": "..\\Classes\\HelloWorldScene.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp",
+              "RelativeToolTip": "..\\Classes\\HelloWorldScene.cpp",
+              "ViewState": "AQIAACsAAAAAAAAAAAAuwDkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-04-29T15:34:59.12Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
