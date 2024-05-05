@@ -45,6 +45,7 @@ THE SOFTWARE.
 
 
 #include <math.h>
+#include "base/Types.h"
 
 NS_AX_BEGIN
 
