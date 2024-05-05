@@ -27,9 +27,9 @@ THE SOFTWARE.
 #ifndef __AXMENU_ITEM_H__
 #define __AXMENU_ITEM_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Protocols.h"
-#include "cocoa/Array.h"
+#include "base/Array.h"
 
 NS_AX_BEGIN
     
@@ -68,7 +68,6 @@ public:
     , m_bEnabled(false)            
     , m_pListener(NULL)            
     , m_pfnSelector(NULL)
-    , m_nScriptTapHandler(0)
     {}
     /**
      * @js NA
@@ -95,11 +94,6 @@ public:
     virtual void selected();
     /** The item was unselected */
     virtual void unselected();
-    
-    /** Register menu handler script function */
-    virtual void registerScriptTapHandler(int nHandler);
-    virtual void unregisterScriptTapHandler(void);
-    int getScriptTapHandler() { return m_nScriptTapHandler; };
 
     virtual bool isEnabled();
     //@note: It's 'setIsEnable' in cocos2d-iphone. 
@@ -112,7 +106,6 @@ public:
 protected:
     Object*       m_pListener;
     SEL_MenuHandler    m_pfnSelector;
-    int             m_nScriptTapHandler;
 };
 
 /** @brief An abstract class for "label" MenuItemLabel items 

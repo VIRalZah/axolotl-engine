@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __AXEGLVIEW_H__
 
 #include "platform/Common.h"
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 #include "ppapi/cpp/input_event.h"
 #include <pthread.h>

@@ -23,8 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "NotificationCenter.h"
-#include "cocoa/Array.h"
-#include "script_support/ScriptSupport.h"
+#include "base/Array.h"
 #include <string>
 
 using namespace std;
@@ -34,7 +33,6 @@ NS_AX_BEGIN
 static NotificationCenter *s_sharedNotifCenter = NULL;
 
 NotificationCenter::NotificationCenter()
-: m_scriptHandler(0)
 {
     m_observers = Array::createWithCapacity(3);
     m_observers->retain();
@@ -131,37 +129,6 @@ int NotificationCenter::removeAllObservers(Object *target)
     return toRemove->count();
 }
 
-void NotificationCenter::registerScriptObserver( Object *target, int handler,const char* name)
-{
-    
-    if (this->observerExisted(target, name))
-        return;
-    
-    NotificationObserver *observer = new NotificationObserver(target, NULL, name, NULL);
-    if (!observer)
-        return;
-    
-    observer->setHandler(handler);
-    observer->autorelease();
-    m_observers->addObject(observer);
-}
-
-void NotificationCenter::unregisterScriptObserver(Object *target,const char* name)
-{        
-    Object* obj = NULL;
-    AXARRAY_FOREACH(m_observers, obj)
-    {
-        NotificationObserver* observer = (NotificationObserver*) obj;
-        if (!observer)
-            continue;
-            
-        if ( !strcmp(observer->getName(),name) && observer->getTarget() == target)
-        {
-            m_observers->removeObject(observer);
-        }
-    }
-}
-
 void NotificationCenter::postNotification(const char *name, Object *object)
 {
     Array* ObserversCopy = Array::createWithCapacity(m_observers->count());
@@ -175,15 +142,7 @@ void NotificationCenter::postNotification(const char *name, Object *object)
         
         if ((observer->getObject() == object || observer->getObject() == NULL || object == NULL) && !strcmp(name,observer->getName()))
         {
-            if (0 != observer->getHandler())
-            {
-                ScriptEngineProtocol* engine = ScriptEngineManager::sharedManager()->getScriptEngine();
-                engine->executeNotificationEvent(this, name);
-            }
-            else
-            {
-                observer->performSelector(object);
-            }
+            observer->performSelector(object);
         }
     }
 }
@@ -191,30 +150,6 @@ void NotificationCenter::postNotification(const char *name, Object *object)
 void NotificationCenter::postNotification(const char *name)
 {
     this->postNotification(name,NULL);
-}
-
-int NotificationCenter::getObserverHandlerByName(const char* name)
-{
-    if (NULL == name || strlen(name) == 0)
-    {
-        return -1;
-    }
-    
-    Object* obj = NULL;
-    AXARRAY_FOREACH(m_observers, obj)
-    {
-        NotificationObserver* observer = (NotificationObserver*) obj;
-        if (NULL == observer)
-            continue;
-        
-        if ( 0 == strcmp(observer->getName(),name) )
-        {
-            return observer->getHandler();
-            break;
-        }
-    }
-    
-    return -1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +171,6 @@ NotificationObserver::NotificationObserver(Object *target,
     
     string orig (name);
     orig.copy(m_name,strlen(name),0);
-    m_nHandler = 0;
 }
 
 NotificationObserver::~NotificationObserver()
@@ -274,16 +208,6 @@ char *NotificationObserver::getName()
 Object *NotificationObserver::getObject()
 {
     return m_object;
-}
-
-int NotificationObserver::getHandler()
-{
-    return m_nHandler;
-}
-
-void NotificationObserver::setHandler(int var)
-{
-    m_nHandler = var;
 }
 
 NS_AX_END

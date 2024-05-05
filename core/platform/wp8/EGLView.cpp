@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "EGLView.h"
-#include "cocoa/Set.h"
+#include "base/Set.h"
 #include "ccMacros.h"
 #include "base/Director.h"
 #include "base/Touch.h"
@@ -472,7 +472,7 @@ void EGLView::UpdateWindowSize()
     }
     else
     {
-        m_obScreenSize = CCSizeMake(width, height);
+        m_obScreenSize = Size(width, height);
         Size designSize = getDesignResolutionSize();
         if(m_eResolutionPolicy == kResolutionUnKnown)
         {

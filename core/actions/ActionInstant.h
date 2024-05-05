@@ -271,9 +271,9 @@ public:
     virtual ~Place(){}
 
     /** creates a Place action with a position */
-    static Place * create(const Point& pos);
+    static Place * create(const Vec2& pos);
     /** Initializes a Place action with a position */
-    bool initWithPosition(const Point& pos);
+    bool initWithPosition(const Vec2& pos);
     //super methods
     virtual void update(float time);
     /**
@@ -282,7 +282,7 @@ public:
      */
     virtual Object* copyWithZone(Zone *pZone);
 protected:
-    Point m_tPosition;
+    Vec2 m_tPosition;
 };
 
 /** @brief Calls a 'callback'
@@ -295,7 +295,6 @@ public:
      */
     CallFunc()
         : m_pSelectorTarget(NULL)
-		, m_nScriptHandler(0)
         , m_pCallFunc(NULL)
     {
     }
@@ -311,11 +310,6 @@ public:
     * @lua NA
     */
     static CallFunc * create(Object* pSelectorTarget, SEL_CallFunc selector);
-
-	/** creates the action with the handler script function 
-     * @js NA
-     */
-	static CallFunc * create(int nHandler);
 
 	/** initializes the action with the callback 
     
@@ -355,15 +349,9 @@ public:
             m_pSelectorTarget = pSel; 
         }
     }
-    /**
-     * @lua NA
-     */
-    inline int getScriptHandler() { return m_nScriptHandler; };
 protected:
     /** Target that will be called */
     Object*   m_pSelectorTarget;
-
-	int m_nScriptHandler;
 
     union
     {
@@ -406,9 +394,6 @@ public:
      * @lua NA
      */
     static CallFuncN * create(Object* pSelectorTarget, SEL_CallFuncN selector);
-
-	/** creates the action with the handler script function*/
-	static CallFuncN * create(int nHandler);
 
     /** initializes the action with the callback 
 

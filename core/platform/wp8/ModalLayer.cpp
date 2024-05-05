@@ -64,7 +64,7 @@ void ModalLayer::setMessage(const char* pszMsg)
 	Size visibleSize = pDirector->getVisibleSize();
     Point origin = pDirector->getVisibleOrigin();
 
-	LabelTTF *pLabel = LabelTTF::create(pszMsg,  "Arial", 24, CCSizeMake(0, 0), kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
+	LabelTTF *pLabel = LabelTTF::create(pszMsg,  "Arial", 24, Size(0, 0), kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
    pLabel->setPosition(Point(origin.x + visibleSize.width/2,
                             origin.y + visibleSize.height - pLabel->getContentSize().height));
 

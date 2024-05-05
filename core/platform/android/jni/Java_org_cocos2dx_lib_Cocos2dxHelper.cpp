@@ -3,7 +3,7 @@
 #include <android/log.h>
 #include <string>
 #include "JniHelper.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include "Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 
 

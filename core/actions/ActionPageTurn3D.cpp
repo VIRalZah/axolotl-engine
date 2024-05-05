@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "ActionPageTurn3D.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 #include "support/PointExtension.h"
 
 NS_AX_BEGIN
@@ -68,7 +68,7 @@ void PageTurn3D::update(float time)
         for (int j = 0; j <= m_sGridSize.height; ++j)
         {
             // Get original vertex
-            ccVertex3F p = originalVertex(Point(i ,j));
+            ccVertex3F p = originalVertex(Vec2(i ,j));
             
             float R = sqrtf((p.x * p.x) + ((p.y - ay) * (p.y - ay)));
             float r = R * sinTheta;
@@ -103,7 +103,7 @@ void PageTurn3D::update(float time)
             }
             
             // Set new coords
-            setVertex(Point(i, j), p);
+            setVertex(Vec2(i, j), p);
             
         }
     }

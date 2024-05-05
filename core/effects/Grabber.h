@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __EFFECTS_AXGRABBER_H__
 
 #include "base/Configuration.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include "GL.h"
 
 NS_AX_BEGIN

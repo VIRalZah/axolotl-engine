@@ -75,7 +75,7 @@ public:
 class AX_EX_DLL CCControlUtils
 {
 public:
-    static Sprite* addSpriteToTargetWithPosAndAnchor(const char* spriteName, Node * target, Point pos, Point anchor);
+    static Sprite* addSpriteToTargetWithPosAndAnchor(const char* spriteName, Node * target, Vec2 pos, Vec2 anchor);
     static HSV HSVfromRGB(RGBA value);
     static RGBA RGBfromHSV(HSV value);
     static Rect CCRectUnion(const Rect& src1, const Rect& src2);

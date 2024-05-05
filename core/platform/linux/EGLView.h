@@ -9,7 +9,7 @@
 #define CCEGLVIEW_H_
 
 #include "platform/Common.h"
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 
 bool initExtensions();

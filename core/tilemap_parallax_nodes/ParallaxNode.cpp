@@ -31,19 +31,19 @@ NS_AX_BEGIN
 
 class CCPointObject : Object
 {
-    AX_SYNTHESIZE(Point, m_tRatio, Ratio)
-    AX_SYNTHESIZE(Point, m_tOffset, Offset)
+    AX_SYNTHESIZE(Vec2, m_tRatio, Ratio)
+    AX_SYNTHESIZE(Vec2, m_tOffset, Offset)
     AX_SYNTHESIZE(Node *,m_pChild, Child)    // weak ref
 
 public:
-    static CCPointObject * pointWithCCPoint(Point ratio, Point offset)
+    static CCPointObject * pointWithCCPoint(Vec2 ratio, Vec2 offset)
     {
         CCPointObject *pRet = new CCPointObject();
         pRet->initWithCCPoint(ratio, offset);
         pRet->autorelease();
         return pRet;
     }
-    bool initWithCCPoint(Point ratio, Point offset)
+    bool initWithCCPoint(Vec2 ratio, Vec2 offset)
     {
         m_tRatio = ratio;
         m_tOffset = offset;
@@ -55,7 +55,7 @@ public:
 ParallaxNode::ParallaxNode()
 {
     m_pParallaxArray = axArrayNew(5);        
-    m_tLastPosition = Point(-100,-100);
+    m_tLastPosition = Vec2(-100,-100);
 }
 ParallaxNode::~ParallaxNode()
 {
@@ -80,14 +80,14 @@ void ParallaxNode::addChild(Node * child, unsigned int zOrder, int tag)
     AX_UNUSED_PARAM(tag);
     AXAssert(0,"ParallaxNode: use addChild:z:parallaxRatio:positionOffset instead");
 }
-void ParallaxNode::addChild(Node *child, unsigned int z, const Point& ratio, const Point& offset)
+void ParallaxNode::addChild(Node *child, unsigned int z, const Vec2& ratio, const Vec2& offset)
 {
     AXAssert( child != NULL, "Argument must be non-nil");
     CCPointObject *obj = CCPointObject::pointWithCCPoint(ratio, offset);
     obj->setChild(child);
     axArrayAppendObjectWithResize(m_pParallaxArray, (Object*)obj);
 
-    Point pos = m_obPosition;
+    Vec2 pos = m_obPosition;
     pos.x = pos.x * ratio.x + offset.x;
     pos.y = pos.y * ratio.y + offset.y;
     child->setPosition(pos);
@@ -112,9 +112,9 @@ void ParallaxNode::removeAllChildrenWithCleanup(bool cleanup)
     axArrayRemoveAllObjects(m_pParallaxArray);
     Node::removeAllChildrenWithCleanup(cleanup);
 }
-Point ParallaxNode::absolutePosition()
+Vec2 ParallaxNode::absolutePosition()
 {
-    Point ret = m_obPosition;
+    Vec2 ret = m_obPosition;
     Node *cn = this;
     while (cn->getParent() != NULL)
     {
@@ -131,9 +131,9 @@ The positions are updated at visit because:
 */
 void ParallaxNode::visit()
 {
-    //    Point pos = position_;
-    //    Point    pos = [self convertToWorldSpace:Point::ZERO];
-    Point pos = this->absolutePosition();
+    //    Vec2 pos = position_;
+    //    Vec2    pos = [self convertToWorldSpace:Vec2::ZERO];
+    Vec2 pos = this->absolutePosition();
     if( ! pos.equals(m_tLastPosition) )
     {
         for(unsigned int i=0; i < m_pParallaxArray->num; i++ ) 
@@ -141,7 +141,7 @@ void ParallaxNode::visit()
             CCPointObject *point = (CCPointObject*)m_pParallaxArray->arr[i];
             float x = -pos.x + pos.x * point->getRatio().x + point->getOffset().x;
             float y = -pos.y + pos.y * point->getRatio().y + point->getOffset().y;            
-            point->getChild()->setPosition(Point(x,y));
+            point->getChild()->setPosition(Vec2(x,y));
         }
         m_tLastPosition = pos;
     }

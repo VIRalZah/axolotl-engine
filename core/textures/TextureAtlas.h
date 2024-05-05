@@ -27,8 +27,8 @@ THE SOFTWARE.
 #ifndef __AXTEXTURE_ATLAS_H__
 #define __AXTEXTURE_ATLAS_H__
 
-#include "ccTypes.h"
-#include "cocoa/Object.h"
+#include "base/Types.h"
+#include "base/Object.h"
 #include "ccConfig.h"
 #include <string>
 

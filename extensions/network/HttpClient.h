@@ -26,7 +26,7 @@
 #ifndef __AXHTTPREQUEST_H__
 #define __AXHTTPREQUEST_H__
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "ExtensionMacros.h"
 
 #include "HttpRequest.h"

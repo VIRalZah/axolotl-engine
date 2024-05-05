@@ -93,19 +93,19 @@ bool CCControlColourPicker::init()
         m_hsv.v = 0;
         
         // Add image
-        m_background=CCControlUtils::addSpriteToTargetWithPosAndAnchor("menuColourPanelBackground.png", spriteSheet, Point::ZERO, Point(0.5f, 0.5f));
+        m_background=CCControlUtils::addSpriteToTargetWithPosAndAnchor("menuColourPanelBackground.png", spriteSheet, Vec2::ZERO, Vec2(0.5f, 0.5f));
         AX_SAFE_RETAIN(m_background);
         
-        Point backgroundPointZero = PointSub(m_background->getPosition(), Point (m_background->getContentSize().width / 2, m_background->getContentSize().height / 2));
+        Vec2 backgroundPointZero = PointSub(m_background->getPosition(), Vec2 (m_background->getContentSize().width / 2, m_background->getContentSize().height / 2));
         
         // Setup panels
         float hueShift                = 8;
         float colourShift             = 28;
         
         m_huePicker = new CCControlHuePicker();
-        m_huePicker->initWithTargetAndPos(spriteSheet, Point(backgroundPointZero.x + hueShift, backgroundPointZero.y + hueShift));
+        m_huePicker->initWithTargetAndPos(spriteSheet, Vec2(backgroundPointZero.x + hueShift, backgroundPointZero.y + hueShift));
         m_colourPicker = new CCControlSaturationBrightnessPicker();
-        m_colourPicker->initWithTargetAndPos(spriteSheet, Point(backgroundPointZero.x + colourShift, backgroundPointZero.y + colourShift));
+        m_colourPicker->initWithTargetAndPos(spriteSheet, Vec2(backgroundPointZero.x + colourShift, backgroundPointZero.y + colourShift));
         
         // Setup events
         m_huePicker->addTargetWithActionForControlEvents(this, cccontrol_selector(CCControlColourPicker::hueSliderValueChanged), CCControlEventValueChanged);

@@ -25,8 +25,8 @@ THE SOFTWARE.
 #ifndef __AX_TOUCH_H__
 #define __AX_TOUCH_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Geometry.h"
+#include "Object.h"
+#include "Types.h"
 
 NS_AX_BEGIN
 
@@ -36,14 +36,14 @@ public:
     Touch();
     virtual ~Touch();
 
-    Point getLocation() const;
-    Point getPreviousLocation() const;
-    Point getStartLocation() const;
-    Point getDelta() const;
+    Vec2 getLocation() const;
+    Vec2 getPreviousLocation() const;
+    Vec2 getStartLocation() const;
+    Vec2 getDelta() const;
 
-    Point getLocationInView() const;
-    Point getPreviousLocationInView() const;
-    Point getStartLocationInView() const;
+    Vec2 getLocationInView() const;
+    Vec2 getPreviousLocationInView() const;
+    Vec2 getStartLocationInView() const;
     
     void setTouchInfo(int id, float x, float y)
     {
@@ -66,9 +66,9 @@ private:
     int _id;
 
     bool _startPointCaptured;
-    Point _startPoint;
-    Point _point;
-    Point _prevPoint;
+    Vec2 _startPoint;
+    Vec2 _point;
+    Vec2 _prevPoint;
 };
 
 NS_AX_END

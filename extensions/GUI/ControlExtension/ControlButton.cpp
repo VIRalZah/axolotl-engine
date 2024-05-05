@@ -105,13 +105,13 @@ bool CCControlButton::initWithLabelAndBackgroundSprite(Node* node, CCScale9Sprit
 
         // Adjust the background image by default
         setAdjustBackgroundImage(true);
-        setPreferredSize(CCSizeZero);
+        setPreferredSize(Size::ZERO);
         // Zooming button by default
         m_zoomOnTouchDown = true;
         
         // Set the default anchor point
         ignoreAnchorPointForPosition(false);
-        setAnchorPoint(Point(0.5f, 0.5f));
+        setAnchorPoint(Vec2(0.5f, 0.5f));
         
         // Set the nodes
         setTitleLabel(node);
@@ -131,7 +131,7 @@ bool CCControlButton::initWithLabelAndBackgroundSprite(Node* node, CCScale9Sprit
         setTitleLabelForState(node, CCControlStateNormal);
         setBackgroundSpriteForState(backgroundSprite, CCControlStateNormal);
         
-        setLabelAnchorPoint(Point(0.5f, 0.5f));
+        setLabelAnchorPoint(Vec2(0.5f, 0.5f));
 
         // Layout update
         needsLayout();
@@ -276,12 +276,12 @@ bool CCControlButton::doesAdjustBackgroundImage()
     return m_doesAdjustBackgroundImage;
 }
 
-Point CCControlButton::getLabelAnchorPoint()
+Vec2 CCControlButton::getLabelAnchorPoint()
 {
     return this->m_labelAnchorPoint;
 }
 
-void CCControlButton::setLabelAnchorPoint(Point labelAnchorPoint)
+void CCControlButton::setLabelAnchorPoint(Vec2 labelAnchorPoint)
 {
     this->m_labelAnchorPoint = labelAnchorPoint;
     if (m_titleLabel != NULL)
@@ -380,7 +380,7 @@ void CCControlButton::setTitleLabelForState(Node* titleLabel, CCControlState sta
 
     m_titleLabelDispatchTable->setObject(titleLabel, state);
     titleLabel->setVisible(false);
-    titleLabel->setAnchorPoint(Point(0.5f, 0.5f));
+    titleLabel->setAnchorPoint(Vec2(0.5f, 0.5f));
     addChild(titleLabel, 1);
 
     // If the current state if equal to the given state we update the layout
@@ -490,7 +490,7 @@ void CCControlButton::setBackgroundSpriteForState(CCScale9Sprite* sprite, CCCont
 
     m_backgroundSpriteDispatchTable->setObject(sprite, state);
     sprite->setVisible(false);
-    sprite->setAnchorPoint(Point(0.5f, 0.5f));
+    sprite->setAnchorPoint(Vec2(0.5f, 0.5f));
     addChild(sprite);
 
     if (this->m_preferredSize.width != 0 || this->m_preferredSize.height != 0)
@@ -498,7 +498,7 @@ void CCControlButton::setBackgroundSpriteForState(CCScale9Sprite* sprite, CCCont
         if (oldPreferredSize.equals(m_preferredSize))
         {
             // Force update of preferred size
-            sprite->setPreferredSize(CCSizeMake(oldPreferredSize.width+1, oldPreferredSize.height+1));
+            sprite->setPreferredSize(Size(oldPreferredSize.width+1, oldPreferredSize.height+1));
         }
         
         sprite->setPreferredSize(this->m_preferredSize);
@@ -555,14 +555,14 @@ void CCControlButton::needsLayout()
     }
     if (m_titleLabel != NULL)
     {
-        m_titleLabel->setPosition(Point (getContentSize().width / 2, getContentSize().height / 2));
+        m_titleLabel->setPosition(Vec2 (getContentSize().width / 2, getContentSize().height / 2));
     }
     
     // Update the background sprite
     this->setBackgroundSprite(this->getBackgroundSpriteForState(m_eState));
     if (m_backgroundSprite != NULL)
     {
-        m_backgroundSprite->setPosition(Point (getContentSize().width / 2, getContentSize().height / 2));
+        m_backgroundSprite->setPosition(Vec2 (getContentSize().width / 2, getContentSize().height / 2));
     }
    
     // Get the title label size
@@ -578,7 +578,7 @@ void CCControlButton::needsLayout()
         // Add the margins
         if (m_backgroundSprite != NULL)
         {
-            m_backgroundSprite->setContentSize(CCSizeMake(titleLabelSize.width + m_marginH * 2, titleLabelSize.height + m_marginV * 2));
+            m_backgroundSprite->setContentSize(Size(titleLabelSize.width + m_marginH * 2, titleLabelSize.height + m_marginV * 2));
         }
     } 
     else
@@ -613,18 +613,18 @@ void CCControlButton::needsLayout()
     }
 
     Rect maxRect = CCControlUtils::CCRectUnion(rectTitle, rectBackground);
-    setContentSize(CCSizeMake(maxRect.size.width, maxRect.size.height));        
+    setContentSize(Size(maxRect.size.width, maxRect.size.height));        
     
     if (m_titleLabel != NULL)
     {
-        m_titleLabel->setPosition(Point(getContentSize().width/2, getContentSize().height/2));
+        m_titleLabel->setPosition(Vec2(getContentSize().width/2, getContentSize().height/2));
         // Make visible the background and the label
         m_titleLabel->setVisible(true);
     }
   
     if (m_backgroundSprite != NULL)
     {
-        m_backgroundSprite->setPosition(Point(getContentSize().width/2, getContentSize().height/2));
+        m_backgroundSprite->setPosition(Vec2(getContentSize().width/2, getContentSize().height/2));
         m_backgroundSprite->setVisible(true);   
     }   
 }

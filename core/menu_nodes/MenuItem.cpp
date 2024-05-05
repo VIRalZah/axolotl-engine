@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include "sprite_nodes/Sprite.h"
 #include "label_nodes/LabelAtlas.h"
 #include "label_nodes/LabelTTF.h"
-#include "script_support/ScriptSupport.h"
 #include <stdarg.h>
 #include <cstring>
 
@@ -65,7 +64,7 @@ MenuItem* MenuItem::create(Object *rec, SEL_MenuHandler selector)
 
 bool MenuItem::initWithTarget(Object *rec, SEL_MenuHandler selector)
 {
-    setAnchorPoint(Point(0.5f, 0.5f));
+    setAnchorPoint(Vec2(0.5f, 0.5f));
     m_pListener = rec;
     m_pfnSelector = selector;
     m_bEnabled = true;
@@ -75,7 +74,6 @@ bool MenuItem::initWithTarget(Object *rec, SEL_MenuHandler selector)
 
 MenuItem::~MenuItem()
 {
-    unregisterScriptTapHandler();
 }
 
 void MenuItem::selected()
@@ -88,23 +86,6 @@ void MenuItem::unselected()
     m_bSelected = false;
 }
 
-void MenuItem::registerScriptTapHandler(int nHandler)
-{
-    unregisterScriptTapHandler();
-    m_nScriptTapHandler = nHandler;
-    LUALOG("[LUA] Add MenuItem script handler: %d", m_nScriptTapHandler);
-}
-
-void MenuItem::unregisterScriptTapHandler(void)
-{
-    if (m_nScriptTapHandler)
-    {
-        ScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nScriptTapHandler);
-        LUALOG("[LUA] Remove MenuItem script handler: %d", m_nScriptTapHandler);
-        m_nScriptTapHandler = 0;
-    }
-}
-
 void MenuItem::activate()
 {
     if (m_bEnabled)
@@ -112,11 +93,6 @@ void MenuItem::activate()
         if (m_pListener && m_pfnSelector)
         {
             (m_pListener->*m_pfnSelector)(this);
-        }
-        
-        if (kScriptTypeNone != m_eScriptType)
-        {
-            ScriptEngineManager::sharedManager()->getScriptEngine()->executeMenuItemEvent(this);
         }
     }
 }
@@ -133,7 +109,7 @@ bool MenuItem::isEnabled()
 
 Rect MenuItem::rect()
 {
-    return CCRectMake( m_obPosition.x - m_obContentSize.width * m_obAnchorPoint.x,
+    return Rect( m_obPosition.x - m_obContentSize.width * m_obAnchorPoint.x,
                       m_obPosition.y - m_obContentSize.height * m_obAnchorPoint.y,
                       m_obContentSize.width, m_obContentSize.height);
 }
@@ -170,7 +146,7 @@ void MenuItemLabel::setLabel(Node* var)
     if (var)
     {
         addChild(var);
-        var->setAnchorPoint(Point(0, 0));
+        var->setAnchorPoint(Vec2(0, 0));
         setContentSize(var->getContentSize());
     }
     
@@ -419,7 +395,7 @@ void MenuItemSprite::setNormalImage(Node* pImage)
         if (pImage)
         {
             addChild(pImage, 0, kNormalTag);
-            pImage->setAnchorPoint(Point(0, 0));
+            pImage->setAnchorPoint(Vec2(0, 0));
         }
 
         if (m_pNormalImage)
@@ -445,7 +421,7 @@ void MenuItemSprite::setSelectedImage(Node* pImage)
         if (pImage)
         {
             addChild(pImage, 0, kSelectedTag);
-            pImage->setAnchorPoint(Point(0, 0));
+            pImage->setAnchorPoint(Vec2(0, 0));
         }
 
         if (m_pSelectedImage)
@@ -470,7 +446,7 @@ void MenuItemSprite::setDisabledImage(Node* pImage)
         if (pImage)
         {
             addChild(pImage, 0, kDisableTag);
-            pImage->setAnchorPoint(Point(0, 0));
+            pImage->setAnchorPoint(Vec2(0, 0));
         }
 
         if (m_pDisabledImage)
@@ -819,7 +795,7 @@ void MenuItemToggle::setSelectedIndex(unsigned int index)
         this->addChild(item, 0, kCurrentItem);
         Size s = item->getContentSize();
         this->setContentSize(s);
-        item->setPosition( Point( s.width/2, s.height/2 ) );
+        item->setPosition( Vec2( s.width/2, s.height/2 ) );
     }
 }
 unsigned int MenuItemToggle::getSelectedIndex()

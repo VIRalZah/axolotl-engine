@@ -22,7 +22,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "Accelerometer.h"
 using namespace Windows::Foundation;
 using namespace Windows::Devices::Sensors;

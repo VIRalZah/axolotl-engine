@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "TransformUtils.h"
-#include "cocoa/AffineTransform.h"
+#include "base/AffineTransform.h"
 
 namespace axolotl {
 

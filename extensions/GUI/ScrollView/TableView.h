@@ -112,7 +112,7 @@ public:
      * @return cell size
      */
     virtual Size cellSizeForTable(CCTableView *table) {
-        return CCSizeZero;
+        return Size::ZERO;
     };
     /**
      * a cell instance at a given index
@@ -271,10 +271,10 @@ protected:
 
 	CCScrollViewDirection m_eOldDirection;
 
-    int __indexFromOffset(Point offset);
-    unsigned int _indexFromOffset(Point offset);
-    Point __offsetFromIndex(unsigned int index);
-    Point _offsetFromIndex(unsigned int index);
+    int __indexFromOffset(Vec2 offset);
+    unsigned int _indexFromOffset(Vec2 offset);
+    Vec2 __offsetFromIndex(unsigned int index);
+    Vec2 _offsetFromIndex(unsigned int index);
 
     void _moveCellOutOfSight(CCTableViewCell *cell);
     void _setIndexForCell(unsigned int index, CCTableViewCell *cell);

@@ -28,7 +28,7 @@ THE SOFTWARE.
 #define __AXTRANSITION_H__
 
 #include "Scene.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 
 NS_AX_BEGIN
 

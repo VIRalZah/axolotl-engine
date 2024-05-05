@@ -26,7 +26,7 @@
 
 #include "platform/FileUtils.h"
 #include "platform/PlatformMacros.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 #include "ccTypeInfo.h"
 #include <string>
 #include <vector>

@@ -33,7 +33,7 @@
 #include "platform/PlatformMacros.h"
 
 #include "ExtensionMacros.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "libwebsockets.h"
 
 #include "StdC.h"

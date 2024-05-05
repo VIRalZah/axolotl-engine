@@ -24,13 +24,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/Scheduler.h"
+#include "Scheduler.h"
 #include "ccMacros.h"
-#include "base/Director.h"
+#include "Director.h"
 #include "support/data_support/utlist.h"
 #include "support/data_support/axCArray.h"
-#include "cocoa/Array.h"
-#include "script_support/ScriptSupport.h"
+#include "Array.h"
 
 using namespace std;
 
@@ -80,7 +79,6 @@ Timer::Timer()
 , m_fDelay(0.0f)
 , m_fInterval(0.0f)
 , m_pfnSelector(NULL)
-, m_nScriptHandler(0)
 {
 }
 
@@ -102,25 +100,6 @@ Timer* Timer::timerWithTarget(Object *pTarget, SEL_SCHEDULE pfnSelector, float f
     pTimer->autorelease();
 
     return pTimer;
-}
-
-Timer* Timer::timerWithScriptHandler(int nHandler, float fSeconds)
-{
-    Timer *pTimer = new Timer();
-
-    pTimer->initWithScriptHandler(nHandler, fSeconds);
-    pTimer->autorelease();
-
-    return pTimer;
-}
-
-bool Timer::initWithScriptHandler(int nHandler, float fSeconds)
-{
-    m_nScriptHandler = nHandler;
-    m_fElapsed = -1;
-    m_fInterval = fSeconds;
-
-    return true;
 }
 
 bool Timer::initWithTarget(Object *pTarget, SEL_SCHEDULE pfnSelector)
@@ -160,10 +139,6 @@ void Timer::update(float dt)
                     (m_pTarget->*m_pfnSelector)(m_fElapsed);
                 }
 
-                if (m_nScriptHandler)
-                {
-                    ScriptEngineManager::sharedManager()->getScriptEngine()->executeSchedule(m_nScriptHandler, m_fElapsed);
-                }
                 m_fElapsed = 0;
             }
         }    
@@ -179,11 +154,6 @@ void Timer::update(float dt)
                         (m_pTarget->*m_pfnSelector)(m_fElapsed);
                     }
 
-                    if (m_nScriptHandler)
-                    {
-                        ScriptEngineManager::sharedManager()->getScriptEngine()->executeSchedule(m_nScriptHandler, m_fElapsed);
-                    }
-
                     m_fElapsed = m_fElapsed - m_fDelay;
                     m_uTimesExecuted += 1;
                     m_bUseDelay = false;
@@ -196,11 +166,6 @@ void Timer::update(float dt)
                     if (m_pTarget && m_pfnSelector)
                     {
                         (m_pTarget->*m_pfnSelector)(m_fElapsed);
-                    }
-
-                    if (m_nScriptHandler)
-                    {
-                        ScriptEngineManager::sharedManager()->getScriptEngine()->executeSchedule(m_nScriptHandler, m_fElapsed);
                     }
 
                     m_fElapsed = 0;
@@ -244,7 +209,6 @@ Scheduler::Scheduler(void)
 , m_pCurrentTarget(NULL)
 , m_bCurrentTargetSalvaged(false)
 , m_bUpdateHashLocked(false)
-, m_pScriptHandlerEntries(NULL)
 {
 
 }
@@ -252,7 +216,6 @@ Scheduler::Scheduler(void)
 Scheduler::~Scheduler(void)
 {
     unscheduleAll();
-    AX_SAFE_RELEASE(m_pScriptHandlerEntries);
 }
 
 void Scheduler::removeHashElement(_hashSelectorEntry *pElement)
@@ -582,11 +545,6 @@ void Scheduler::unscheduleAllWithMinPriority(int nMinPriority)
             unscheduleUpdateForTarget(pEntry->target);
         }
     }
-
-    if (m_pScriptHandlerEntries)
-    {
-        m_pScriptHandlerEntries->removeAllObjects();
-    }
 }
 
 void Scheduler::unscheduleAllForTarget(Object *pTarget)
@@ -623,31 +581,6 @@ void Scheduler::unscheduleAllForTarget(Object *pTarget)
 
     // update selector
     unscheduleUpdateForTarget(pTarget);
-}
-
-unsigned int Scheduler::scheduleScriptFunc(unsigned int nHandler, float fInterval, bool bPaused)
-{
-    CCSchedulerScriptHandlerEntry* pEntry = CCSchedulerScriptHandlerEntry::create(nHandler, fInterval, bPaused);
-    if (!m_pScriptHandlerEntries)
-    {
-        m_pScriptHandlerEntries = Array::createWithCapacity(20);
-        m_pScriptHandlerEntries->retain();
-    }
-    m_pScriptHandlerEntries->addObject(pEntry);
-    return pEntry->getEntryId();
-}
-
-void Scheduler::unscheduleScriptEntry(unsigned int uScheduleScriptEntryID)
-{
-    for (int i = m_pScriptHandlerEntries->count() - 1; i >= 0; i--)
-    {
-        CCSchedulerScriptHandlerEntry* pEntry = static_cast<CCSchedulerScriptHandlerEntry*>(m_pScriptHandlerEntries->objectAtIndex(i));
-        if (pEntry->getEntryId() == (int)uScheduleScriptEntryID)
-        {
-            pEntry->markedForDeletion();
-            break;
-        }
-    }
 }
 
 void Scheduler::resumeTarget(Object *pTarget)
@@ -855,23 +788,6 @@ void Scheduler::update(float dt)
         if (m_bCurrentTargetSalvaged && m_pCurrentTarget->timers->num == 0)
         {
             removeHashElement(m_pCurrentTarget);
-        }
-    }
-
-    // Iterate over all the script callbacks
-    if (m_pScriptHandlerEntries)
-    {
-        for (int i = m_pScriptHandlerEntries->count() - 1; i >= 0; i--)
-        {
-            CCSchedulerScriptHandlerEntry* pEntry = static_cast<CCSchedulerScriptHandlerEntry*>(m_pScriptHandlerEntries->objectAtIndex(i));
-            if (pEntry->isMarkedForDeletion())
-            {
-                m_pScriptHandlerEntries->removeObjectAtIndex(i);
-            }
-            else if (!pEntry->isPaused())
-            {
-                pEntry->getTimer()->update(dt);
-            }
         }
     }
 

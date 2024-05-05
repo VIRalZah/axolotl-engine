@@ -25,7 +25,7 @@
 #ifndef __HTTP_REQUEST_H__
 #define __HTTP_REQUEST_H__
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "ExtensionMacros.h"
 
 NS_AX_EXT_BEGIN

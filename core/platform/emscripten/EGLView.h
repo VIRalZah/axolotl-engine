@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_EGLVIEW_BLACKBERRY_H__
 #define __AX_EGLVIEW_BLACKBERRY_H__
 
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 #include "platform/PlatformMacros.h"
 

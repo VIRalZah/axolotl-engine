@@ -94,20 +94,20 @@ CCControlSlider* CCControlSlider::create(Sprite * backgroundSprite, Sprite* pogr
         // Defines the content size
         Rect maxRect   = CCControlUtils::CCRectUnion(backgroundSprite->boundingBox(), thumbSprite->boundingBox());
 
-        setContentSize(CCSizeMake(maxRect.size.width, maxRect.size.height));
+        setContentSize(Size(maxRect.size.width, maxRect.size.height));
         
         // Add the slider background
-        m_backgroundSprite->setAnchorPoint(Point(0.5f, 0.5f));
-        m_backgroundSprite->setPosition(Point(this->getContentSize().width / 2, this->getContentSize().height / 2));
+        m_backgroundSprite->setAnchorPoint(Vec2(0.5f, 0.5f));
+        m_backgroundSprite->setPosition(Vec2(this->getContentSize().width / 2, this->getContentSize().height / 2));
         addChild(m_backgroundSprite);
 
         // Add the progress bar
-        m_progressSprite->setAnchorPoint(Point(0.0f, 0.5f));
-        m_progressSprite->setPosition(Point(0.0f, this->getContentSize().height / 2));
+        m_progressSprite->setAnchorPoint(Vec2(0.0f, 0.5f));
+        m_progressSprite->setPosition(Vec2(0.0f, this->getContentSize().height / 2));
         addChild(m_progressSprite);
 
         // Add the slider thumb  
-        m_thumbSprite->setPosition(Point(0.0f, this->getContentSize().height / 2));
+        m_thumbSprite->setPosition(Vec2(0.0f, this->getContentSize().height / 2));
         addChild(m_thumbSprite);
         
         // Init default values
@@ -177,7 +177,7 @@ void CCControlSlider::setEnabled(bool enabled)
 
 bool CCControlSlider::isTouchInside(Touch * touch)
 {
-  Point touchLocation   = touch->getLocation();
+  Vec2 touchLocation   = touch->getLocation();
   touchLocation           = this->getParent()->convertToNodeSpace(touchLocation);
 
   Rect rect             = this->boundingBox();
@@ -187,9 +187,9 @@ bool CCControlSlider::isTouchInside(Touch * touch)
   return rect.containsPoint(touchLocation);
 }
 
-Point CCControlSlider::locationFromTouch(Touch* touch)
+Vec2 CCControlSlider::locationFromTouch(Touch* touch)
 {
-  Point touchLocation   = touch->getLocation();                      // Get the touch position
+  Vec2 touchLocation   = touch->getLocation();                      // Get the touch position
   touchLocation           = this->convertToNodeSpace(touchLocation);                  // Convert to the node space of this class
 
   if (touchLocation.x < 0)
@@ -211,20 +211,20 @@ bool CCControlSlider::ccTouchBegan(Touch* touch)
         return false;
     }
 
-    Point location = locationFromTouch(touch);
+    Vec2 location = locationFromTouch(touch);
     sliderBegan(location);
     return true;
 }
 
 void CCControlSlider::ccTouchMoved(Touch *pTouch)
 {
-    Point location = locationFromTouch(pTouch);
+    Vec2 location = locationFromTouch(pTouch);
     sliderMoved(location);
 }
 
 void CCControlSlider::ccTouchEnded(Touch *pTouch)
 {
-    sliderEnded(Point::ZERO);
+    sliderEnded(Vec2::ZERO);
 }
 
 void CCControlSlider::needsLayout()
@@ -236,29 +236,29 @@ void CCControlSlider::needsLayout()
     // Update thumb position for new value
     float percent               = (m_value - m_minimumValue) / (m_maximumValue - m_minimumValue);
 
-    Point pos                 = m_thumbSprite->getPosition();
+    Vec2 pos                 = m_thumbSprite->getPosition();
     pos.x                       = percent * m_backgroundSprite->getContentSize().width;
     m_thumbSprite->setPosition(pos);
 
     // Stretches content proportional to newLevel
     Rect textureRect          = m_progressSprite->getTextureRect();
-    textureRect                 = CCRectMake(textureRect.origin.x, textureRect.origin.y, pos.x, textureRect.size.height);
+    textureRect                 = Rect(textureRect.origin.x, textureRect.origin.y, pos.x, textureRect.size.height);
     m_progressSprite->setTextureRect(textureRect, m_progressSprite->isTextureRectRotated(), textureRect.size);
 }
 
-void CCControlSlider::sliderBegan(Point location)
+void CCControlSlider::sliderBegan(Vec2 location)
 {
     this->setSelected(true);
     this->getThumbSprite()->setColor(ccGRAY);
     setValue(valueForLocation(location));
 }
 
-void CCControlSlider::sliderMoved(Point location)
+void CCControlSlider::sliderMoved(Vec2 location)
 {
     setValue(valueForLocation(location));
 }
 
-void CCControlSlider::sliderEnded(Point location)
+void CCControlSlider::sliderEnded(Vec2 location)
 {
     if (this->isSelected())
     {
@@ -268,7 +268,7 @@ void CCControlSlider::sliderEnded(Point location)
     this->setSelected(false);
 }
 
-float CCControlSlider::valueForLocation(Point location)
+float CCControlSlider::valueForLocation(Vec2 location)
 {
     float percent = location.x/ m_backgroundSprite->getContentSize().width;
     return MAX(MIN(m_minimumValue + percent * (m_maximumValue - m_minimumValue), m_maximumAllowedValue), m_minimumAllowedValue);

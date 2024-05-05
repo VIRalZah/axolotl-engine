@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 #include "StdC.h"
 #include "platform/Common.h"
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 #include "glfw/include/GLFW/glfw3.h"
 
@@ -86,7 +86,7 @@ protected:
     GLFWmonitor* _monitor;
     GLFWwindow* _window;
 
-    Point _cursorPosition;
+    Vec2 _cursorPosition;
     bool _captured;
 
     LPFN_ACCELEROMETER_KEYHOOK _accelerometerKeyHook;

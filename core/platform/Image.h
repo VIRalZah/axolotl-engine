@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_IMAGE_H__
 #define __AX_IMAGE_H__
 
-#include "cocoa/Object.h"
+#include "base/Object.h"
 
 NS_AX_BEGIN
 

@@ -28,7 +28,7 @@
 #ifndef __MISCNODE_AXCLIPPING_NODE_H__
 #define __MISCNODE_AXCLIPPING_NODE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "GL.h"
 
 NS_AX_BEGIN

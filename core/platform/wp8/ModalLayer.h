@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __ModalLayer_WP8_H__
 #define __ModalLayer_WP8_H__
 
-#include "cocos2d.h"
+#include "axolotl.h"
 
 class ModalLayer : public axolotl::Layer
 {

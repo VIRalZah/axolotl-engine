@@ -36,7 +36,7 @@ THE SOFTWARE.
  */
 
 #include "DrawingPrimitives.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 #include "ccMacros.h"
 #include "GL.h"
 #include "base/Director.h"
@@ -118,7 +118,7 @@ void ccDrawFree()
 	s_bInitialized = false;
 }
 
-void ccDrawPoint( const Point& point )
+void ccDrawPoint( const Vec2& point )
 {
     lazy_init();
 
@@ -145,7 +145,7 @@ void ccDrawPoint( const Point& point )
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void ccDrawPoints( const Point *points, unsigned int numberOfPoints )
+void ccDrawPoints( const Vec2 *points, unsigned int numberOfPoints )
 {
     lazy_init();
 
@@ -159,10 +159,10 @@ void ccDrawPoints( const Point *points, unsigned int numberOfPoints )
     ccVertex2F* newPoints = new ccVertex2F[numberOfPoints];
 
     // iPhone and 32-bit machines optimization
-    if( sizeof(Point) == sizeof(ccVertex2F) )
+    if( sizeof(Vec2) == sizeof(ccVertex2F) )
     {
 #ifdef EMSCRIPTEN
-        setGLBufferData((void*) points, numberOfPoints * sizeof(Point));
+        setGLBufferData((void*) points, numberOfPoints * sizeof(Vec2));
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 #else
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, points);
@@ -193,7 +193,7 @@ void ccDrawPoints( const Point *points, unsigned int numberOfPoints )
 }
 
 
-void ccDrawLine( const Point& origin, const Point& destination )
+void ccDrawLine( const Vec2& origin, const Vec2& destination )
 {
     lazy_init();
 
@@ -218,27 +218,27 @@ void ccDrawLine( const Point& origin, const Point& destination )
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void ccDrawRect( Point origin, Point destination )
+void ccDrawRect( Vec2 origin, Vec2 destination )
 {
-    ccDrawLine(Point(origin.x, origin.y), Point(destination.x, origin.y));
-    ccDrawLine(Point(destination.x, origin.y), Point(destination.x, destination.y));
-    ccDrawLine(Point(destination.x, destination.y), Point(origin.x, destination.y));
-    ccDrawLine(Point(origin.x, destination.y), Point(origin.x, origin.y));
+    ccDrawLine(Vec2(origin.x, origin.y), Vec2(destination.x, origin.y));
+    ccDrawLine(Vec2(destination.x, origin.y), Vec2(destination.x, destination.y));
+    ccDrawLine(Vec2(destination.x, destination.y), Vec2(origin.x, destination.y));
+    ccDrawLine(Vec2(origin.x, destination.y), Vec2(origin.x, origin.y));
 }
 
-void ccDrawSolidRect( Point origin, Point destination, ccColor4F color )
+void ccDrawSolidRect( Vec2 origin, Vec2 destination, ccColor4F color )
 {
-    Point vertices[] = {
+    Vec2 vertices[] = {
         origin,
-        Point(destination.x, origin.y),
+        Vec2(destination.x, origin.y),
         destination,
-        Point(origin.x, destination.y)
+        Vec2(origin.x, destination.y)
     };
 
     ccDrawSolidPoly(vertices, 4, color );
 }
 
-void ccDrawPoly( const Point *poli, unsigned int numberOfPoints, bool closePolygon )
+void ccDrawPoly( const Vec2 *poli, unsigned int numberOfPoints, bool closePolygon )
 {
     lazy_init();
 
@@ -249,10 +249,10 @@ void ccDrawPoly( const Point *poli, unsigned int numberOfPoints, bool closePolyg
     ccGLEnableVertexAttribs( kCCVertexAttribFlag_Position );
 
     // iPhone and 32-bit machines optimization
-    if( sizeof(Point) == sizeof(ccVertex2F) )
+    if( sizeof(Vec2) == sizeof(ccVertex2F) )
     {
 #ifdef EMSCRIPTEN
-        setGLBufferData((void*) poli, numberOfPoints * sizeof(Point));
+        setGLBufferData((void*) poli, numberOfPoints * sizeof(Vec2));
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 #else
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, poli);
@@ -290,7 +290,7 @@ void ccDrawPoly( const Point *poli, unsigned int numberOfPoints, bool closePolyg
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void ccDrawSolidPoly( const Point *poli, unsigned int numberOfPoints, ccColor4F color )
+void ccDrawSolidPoly( const Vec2 *poli, unsigned int numberOfPoints, ccColor4F color )
 {
     lazy_init();
 
@@ -304,10 +304,10 @@ void ccDrawSolidPoly( const Point *poli, unsigned int numberOfPoints, ccColor4F 
     ccVertex2F* newPoli = new ccVertex2F[numberOfPoints];
 
     // iPhone and 32-bit machines optimization
-    if( sizeof(Point) == sizeof(ccVertex2F) )
+    if( sizeof(Vec2) == sizeof(ccVertex2F) )
     {
 #ifdef EMSCRIPTEN
-        setGLBufferData((void*) poli, numberOfPoints * sizeof(Point));
+        setGLBufferData((void*) poli, numberOfPoints * sizeof(Vec2));
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, 0);
 #else
         glVertexAttribPointer(kCCVertexAttrib_Position, 2, GL_FLOAT, GL_FALSE, 0, poli);
@@ -334,7 +334,7 @@ void ccDrawSolidPoly( const Point *poli, unsigned int numberOfPoints, ccColor4F 
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void ccDrawCircle( const Point& center, float radius, float angle, unsigned int segments, bool drawLineToCenter, float scaleX, float scaleY)
+void ccDrawCircle( const Vec2& center, float radius, float angle, unsigned int segments, bool drawLineToCenter, float scaleX, float scaleY)
 {
     lazy_init();
 
@@ -378,12 +378,12 @@ void ccDrawCircle( const Point& center, float radius, float angle, unsigned int 
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void AX_DLL ccDrawCircle( const Point& center, float radius, float angle, unsigned int segments, bool drawLineToCenter)
+void AX_DLL ccDrawCircle( const Vec2& center, float radius, float angle, unsigned int segments, bool drawLineToCenter)
 {
     ccDrawCircle(center, radius, angle, segments, drawLineToCenter, 1.0f, 1.0f);
 }
 
-void ccDrawQuadBezier(const Point& origin, const Point& control, const Point& destination, unsigned int segments)
+void ccDrawQuadBezier(const Vec2& origin, const Vec2& control, const Vec2& destination, unsigned int segments)
 {
     lazy_init();
 
@@ -446,12 +446,12 @@ void ccDrawCardinalSpline( PointArray *config, float tension,  unsigned int segm
         }
 
         // Interpolate
-        Point pp0 = config->getControlPointAtIndex(p-1);
-        Point pp1 = config->getControlPointAtIndex(p+0);
-        Point pp2 = config->getControlPointAtIndex(p+1);
-        Point pp3 = config->getControlPointAtIndex(p+2);
+        Vec2 pp0 = config->getControlPointAtIndex(p-1);
+        Vec2 pp1 = config->getControlPointAtIndex(p+0);
+        Vec2 pp2 = config->getControlPointAtIndex(p+1);
+        Vec2 pp3 = config->getControlPointAtIndex(p+2);
 
-        Point newPos = ccCardinalSplineAt( pp0, pp1, pp2, pp3, tension, lt);
+        Vec2 newPos = ccCardinalSplineAt( pp0, pp1, pp2, pp3, tension, lt);
         vertices[i].x = newPos.x;
         vertices[i].y = newPos.y;
     }
@@ -474,7 +474,7 @@ void ccDrawCardinalSpline( PointArray *config, float tension,  unsigned int segm
     AX_INCREMENT_GL_DRAWS(1);
 }
 
-void ccDrawCubicBezier(const Point& origin, const Point& control1, const Point& control2, const Point& destination, unsigned int segments)
+void ccDrawCubicBezier(const Vec2& origin, const Vec2& control1, const Vec2& control2, const Vec2& destination, unsigned int segments)
 {
     lazy_init();
 

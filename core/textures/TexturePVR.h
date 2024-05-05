@@ -28,8 +28,8 @@ THE SOFTWARE.
 
 #include "StdC.h"
 #include "GL.h"
-#include "cocoa/Object.h"
-#include "cocoa/Array.h"
+#include "base/Object.h"
+#include "base/Array.h"
 
 NS_AX_BEGIN
 

@@ -29,7 +29,7 @@
 #include "platform/ApplicationProtocol.h"
 //#include "CCCommon.h"
 
-#include "Geometry.h"
+
 #include "base/Director.h"
 #include "IwUtil.h"
 #include "IwUtilInitTerm.h"

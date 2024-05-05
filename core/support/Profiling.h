@@ -26,9 +26,9 @@ THE SOFTWARE.
 #define __SUPPORT_AXPROFILING_H__
 
 #include "ccConfig.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include "platform/platform.h"
-#include "cocoa/Dictionary.h"
+#include "base/Dictionary.h"
 #include <string>
 
 NS_AX_BEGIN

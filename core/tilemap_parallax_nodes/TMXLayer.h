@@ -27,7 +27,7 @@ THE SOFTWARE.
 #define __AXTMX_LAYER_H__
 
 #include "TMXObjectGroup.h"
-#include "base_nodes/AtlasNode.h"
+#include "base/AtlasNode.h"
 #include "sprite_nodes/SpriteBatchNode.h"
 #include "TMXXMLParser.h"
 NS_AX_BEGIN
@@ -116,30 +116,30 @@ public:
     The Sprite can be treated like any other Sprite: rotated, scaled, translated, opacity, color, etc.
     You can remove either by calling:
     - layer->removeChild(sprite, cleanup);
-    - or layer->removeTileAt(Point(x,y));
+    - or layer->removeTileAt(Vec2(x,y));
     @js getTileGIDAt
     */
-    Sprite* tileAt(const Point& tileCoordinate);
+    Sprite* tileAt(const Vec2& tileCoordinate);
 
     /** returns the tile gid at a given tile coordinate.
     if it returns 0, it means that the tile is empty.
     This method requires the the tile map has not been previously released (eg. don't call layer->releaseMap())
     @js tileGIDAt
     */
-    unsigned int  tileGIDAt(const Point& tileCoordinate);
+    unsigned int  tileGIDAt(const Vec2& tileCoordinate);
 
     /** returns the tile gid at a given tile coordinate. It also returns the tile flags.
      This method requires the the tile map has not been previously released (eg. don't call [layer releaseMap])
      @js tileGIDAt
      @lua NA
      */
-    unsigned int tileGIDAt(const Point& tileCoordinate, ccTMXTileFlags* flags);
+    unsigned int tileGIDAt(const Vec2& tileCoordinate, ccTMXTileFlags* flags);
 
     /** sets the tile gid (gid = tile global id) at a given tile coordinate.
     The Tile GID can be obtained by using the method "tileGIDAt" or by using the TMX editor -> Tileset Mgr +1.
     If a tile is already placed at that position, then it will be removed.
     */
-    void setTileGID(unsigned int gid, const Point& tileCoordinate);
+    void setTileGID(unsigned int gid, const Vec2& tileCoordinate);
 
     /** sets the tile gid (gid = tile global id) at a given tile coordinate.
      The Tile GID can be obtained by using the method "tileGIDAt" or by using the TMX editor -> Tileset Mgr +1.
@@ -148,15 +148,15 @@ public:
      Use withFlags if the tile flags need to be changed as well
      */
 
-    void setTileGID(unsigned int gid, const Point& tileCoordinate, ccTMXTileFlags flags);
+    void setTileGID(unsigned int gid, const Vec2& tileCoordinate, ccTMXTileFlags flags);
 
     /** removes a tile at given tile coordinate */
-    void removeTileAt(const Point& tileCoordinate);
+    void removeTileAt(const Vec2& tileCoordinate);
 
     /** returns the position in points of a given tile coordinate 
      * @js getPositionAt
      */
-    Point positionAt(const Point& tileCoordinate);
+    Vec2 positionAt(const Vec2& tileCoordinate);
 
     /** return the value for the specific property name 
      *  @js getProperty
@@ -179,22 +179,22 @@ public:
     inline const char* getLayerName(){ return m_sLayerName.c_str(); }
     inline void setLayerName(const char *layerName){ m_sLayerName = layerName; }
 private:
-    Point positionForIsoAt(const Point& pos);
-    Point positionForOrthoAt(const Point& pos);
-    Point positionForHexAt(const Point& pos);
+    Vec2 positionForIsoAt(const Vec2& pos);
+    Vec2 positionForOrthoAt(const Vec2& pos);
+    Vec2 positionForHexAt(const Vec2& pos);
 
-    Point calculateLayerOffset(const Point& offset);
+    Vec2 calculateLayerOffset(const Vec2& offset);
 
     /* optimization methods */
-    Sprite* appendTileForGID(unsigned int gid, const Point& pos);
-    Sprite* insertTileForGID(unsigned int gid, const Point& pos);
-    Sprite* updateTileForGID(unsigned int gid, const Point& pos);
+    Sprite* appendTileForGID(unsigned int gid, const Vec2& pos);
+    Sprite* insertTileForGID(unsigned int gid, const Vec2& pos);
+    Sprite* updateTileForGID(unsigned int gid, const Vec2& pos);
 
     /* The layer recognizes some special properties, like AX_vertez */
     void parseInternalProperties();
-    void setupTileSprite(Sprite* sprite, Point pos, unsigned int gid);
+    void setupTileSprite(Sprite* sprite, Vec2 pos, unsigned int gid);
     Sprite* reusedTileWithRect(Rect rect);
-    int vertexZForPos(const Point& pos);
+    int vertexZForPos(const Vec2& pos);
 
     // index
     unsigned int atlasIndexForExistantZ(unsigned int z);

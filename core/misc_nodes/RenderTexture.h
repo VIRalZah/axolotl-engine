@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AXRENDER_TEXTURE_H__
 #define __AXRENDER_TEXTURE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "sprite_nodes/Sprite.h"
 #include "kazmath/mat4.h"
 

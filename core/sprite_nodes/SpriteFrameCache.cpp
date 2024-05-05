@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "cocoa/NS.h"
+#include "base/NS.h"
 #include "ccMacros.h"
 #include "textures/TextureCache.h"
 #include "SpriteFrameCache.h"
@@ -34,9 +34,9 @@ THE SOFTWARE.
 #include "Sprite.h"
 #include "support/TransformUtils.h"
 #include "platform/FileUtils.h"
-#include "cocoa/String.h"
-#include "cocoa/Array.h"
-#include "cocoa/Dictionary.h"
+#include "base/String.h"
+#include "base/Array.h"
+#include "base/Dictionary.h"
 #include <vector>
 
 using namespace std;
@@ -132,10 +132,10 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(Dictionary* dictionary, Tex
             // create frame
             spriteFrame = new SpriteFrame();
             spriteFrame->initWithTexture(pobTexture, 
-                                        CCRectMake(x, y, w, h), 
+                                        Rect(x, y, w, h), 
                                         false,
-                                        Point(ox, oy),
-                                        CCSizeMake((float)ow, (float)oh)
+                                        Vec2(ox, oy),
+                                        Size((float)ow, (float)oh)
                                         );
         } 
         else if(format == 1 || format == 2) 
@@ -149,7 +149,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(Dictionary* dictionary, Tex
                 rotated = frameDict->valueForKey("rotated")->boolValue();
             }
 
-            Point offset = CCPointFromString(frameDict->valueForKey("offset")->getCString());
+            Vec2 offset = CCPointFromString(frameDict->valueForKey("offset")->getCString());
             Size sourceSize = CCSizeFromString(frameDict->valueForKey("sourceSize")->getCString());
 
             // create frame
@@ -165,7 +165,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(Dictionary* dictionary, Tex
         {
             // get values
             Size spriteSize = CCSizeFromString(frameDict->valueForKey("spriteSize")->getCString());
-            Point spriteOffset = CCPointFromString(frameDict->valueForKey("spriteOffset")->getCString());
+            Vec2 spriteOffset = CCPointFromString(frameDict->valueForKey("spriteOffset")->getCString());
             Size spriteSourceSize = CCSizeFromString(frameDict->valueForKey("spriteSourceSize")->getCString());
             Rect textureRect = CCRectFromString(frameDict->valueForKey("textureRect")->getCString());
             bool textureRotated = frameDict->valueForKey("textureRotated")->boolValue();
@@ -189,7 +189,7 @@ void SpriteFrameCache::addSpriteFramesWithDictionary(Dictionary* dictionary, Tex
             // create frame
             spriteFrame = new SpriteFrame();
             spriteFrame->initWithTexture(pobTexture,
-                            CCRectMake(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+                            Rect(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
                             textureRotated,
                             spriteOffset,
                             spriteSourceSize);

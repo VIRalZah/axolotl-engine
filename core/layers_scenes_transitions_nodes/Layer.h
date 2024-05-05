@@ -27,13 +27,13 @@ THE SOFTWARE.
 #ifndef __AXLAYER_H__
 #define __AXLAYER_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Protocols.h"
 #include "platform/AccelerometerDelegate.h"
 #include "keypad_dispatcher/KeypadDelegate.h"
-#include "cocoa/Array.h"
+#include "base/Array.h"
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -47,8 +47,6 @@ typedef enum {
  * @addtogroup layer
  * @{
  */
-
-class CCTouchScriptHandlerEntry;
 
 //
 // Layer
@@ -104,8 +102,6 @@ public:
      * @lua NA
      */
     virtual void didAccelerate(Acceleration* pAccelerationValue);
-    void registerScriptAccelerateHandler(int nHandler);
-    void unregisterScriptAccelerateHandler(void);
 
     /** If isTouchEnabled, this method is called onEnter. Override it to change the
     way Layer receives touch events.
@@ -118,11 +114,6 @@ public:
     @since v0.8.0
     */
     virtual void registerWithTouchDispatcher(void);
-    
-    /** Register script touch events handler */
-    virtual void registerScriptTouchHandler(int nHandler, bool bIsMultiTouches = false, int nPriority = INT_MIN, bool bSwallowsTouches = false);
-    /** Unregister script touch events handler */
-    virtual void unregisterScriptTouchHandler(void);
 
     /** whether or not it will receive Touch events.
     You can enable / disable touch events with this property.
@@ -157,17 +148,8 @@ public:
     virtual bool isKeypadEnabled();
     virtual void setKeypadEnabled(bool value);
 
-    /** Register keypad events handler */
-    void registerScriptKeypadHandler(int nHandler);
-    /** Unregister keypad events handler */
-    void unregisterScriptKeypadHandler(void);
-
     virtual void keyBackClicked(void);
     virtual void keyMenuClicked(void);
-    
-    inline CCTouchScriptHandlerEntry* getScriptTouchHandlerEntry() { return m_pScriptTouchHandlerEntry; };
-    inline CCScriptHandlerEntry* getScriptKeypadHandlerEntry() { return m_pScriptKeypadHandlerEntry; };
-    inline CCScriptHandlerEntry* getScriptAccelerateHandlerEntry() { return m_pScriptAccelerateHandlerEntry; };
 protected:   
     bool _touchEnabled;
     bool _keyboardEnabled;
@@ -175,19 +157,11 @@ protected:
     bool m_bKeypadEnabled;
     
 private:
-    // Script touch events handler
-    CCTouchScriptHandlerEntry* m_pScriptTouchHandlerEntry;
-    CCScriptHandlerEntry* m_pScriptKeypadHandlerEntry;
-    CCScriptHandlerEntry* m_pScriptAccelerateHandlerEntry;
-    
     int _touchPriority;
     TouchHandler* _touchHandler;
 
     int _keyboardPriority;
     KeyboardHandler* _keyboardHandler;
-    
-    int  excuteScriptTouchHandler(int nEventType, Touch *pTouch);
-    int  excuteScriptTouchHandler(int nEventType, Set *pTouches);
 };
 
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_IOS) || (AX_TARGET_PLATFORM == AX_PLATFORM_MAC)
@@ -334,7 +308,7 @@ public:
     static LayerGradient* create(const ccColor4B& start, const ccColor4B& end);
 
     /** Creates a full-screen Layer with a gradient between start and end in the direction of v. */
-    static LayerGradient* create(const ccColor4B& start, const ccColor4B& end, const Point& v);
+    static LayerGradient* create(const ccColor4B& start, const ccColor4B& end, const Vec2& v);
 
     virtual bool init();
     /** Initializes the Layer with a gradient between start and end. 
@@ -345,13 +319,13 @@ public:
     /** Initializes the Layer with a gradient between start and end in the direction of v. 
      *  @js init
      */
-    virtual bool initWithColor(const ccColor4B& start, const ccColor4B& end, const Point& v);
+    virtual bool initWithColor(const ccColor4B& start, const ccColor4B& end, const Vec2& v);
 
     AX_PROPERTY_PASS_BY_REF(ccColor3B, m_startColor, StartColor)
     AX_PROPERTY_PASS_BY_REF(ccColor3B, m_endColor, EndColor)
     AX_PROPERTY(GLubyte, m_cStartOpacity, StartOpacity)
     AX_PROPERTY(GLubyte, m_cEndOpacity, EndOpacity)
-    AX_PROPERTY_PASS_BY_REF(Point, m_AlongVector, Vector)
+    AX_PROPERTY_PASS_BY_REF(Vec2, m_AlongVector, Vector)
 
     /** Whether or not the interpolation will be compressed in order to display all the colors of the gradient both in canonical and non canonical vectors
     Default: YES

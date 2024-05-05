@@ -40,8 +40,8 @@
 #include <vector>
 
 #include "ActionInterval.h"
-#include "base_nodes/Node.h"
-#include "cocoa/Geometry.h"
+#include "base/Node.h"
+
 
 NS_AX_BEGIN;
 
@@ -76,16 +76,16 @@ public:
     bool initWithCapacity(unsigned int capacity);
     
     /** appends a control point */
-    void addControlPoint(Point controlPoint);
+    void addControlPoint(Vec2 controlPoint);
     
     /** inserts a controlPoint at index */
-    void insertControlPoint(Point &controlPoint, unsigned int index);
+    void insertControlPoint(Vec2 &controlPoint, unsigned int index);
     
     /** replaces an existing controlPoint at index */
-    void replaceControlPoint(Point &controlPoint, unsigned int index);
+    void replaceControlPoint(Vec2 &controlPoint, unsigned int index);
     
     /** get the value of a controlPoint at a given index */
-    Point getControlPointAtIndex(unsigned int index);
+    Vec2 getControlPointAtIndex(unsigned int index);
     
     /** deletes a control point at a given index */
     void removeControlPointAtIndex(unsigned int index);
@@ -104,12 +104,12 @@ public:
      */
     virtual Object* copyWithZone(Zone *zone);
     
-    const std::vector<Point*>* getControlPoints();
+    const std::vector<Vec2*>* getControlPoints();
 
-    void setControlPoints(std::vector<Point*> *controlPoints);
+    void setControlPoints(std::vector<Vec2*> *controlPoints);
 private:
     /** Array that contains the control points */
-    std::vector<Point*> *m_pControlPoints;
+    std::vector<Vec2*> *m_pControlPoints;
 };
 
 /** Cardinal Spline path.
@@ -161,7 +161,7 @@ public:
     /**
      *  @lua NA
      */
-    virtual void updatePosition(Point &newPos);
+    virtual void updatePosition(Vec2 &newPos);
     
     inline PointArray* getPoints() { return m_pPoints; }
     /**
@@ -179,8 +179,8 @@ protected:
     PointArray *m_pPoints;
     float m_fDeltaT;
     float m_fTension;
-    Point	m_previousPosition;
-    Point	m_accumulatedDiff;
+    Vec2	m_previousPosition;
+    Vec2	m_accumulatedDiff;
 };
 
 /** Cardinal Spline path.
@@ -211,9 +211,9 @@ public:
     /**
      *  @lua NA
      */
-    virtual void updatePosition(Point &newPos);
+    virtual void updatePosition(Vec2 &newPos);
 protected:
-    Point m_startPosition;
+    Vec2 m_startPosition;
 };
 
 /** An action that moves the target with a CatmullRom curve to a destination point.
@@ -265,7 +265,7 @@ public:
 };
 
 /** Returns the Cardinal Spline position for a given set of control points, tension and time */
-extern AX_DLL Point ccCardinalSplineAt(Point &p0, Point &p1, Point &p2, Point &p3, float tension, float t);
+extern AX_DLL Vec2 ccCardinalSplineAt(Vec2 &p0, Vec2 &p1, Vec2 &p2, Vec2 &p3, float tension, float t);
 
 // end of actions group
 /// @}

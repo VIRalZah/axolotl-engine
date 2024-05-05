@@ -24,8 +24,8 @@ THE SOFTWARE.
 
 #include "FileUtils.h"
 #include "base/Director.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/String.h"
+#include "base/Dictionary.h"
+#include "base/String.h"
 #include "SAXParser.h"
 #include "support/tinyxml2/tinyxml2.h"
 #include "support/zip_support/unzip.h"

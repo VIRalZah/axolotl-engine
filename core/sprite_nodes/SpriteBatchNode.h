@@ -28,11 +28,11 @@ THE SOFTWARE.
 #ifndef __AX_SPRITE_BATCH_NODE_H__
 #define __AX_SPRITE_BATCH_NODE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Protocols.h"
 #include "textures/TextureAtlas.h"
 #include "ccMacros.h"
-#include "cocoa/Array.h"
+#include "base/Array.h"
 
 NS_AX_BEGIN
 

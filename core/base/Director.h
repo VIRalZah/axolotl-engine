@@ -1,9 +1,7 @@
 /****************************************************************************
-Copyright (c) 2010-2012 cocos2d-x.org
-Copyright (c) 2008-2010 Ricardo Quesada
-Copyright (c) 2011      Zynga Inc.
+Copyright (c) 2010-2012 zahann.ru
 
-http://www.cocos2d-x.org
+http://www.zahann.ru
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,45 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __AXDIRECTOR_H__
-#define __AXDIRECTOR_H__
+#ifndef __AX_DIRECTOR_H__
+#define __AX_DIRECTOR_H__
 
 #include "platform/PlatformMacros.h"
-#include "cocoa/Object.h"
-#include "ccTypes.h"
-#include "cocoa/Geometry.h"
-#include "cocoa/Array.h"
+#include "Object.h"
+#include "Types.h"
+#include "Array.h"
 #include "GL.h"
 #include "kazmath/mat4.h"
 #include "label_nodes/LabelAtlas.h"
 #include "ccTypeInfo.h"
 
-
 NS_AX_BEGIN
 
-/**
- * @addtogroup base_nodes
- * @{
- */
+enum Projection
+{
+    ORTHOGRAPHIC,
+    PERSPECTIVE,
+    CUSTOM,
+    
+    DEFAULT = ORTHOGRAPHIC
+};
 
-/** @typedef ccDirectorProjection
- Possible OpenGL projections used by director
- */
-typedef enum {
-    /// sets a 2D projection (orthogonal projection)
-    kCCDirectorProjection2D,
-    
-    /// sets a 3D projection with a fovy=60, znear=0.5f and zfar=1500.
-    kCCDirectorProjection3D,
-    
-    /// it calls "updateProjection" on the projection delegate.
-    kCCDirectorProjectionCustom,
-    
-    /// Default projection is 3D projection
-    kCCDirectorProjectionDefault = kCCDirectorProjection3D,
-} ccDirectorProjection;
-
-/* Forward declarations. */
 class LabelAtlas;
 class Scene;
 class EGLViewProtocol;
@@ -74,91 +56,45 @@ class KeypadDispatcher;
 class Accelerometer;
 class EventDispatcher;
 
-/**
-@brief Class that creates and handle the main Window and manages how
-and when to execute the Scenes.
- 
- The Director is also responsible for:
-  - initializing the OpenGL context
-  - setting the OpenGL pixel format (default on is RGB565)
-  - setting the OpenGL buffer depth (default one is 0-bit)
-  - setting the projection (default one is 3D)
-  - setting the orientation (default one is Portrait)
- 
- Since the Director is a singleton, the standard way to use it is by calling:
-  _ Director::sharedDirector()->methodName();
- 
- The Director also sets the default OpenGL context:
-  - GL_TEXTURE_2D is enabled
-  - GL_VERTEX_ARRAY is enabled
-  - GL_COLOR_ARRAY is enabled
-  - GL_TEXTURE_COORD_ARRAY is enabled
-*/
 class AX_DLL Director : public Object, public TypeInfo
 {
 public:
-    /**
-     *  @js ctor
-     */
     Director(void);
-    /**
-     *  @js NA
-     *  @lua NA
-     */
     virtual ~Director(void);
+
     virtual bool init(void);
-    /**
-     * @js NA
-     * @lua NA
-     */
-    virtual long getClassTypeInfo() {
+
+    virtual long getClassTypeInfo()
+    {
 		static const long id = axolotl::getHashCodeByString(typeid(axolotl::Director).name());
 		return id;
     }
 
-    // attribute
+    inline Scene* getRunningScene() { return _runningScene; }
 
-    /** Get current running Scene. Director can only run one Scene at the time */
-    inline Scene* getRunningScene(void) { return m_pRunningScene; }
+    inline double getAnimationInterval() const { return _animationInterval; }
+    virtual void setAnimationInterval(double value) = 0;
 
-    /** Get the FPS value */
-    inline double getAnimationInterval(void) { return m_dAnimationInterval; }
-    /** Set the FPS value. */
-    virtual void setAnimationInterval(double dValue) = 0;
-
-    /** Whether or not to display the FPS on the bottom-left corner */
-    inline bool isDisplayStats(void) { return m_bDisplayStats; }
-    /** Display the FPS on the bottom-left corner */
-    inline void setDisplayStats(bool bDisplayStats) { m_bDisplayStats = bDisplayStats; }
+    inline bool isDisplayStats() const { return _displayStats; }
+    virtual void setDisplayStats(bool displayStats) { _displayStats = displayStats; }
     
-    /** seconds per frame */
-    inline float getSecondsPerFrame() { return m_fSecondsPerFrame; }
+    inline EGLViewProtocol* getOpenGLView() const { return _openGLView; }
+    virtual void setOpenGLView(EGLViewProtocol* glView);
 
-    /** Get the EGLView, where everything is rendered
-     * @js NA
-     */
-    inline EGLViewProtocol* getOpenGLView(void) { return _glView; }
-    void setOpenGLView(EGLViewProtocol* glView);
+    inline bool isNextDeltaTimeZero() const { return _nextDeltaTimeZero; }
+    virtual void setNextDeltaTimeZero(bool bNextDeltaTimeZero);
 
-    inline bool isNextDeltaTimeZero(void) { return m_bNextDeltaTimeZero; }
-    void setNextDeltaTimeZero(bool bNextDeltaTimeZero);
+    inline bool isPaused() const { return _paused; }
 
-    /** Whether or not the Director is paused */
-    inline bool isPaused(void) { return m_bPaused; }
-
-    /** How many frames were called since the director started */
-    inline unsigned int getTotalFrames(void) { return m_uTotalFrames; }
+    inline unsigned int getTotalFrames() const { return _totalFrames; }
     
-    /** Sets an OpenGL projection
-     @since v0.8.2
-     @js NA
-     */
-    inline ccDirectorProjection getProjection(void) { return m_eProjection; }
-    void setProjection(ccDirectorProjection kProjection);
-     /** reshape projection matrix when canvas has been change"*/
+    inline Projection getProjection(void) { return _projection; }
+    void setProjection(Projection kProjection);
+
+    virtual void updateProjection();
+
     void reshapeProjection(const Size& newWindowSize);
     
-    /** Sets the glViewport*/
     void setViewport();
 
     /** How many frames were called since the director started */
@@ -203,20 +139,19 @@ public:
     
     /** returns visible origin of the OpenGL view in points.
      */
-    Point getVisibleOrigin();
+    Vec2 getVisibleOrigin();
 
     /** converts a UIKit coordinate to an OpenGL coordinate
      Useful to convert (multi) touch coordinates to the current layout (portrait or landscape)
      */
-    Point convertToGL(const Point& obPoint);
+    Vec2 convertToGL(const Vec2& obPoint);
 
     /** converts an OpenGL coordinate to a UIKit coordinate
      Useful to convert node points to window points for calls such as glScissor
      */
-    Point convertToUI(const Point& obPoint);
+    Vec2 convertToUI(const Vec2& obPoint);
 
-    /// XXX: missing description 
-    float getZEye(void);
+    inline float getZEye(void) const;
 
     // Scene Management
 
@@ -375,15 +310,15 @@ protected:
     void calculateDeltaTime();
 protected:
     /* The EGLView, where everything is rendered */
-    EGLViewProtocol* _glView;
+    EGLViewProtocol* _openGLView;
 
-    double m_dAnimationInterval;
+    double _animationInterval;
     double m_dOldAnimationInterval;
 
     /* landscape mode ? */
     bool m_bLandscape;
     
-    bool m_bDisplayStats;
+    bool _displayStats;
     float m_fAccumDt;
     float m_fFrameRate;
     
@@ -392,15 +327,15 @@ protected:
     LabelAtlas *m_pDrawsLabel;
     
     /** Whether or not the Director is paused */
-    bool m_bPaused;
+    bool _paused;
 
     /* How many frames were called since the director started */
-    unsigned int m_uTotalFrames;
+    unsigned int _totalFrames;
     unsigned int m_uFrames;
     float m_fSecondsPerFrame;
      
     /* The running scene */
-    Scene *m_pRunningScene;
+    Scene *_runningScene;
     
     /* will be the next 'runningScene' in the next frame
      nextScene is a weak reference. */
@@ -416,10 +351,10 @@ protected:
     struct AX_timeval *m_pLastUpdate;
 
     /* whether or not the next delta time will be zero */
-    bool m_bNextDeltaTimeZero;
+    bool _nextDeltaTimeZero;
     
     /* projection used */
-    ccDirectorProjection m_eProjection;
+    Projection _projection;
 
     /* window size in points */
     Size    m_obWinSizeInPoints;
@@ -451,20 +386,20 @@ protected:
  @js NA
  @lua NA
  */
-class CCDisplayLinkDirector : public Director
+class DisplayLinkDirector : public Director
 {
 public:
-    CCDisplayLinkDirector(void) 
-        : m_bInvalid(false)
-    {}
+    DisplayLinkDirector();
+    virtual ~DisplayLinkDirector();
 
-    virtual void mainLoop(void);
-    virtual void setAnimationInterval(double dValue);
+    virtual void mainLoop();
+
+    virtual void setAnimationInterval(double value);
+
     virtual void startAnimation(void);
     virtual void stopAnimation();
-
 protected:
-    bool m_bInvalid;
+    bool _invalid;
 };
 
 // end of base_node group
@@ -472,4 +407,4 @@ protected:
 
 NS_AX_END
 
-#endif // __AXDIRECTOR_H__
+#endif // __AX_DIRECTOR_H__

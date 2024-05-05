@@ -43,7 +43,7 @@ THE SOFTWARE.
 
 #include "ParticleSystem.h"
 #include "ParticleBatchNode.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 #include "textures/TextureCache.h"
 #include "textures/TextureAtlas.h"
 #include "support/base64.h"
@@ -94,8 +94,8 @@ ParticleSystem::ParticleSystem()
 , m_bIsActive(true)
 , m_uParticleCount(0)
 , m_fDuration(0)
-, m_tSourcePosition(Point::ZERO)
-, m_tPosVar(Point::ZERO)
+, m_tSourcePosition(Vec2::ZERO)
+, m_tPosVar(Vec2::ZERO)
 , m_fLife(0)
 , m_fLifeVar(0)
 , m_fAngle(0)
@@ -117,7 +117,7 @@ ParticleSystem::ParticleSystem()
 , m_bIsAutoRemoveOnFinish(false)
 , m_nEmitterMode(kCCParticleModeGravity)
 {
-    modeA.gravity = Point::ZERO;
+    modeA.gravity = Vec2::ZERO;
     modeA.speed = 0;
     modeA.speedVar = 0;
     modeA.tangentialAccel = 0;
@@ -248,7 +248,7 @@ bool ParticleSystem::initWithDictionary(Dictionary *dictionary, const char *dirn
             // position
             float x = dictionary->valueForKey("sourcePositionx")->floatValue();
             float y = dictionary->valueForKey("sourcePositiony")->floatValue();
-            this->setPosition( Point(x,y) );            
+            this->setPosition( Vec2(x,y) );            
             m_tPosVar.x = dictionary->valueForKey("sourcePositionVariancex")->floatValue();
             m_tPosVar.y = dictionary->valueForKey("sourcePositionVariancey")->floatValue();
 
@@ -523,7 +523,7 @@ void ParticleSystem::initParticle(tCCParticle* particle)
     // position
     if( m_ePositionType == kCCPositionTypeFree )
     {
-        particle->startPos = this->convertToWorldSpace(Point::ZERO);
+        particle->startPos = this->convertToWorldSpace(Vec2::ZERO);
     }
     else if ( m_ePositionType == kCCPositionTypeRelative )
     {
@@ -536,7 +536,7 @@ void ParticleSystem::initParticle(tCCParticle* particle)
     // Mode Gravity: A
     if (m_nEmitterMode == kCCParticleModeGravity) 
     {
-        Point v(cosf( a ), sinf( a ));
+        Vec2 v(cosf( a ), sinf( a ));
         float s = modeA.speed + modeA.speedVar * CCRANDOM_MINUS1_1();
 
         // direction
@@ -628,10 +628,10 @@ void ParticleSystem::update(float dt)
 
     m_uParticleIdx = 0;
 
-    Point currentPosition = Point::ZERO;
+    Vec2 currentPosition = Vec2::ZERO;
     if (m_ePositionType == kCCPositionTypeFree)
     {
-        currentPosition = this->convertToWorldSpace(Point::ZERO);
+        currentPosition = this->convertToWorldSpace(Vec2::ZERO);
     }
     else if (m_ePositionType == kCCPositionTypeRelative)
     {
@@ -652,9 +652,9 @@ void ParticleSystem::update(float dt)
                 // Mode A: gravity, direction, tangential accel & radial accel
                 if (m_nEmitterMode == kCCParticleModeGravity) 
                 {
-                    Point tmp, radial, tangential;
+                    Vec2 tmp, radial, tangential;
 
-                    radial = Point::ZERO;
+                    radial = Vec2::ZERO;
                     // radial acceleration
                     if (p->pos.x || p->pos.y)
                     {
@@ -705,11 +705,11 @@ void ParticleSystem::update(float dt)
                 // update values in quad
                 //
 
-                Point    newPos;
+                Vec2    newPos;
 
                 if (m_ePositionType == kCCPositionTypeFree || m_ePositionType == kCCPositionTypeRelative) 
                 {
-                    Point diff = PointSub( currentPosition, p->startPos );
+                    Vec2 diff = PointSub( currentPosition, p->startPos );
                     newPos = PointSub(p->pos, diff);
                 } 
                 else
@@ -774,7 +774,7 @@ void ParticleSystem::updateWithNoTime(void)
     this->update(0.0f);
 }
 
-void ParticleSystem::updateQuadWithParticle(tCCParticle* particle, const Point& newPosition)
+void ParticleSystem::updateQuadWithParticle(tCCParticle* particle, const Vec2& newPosition)
 {
     AX_UNUSED_PARAM(particle);
     AX_UNUSED_PARAM(newPosition);
@@ -917,13 +917,13 @@ bool ParticleSystem::getRotationIsDir()
     return modeA.rotationIsDir;
 }
 
-void ParticleSystem::setGravity(const Point& g)
+void ParticleSystem::setGravity(const Vec2& g)
 {
     AXAssert( m_nEmitterMode == kCCParticleModeGravity, "Particle Mode should be Gravity");
     modeA.gravity = g;
 }
 
-const Point& ParticleSystem::getGravity()
+const Vec2& ParticleSystem::getGravity()
 {
     AXAssert( m_nEmitterMode == kCCParticleModeGravity, "Particle Mode should be Gravity");
     return modeA.gravity;
@@ -1046,22 +1046,22 @@ void ParticleSystem::setDuration(float var)
     m_fDuration = var;
 }
 
-const Point& ParticleSystem::getSourcePosition()
+const Vec2& ParticleSystem::getSourcePosition()
 {
     return m_tSourcePosition;
 }
 
-void ParticleSystem::setSourcePosition(const Point& var)
+void ParticleSystem::setSourcePosition(const Vec2& var)
 {
     m_tSourcePosition = var;
 }
 
-const Point& ParticleSystem::getPosVar()
+const Vec2& ParticleSystem::getPosVar()
 {
     return m_tPosVar;
 }
 
-void ParticleSystem::setPosVar(const Point& var)
+void ParticleSystem::setPosVar(const Vec2& var)
 {
     m_tPosVar = var;
 }

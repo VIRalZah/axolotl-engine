@@ -106,7 +106,7 @@ public:
     /**
      * @js NA
      */
-    virtual void updateQuadWithParticle(tCCParticle* particle, const Point& newPosition);
+    virtual void updateQuadWithParticle(tCCParticle* particle, const Vec2& newPosition);
     /**
      * @js NA
      */

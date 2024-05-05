@@ -71,7 +71,7 @@ TMXLayerInfo::TMXLayerInfo()
 , m_bOwnTiles(true)
 , m_uMinGID(100000)
 , m_uMaxGID(0)        
-, m_tOffset(Point::ZERO)
+, m_tOffset(Vec2::ZERO)
 {
     m_pProperties= new Dictionary();;
 }
@@ -100,10 +100,10 @@ void TMXLayerInfo::setProperties(Dictionary* var)
 // implementation TMXTilesetInfo
 TMXTilesetInfo::TMXTilesetInfo()
     :m_uFirstGid(0)
-    ,m_tTileSize(CCSizeZero)
+    ,m_tTileSize(Size::ZERO)
     ,m_uSpacing(0)
     ,m_uMargin(0)
-    ,m_tImageSize(CCSizeZero)
+    ,m_tImageSize(Size::ZERO)
 {
 }
 TMXTilesetInfo::~TMXTilesetInfo()
@@ -193,8 +193,8 @@ bool TMXMapInfo::initWithTMXFile(const char *tmxFile)
 }
 
 TMXMapInfo::TMXMapInfo()
-: m_tMapSize(CCSizeZero)    
-, m_tTileSize(CCSizeZero)
+: m_tMapSize(Size::ZERO)    
+, m_tTileSize(Size::ZERO)
 , m_pLayers(NULL)
 , m_pTilesets(NULL)
 , m_pObjectGroups(NULL)
@@ -438,7 +438,7 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
 
         float x = (float)atof(valueForKey("x", attributeDict));
         float y = (float)atof(valueForKey("y", attributeDict));
-        layer->m_tOffset = Point(x,y);
+        layer->m_tOffset = Vec2(x,y);
 
         pTMXMapInfo->getLayers()->addObject(layer);
         layer->release();
@@ -451,7 +451,7 @@ void TMXMapInfo::startElement(void *ctx, const char *name, const char **atts)
     {
         TMXObjectGroup *objectGroup = new TMXObjectGroup();
         objectGroup->setGroupName(valueForKey("name", attributeDict));
-        Point positionOffset;
+        Vec2 positionOffset;
         positionOffset.x = (float)atof(valueForKey("x", attributeDict)) * pTMXMapInfo->getTileSize().width;
         positionOffset.y = (float)atof(valueForKey("y", attributeDict)) * pTMXMapInfo->getTileSize().height;
         objectGroup->setPositionOffset(positionOffset);

@@ -27,7 +27,7 @@ THE SOFTWARE.
 #define __AXWINRT_UTILS_H__
 
 #include "platform/PlatformMacros.h"
-#include "cocoa/Dictionary.h"
+#include "base/Dictionary.h"
 
 #include <wrl/client.h>
 #include <ppl.h>

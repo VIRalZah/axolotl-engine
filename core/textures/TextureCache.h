@@ -28,8 +28,8 @@ THE SOFTWARE.
 #ifndef __AXTEXTURE_CACHE_H__
 #define __AXTEXTURE_CACHE_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Dictionary.h"
+#include "base/Object.h"
+#include "base/Dictionary.h"
 #include "textures/Texture2D.h"
 #include <string>
 

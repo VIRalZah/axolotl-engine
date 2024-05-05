@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_EVENT_DISPATCHER_H__
 #define __AX_EVENT_DISPATCHER_H__
 
-#include "cocoa/Object.h"
+#include "Object.h"
 #include "Event.h"
 #include <vector>
 

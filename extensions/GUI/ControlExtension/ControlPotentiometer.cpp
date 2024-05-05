@@ -26,7 +26,7 @@
  */
 
 #include "ControlPotentiometer.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 
 NS_AX_EXT_BEGIN
 
@@ -170,7 +170,7 @@ float CCControlPotentiometer::getMaximumValue()
 
 bool CCControlPotentiometer::isTouchInside(Touch * touch)
 {
-    Point touchLocation   = this->getTouchLocation(touch);
+    Vec2 touchLocation   = this->getTouchLocation(touch);
     
     float distance          = this->distanceBetweenPointAndPoint(m_pProgressTimer->getPosition(), touchLocation);
 
@@ -193,17 +193,17 @@ bool CCControlPotentiometer::ccTouchBegan(Touch *pTouch)
 
 void CCControlPotentiometer::ccTouchMoved(Touch *pTouch)
 {
-    Point location    = this->getTouchLocation(pTouch);
+    Vec2 location    = this->getTouchLocation(pTouch);
 
     this->potentiometerMoved(location);
 }
 
 void CCControlPotentiometer::ccTouchEnded(Touch *pTouch)
 {
-    this->potentiometerEnded(Point::ZERO);
+    this->potentiometerEnded(Vec2::ZERO);
 }
 
-float CCControlPotentiometer::distanceBetweenPointAndPoint(Point point1, Point point2)
+float CCControlPotentiometer::distanceBetweenPointAndPoint(Vec2 point1, Vec2 point2)
 {
     float dx = point1.x - point2.x;
     float dy = point1.y - point2.y;
@@ -211,10 +211,10 @@ float CCControlPotentiometer::distanceBetweenPointAndPoint(Point point1, Point p
 }
 
 float CCControlPotentiometer::angleInDegreesBetweenLineFromPoint_toPoint_toLineFromPoint_toPoint(
-    Point beginLineA, 
-    Point endLineA,
-    Point beginLineB,
-    Point endLineB)
+    Vec2 beginLineA, 
+    Vec2 endLineA,
+    Vec2 beginLineB,
+    Vec2 endLineB)
 {
     float a = endLineA.x - beginLineA.x;
     float b = endLineA.y - beginLineA.y;
@@ -228,13 +228,13 @@ float CCControlPotentiometer::angleInDegreesBetweenLineFromPoint_toPoint_toLineF
     return (atanA - atanB) * 180 / M_PI;
 }
 
-void CCControlPotentiometer::potentiometerBegan(Point location)
+void CCControlPotentiometer::potentiometerBegan(Vec2 location)
 {
     setSelected(true);
     getThumbSprite()->setColor(ccGRAY);
 }
 
-void CCControlPotentiometer::potentiometerMoved(Point location)
+void CCControlPotentiometer::potentiometerMoved(Vec2 location)
 {
     float angle       = this->angleInDegreesBetweenLineFromPoint_toPoint_toLineFromPoint_toPoint(
         m_pProgressTimer->getPosition(),
@@ -257,7 +257,7 @@ void CCControlPotentiometer::potentiometerMoved(Point location)
     m_tPreviousLocation    = location;
 }
 
-void CCControlPotentiometer::potentiometerEnded(Point location)
+void CCControlPotentiometer::potentiometerEnded(Vec2 location)
 {
     getThumbSprite()->setColor(ccWHITE);
     setSelected(false);

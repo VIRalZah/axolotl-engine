@@ -25,7 +25,6 @@ THE SOFTWARE.
 #ifndef __AX_EVENT_H__
 #define __AX_EVENT_H__
 
-#include "cocoa/Geometry.h"
 #include <vector>
 #include <functional>
 
@@ -76,13 +75,13 @@ enum TouchType
 class AX_DLL EventTouch : public Event
 {
 public:
-	EventTouch(Point position, TouchType eventType, int id);
+	EventTouch(Vec2 position, TouchType eventType, int id);
 
-	const Point& getPosition() const { return _position; }
+	const Vec2& getPosition() const { return _position; }
 	const TouchType& getTouchType() const { return _eventType; }
 	int getID() { return _id; }
 protected:
-	Point _position;
+	Vec2 _position;
 	TouchType _eventType;
 	int _id;
 };

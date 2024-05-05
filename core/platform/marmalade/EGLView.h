@@ -25,7 +25,7 @@
 #ifndef __AX_EGLVIEW_MARMALADE_H__
 #define __AX_EGLVIEW_MARMALADE_H__
 
-#include "Geometry.h"
+
 #include "EGLViewProtocol.h"					// MH: Added because EGLView should be derived from EGLViewProtocol
 #include "s3eKeyboard.h"
 #include "s3ePointer.h"

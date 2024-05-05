@@ -151,17 +151,7 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\base\AutoreleasePool.cpp" />
-    <ClCompile Include="..\base\Configuration.cpp" />
-    <ClCompile Include="..\base\Director.cpp" />
-    <ClCompile Include="..\base\Event.cpp" />
-    <ClCompile Include="..\base\EventDispatcher.cpp" />
-    <ClCompile Include="..\base\PoolManager.cpp" />
-    <ClCompile Include="..\base\Scheduler.cpp" />
-    <ClCompile Include="..\base\Touch.cpp" />
-    <ClCompile Include="..\base_nodes\AtlasNode.cpp" />
-    <ClCompile Include="..\base_nodes\Node.cpp" />
-    <ClCompile Include="..\ccFPSImages.c">
+    <ClCompile Include="..\axFPSImages.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -169,17 +159,28 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\cocoa\AffineTransform.cpp" />
-    <ClCompile Include="..\cocoa\Array.cpp" />
-    <ClCompile Include="..\cocoa\DataVisitor.cpp" />
-    <ClCompile Include="..\cocoa\Dictionary.cpp" />
-    <ClCompile Include="..\cocoa\Geometry.cpp" />
-    <ClCompile Include="..\cocoa\NS.cpp" />
-    <ClCompile Include="..\cocoa\Object.cpp" />
-    <ClCompile Include="..\cocoa\Set.cpp" />
-    <ClCompile Include="..\cocoa\String.cpp" />
-    <ClCompile Include="..\cocoa\Zone.cpp" />
-    <ClCompile Include="..\cocos2d.cpp" />
+    <ClCompile Include="..\axolotl.cpp" />
+    <ClCompile Include="..\base\AffineTransform.cpp" />
+    <ClCompile Include="..\base\Array.cpp" />
+    <ClCompile Include="..\base\AtlasNode.cpp" />
+    <ClCompile Include="..\base\AutoreleasePool.cpp" />
+    <ClCompile Include="..\base\Camera.cpp" />
+    <ClCompile Include="..\base\Configuration.cpp" />
+    <ClCompile Include="..\base\DataVisitor.cpp" />
+    <ClCompile Include="..\base\Dictionary.cpp" />
+    <ClCompile Include="..\base\Director.cpp" />
+    <ClCompile Include="..\base\Event.cpp" />
+    <ClCompile Include="..\base\EventDispatcher.cpp" />
+    <ClCompile Include="..\base\Node.cpp" />
+    <ClCompile Include="..\base\NS.cpp" />
+    <ClCompile Include="..\base\Object.cpp" />
+    <ClCompile Include="..\base\PoolManager.cpp" />
+    <ClCompile Include="..\base\Scheduler.cpp" />
+    <ClCompile Include="..\base\Set.cpp" />
+    <ClCompile Include="..\base\String.cpp" />
+    <ClCompile Include="..\base\Touch.cpp" />
+    <ClCompile Include="..\base\Types.cpp" />
+    <ClCompile Include="..\base\Zone.cpp" />
     <ClCompile Include="..\draw_nodes\DrawingPrimitives.cpp" />
     <ClCompile Include="..\draw_nodes\DrawNode.cpp" />
     <ClCompile Include="..\effects\Grabber.cpp" />
@@ -272,7 +273,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClCompile Include="..\keypad_dispatcher\KeypadDispatcher.cpp" />
     <ClCompile Include="..\text_input_node\IMEDispatcher.cpp" />
     <ClCompile Include="..\text_input_node\TextFieldTTF.cpp" />
-    <ClCompile Include="..\script_support\ScriptSupport.cpp" />
     <ClCompile Include="..\kazmath\src\aabb.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -377,40 +377,42 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </ForcedIncludeFiles>
     </ClCompile>
-    <ClCompile Include="..\Camera.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\axFPSImages.h">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClInclude>
+    <ClInclude Include="..\axolotl.h" />
+    <ClInclude Include="..\base\AffineTransform.h" />
+    <ClInclude Include="..\base\Array.h" />
+    <ClInclude Include="..\base\AtlasNode.h" />
     <ClInclude Include="..\base\AutoreleasePool.h" />
+    <ClInclude Include="..\base\Bool.h" />
+    <ClInclude Include="..\base\Camera.h" />
     <ClInclude Include="..\base\Configuration.h" />
+    <ClInclude Include="..\base\DataVisitor.h" />
+    <ClInclude Include="..\base\Dictionary.h" />
     <ClInclude Include="..\base\Director.h" />
+    <ClInclude Include="..\base\Double.h" />
     <ClInclude Include="..\base\Event.h" />
     <ClInclude Include="..\base\EventDispatcher.h" />
+    <ClInclude Include="..\base\Float.h" />
+    <ClInclude Include="..\base\Integer.h" />
+    <ClInclude Include="..\base\Node.h" />
+    <ClInclude Include="..\base\NS.h" />
+    <ClInclude Include="..\base\Object.h" />
     <ClInclude Include="..\base\PoolManager.h" />
     <ClInclude Include="..\base\Scheduler.h" />
+    <ClInclude Include="..\base\Set.h" />
+    <ClInclude Include="..\base\String.h" />
     <ClInclude Include="..\base\Touch.h" />
-    <ClInclude Include="..\base_nodes\AtlasNode.h" />
-    <ClInclude Include="..\base_nodes\Node.h" />
-    <ClInclude Include="..\ccFPSImages.h" />
-    <ClInclude Include="..\cocoa\AffineTransform.h" />
-    <ClInclude Include="..\cocoa\Array.h" />
-    <ClInclude Include="..\cocoa\Bool.h" />
-    <ClInclude Include="..\cocoa\DataVisitor.h" />
-    <ClInclude Include="..\cocoa\Dictionary.h" />
-    <ClInclude Include="..\cocoa\Double.h" />
-    <ClInclude Include="..\cocoa\Float.h" />
-    <ClInclude Include="..\cocoa\Geometry.h" />
-    <ClInclude Include="..\cocoa\Integer.h" />
-    <ClInclude Include="..\cocoa\NS.h" />
-    <ClInclude Include="..\cocoa\Number.h" />
-    <ClInclude Include="..\cocoa\Object.h" />
-    <ClInclude Include="..\cocoa\Set.h" />
-    <ClInclude Include="..\cocoa\String.h" />
-    <ClInclude Include="..\cocoa\Zone.h" />
-    <ClInclude Include="..\cocos2d.h" />
+    <ClInclude Include="..\base\Types.h" />
+    <ClInclude Include="..\base\Zone.h" />
     <ClInclude Include="..\draw_nodes\DrawingPrimitives.h" />
     <ClInclude Include="..\draw_nodes\DrawNode.h" />
     <ClInclude Include="..\effects\Grabber.h" />
@@ -432,7 +434,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\include\EventType.h" />
     <ClInclude Include="..\include\ccMacros.h" />
     <ClInclude Include="..\include\Protocols.h" />
-    <ClInclude Include="..\include\ccTypes.h" />
     <ClInclude Include="..\label_nodes\LabelAtlas.h" />
     <ClInclude Include="..\label_nodes\LabelBMFont.h" />
     <ClInclude Include="..\label_nodes\LabelTTF.h" />
@@ -532,7 +533,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\text_input_node\IMEDelegate.h" />
     <ClInclude Include="..\text_input_node\IMEDispatcher.h" />
     <ClInclude Include="..\text_input_node\TextFieldTTF.h" />
-    <ClInclude Include="..\script_support\ScriptSupport.h" />
     <ClInclude Include="..\kazmath\include\kazmath\aabb.h" />
     <ClInclude Include="..\kazmath\include\kazmath\kazmath.h" />
     <ClInclude Include="..\kazmath\include\kazmath\mat3.h" />
@@ -547,7 +547,6 @@ xcopy /Y /Q "$(ProjectDir)..\platform\third_party\win32\libraries\*.*" "$(OutDir
     <ClInclude Include="..\kazmath\include\kazmath\vec4.h" />
     <ClInclude Include="..\kazmath\include\kazmath\GL\mat4stack.h" />
     <ClInclude Include="..\kazmath\include\kazmath\GL\matrix.h" />
-    <ClInclude Include="..\Camera.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

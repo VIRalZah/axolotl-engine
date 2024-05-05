@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include "platform/Image.h"
 #include "support/ccUtils.h"
 #include "base/Scheduler.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include <errno.h>
 #include <stack>
 #include <string>
@@ -752,7 +752,7 @@ VolatileTexture::VolatileTexture(Texture2D *t)
 , uiImage(NULL)
 , m_fFontSize(0.0f)
 {
-    m_size = CCSizeMake(0, 0);
+    m_size = Size(0, 0);
     m_texParams.minFilter = GL_LINEAR;
     m_texParams.magFilter = GL_LINEAR;
     m_texParams.wrapS = GL_CLAMP_TO_EDGE;

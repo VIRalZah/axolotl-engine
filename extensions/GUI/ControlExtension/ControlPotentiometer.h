@@ -76,7 +76,7 @@ public:
 protected:
     AX_SYNTHESIZE_RETAIN(Sprite*, m_pThumbSprite, ThumbSprite)
     AX_SYNTHESIZE_RETAIN(ProgressTimer*, m_pProgressTimer, ProgressTimer)
-    AX_SYNTHESIZE(Point, m_tPreviousLocation, PreviousLocation)
+    AX_SYNTHESIZE(Vec2, m_tPreviousLocation, PreviousLocation)
     /** Contains the receiver’s current value. */
     float           m_fValue; 
     /** Contains the minimum value of the receiver. 
@@ -86,18 +86,18 @@ protected:
     * The default value of this property is 1.0. */
     float           m_fMaximumValue;
     /** Factorize the event dispath into these methods. */
-    void potentiometerBegan(Point location);
-    void potentiometerMoved(Point location);
-    void potentiometerEnded(Point location);
+    void potentiometerBegan(Vec2 location);
+    void potentiometerMoved(Vec2 location);
+    void potentiometerEnded(Vec2 location);
 
     /** Returns the distance between the point1 and point2. */
-    float distanceBetweenPointAndPoint(Point point1, Point point2);
+    float distanceBetweenPointAndPoint(Vec2 point1, Vec2 point2);
     /** Returns the angle in degree between line1 and line2. */
     float angleInDegreesBetweenLineFromPoint_toPoint_toLineFromPoint_toPoint(
-        Point beginLineA, 
-        Point endLineA,
-        Point beginLineB,
-        Point endLineB);
+        Vec2 beginLineA, 
+        Vec2 endLineA,
+        Vec2 beginLineB,
+        Vec2 endLineB);
 
 };
 

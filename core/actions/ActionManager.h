@@ -29,8 +29,8 @@ THE SOFTWARE.
 #define __ACTION_AXACTION_MANAGER_H__
 
 #include "Action.h"
-#include "cocoa/Array.h"
-#include "cocoa/Object.h"
+#include "base/Array.h"
+#include "base/Object.h"
 
 NS_AX_BEGIN
 

@@ -36,7 +36,7 @@ THE SOFTWARE.
 
 #include "sprite_nodes/SpriteFrame.h"
 #include "textures/Texture2D.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include <set>
 #include <string>
 

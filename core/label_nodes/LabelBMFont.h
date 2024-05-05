@@ -208,7 +208,7 @@ public:
     static void purgeCachedData();
 
     /** creates a bitmap font atlas with an initial string and the FNT file */
-    static LabelBMFont * create(const char *str, const char *fntFile, float width, CCTextAlignment alignment, Point imageOffset);
+    static LabelBMFont * create(const char *str, const char *fntFile, float width, CCTextAlignment alignment, Vec2 imageOffset);
     
 	static LabelBMFont * create(const char *str, const char *fntFile, float width, CCTextAlignment alignment);
 
@@ -222,7 +222,7 @@ public:
 
     bool init();
     /** init a bitmap font atlas with an initial string and the FNT file */
-    bool initWithString(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, Point imageOffset = Point::ZERO);
+    bool initWithString(const char *str, const char *fntFile, float width = kCCLabelAutomaticWidth, CCTextAlignment alignment = kCCTextAlignmentLeft, Vec2 imageOffset = Vec2::ZERO);
 
     /** updates the font chars based on the string to render */
     void createFontChars();
@@ -232,7 +232,7 @@ public:
 
     virtual const std::string& getString(void);
     virtual void setCString(const char *label);
-    virtual void setAnchorPoint(const Point& var);
+    virtual void setAnchorPoint(const Vec2& var);
     virtual void updateLabel();
     virtual void setAlignment(CCTextAlignment alignment);
     virtual void setWidth(float width);
@@ -289,7 +289,7 @@ protected:
     
     bool m_bLineBreakWithoutSpaces;
     // offset of the texture atlas
-    Point    m_tImageOffset;
+    Vec2    m_tImageOffset;
     
     // reused char
     Sprite *m_pReusedChar;

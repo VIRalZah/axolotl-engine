@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "textures/Texture2D.h"
 #include "ccMacros.h"
 #include "sprite_nodes/SpriteFrame.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 
@@ -188,7 +188,7 @@ void Animation::addSpriteFrame(SpriteFrame *pFrame)
 void Animation::addSpriteFrameWithFileName(const char *pszFileName)
 {
     Texture2D *pTexture = TextureCache::sharedTextureCache()->addImage(pszFileName);
-    Rect rect = CCRectZero;
+    Rect rect = Rect::ZERO;
     rect.size = pTexture->getContentSize();
     SpriteFrame *pFrame = SpriteFrame::createWithTexture(pTexture, rect);
     addSpriteFrame(pFrame);

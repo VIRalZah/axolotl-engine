@@ -26,8 +26,8 @@ THE SOFTWARE.
 #ifndef __AX_ANIMATION_CACHE_H__
 #define __AX_ANIMATION_CACHE_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Dictionary.h"
+#include "base/Object.h"
+#include "base/Dictionary.h"
 
 #include <string>
 

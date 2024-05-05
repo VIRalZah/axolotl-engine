@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __AXSCHEDULER_H__
 #define __AXSCHEDULER_H__
 
-#include "cocoa/Object.h"
+#include "Object.h"
 #include "support/data_support/uthash.h"
 
 NS_AX_BEGIN
@@ -77,9 +77,6 @@ public:
      */
     bool initWithTarget(Object *pTarget, SEL_SCHEDULE pfnSelector, float fSeconds, unsigned int nRepeat, float fDelay);
     
-    /** Initializes a timer with a script callback function and an interval in seconds. */
-    bool initWithScriptHandler(int nHandler, float fSeconds);
-    
     /** triggers the timer */
     void update(float dt);
     
@@ -93,14 +90,6 @@ public:
      *  @lua NA
      */
     static Timer* timerWithTarget(Object *pTarget, SEL_SCHEDULE pfnSelector, float fSeconds);
-    
-    /** Allocates a timer with a script callback function and an interval in seconds. */
-    static Timer* timerWithScriptHandler(int nHandler, float fSeconds);
-    /**
-     *  @lua NA
-     */
-    inline int getScriptHandler() { return m_nScriptHandler; };
-
 protected:
     Object *m_pTarget;
     float m_fElapsed;
@@ -111,8 +100,6 @@ protected:
     float m_fDelay;
     float m_fInterval;
     SEL_SCHEDULE m_pfnSelector;
-    
-    int m_nScriptHandler;
 };
 
 //
@@ -226,19 +213,6 @@ public:
       */
     void unscheduleAllWithMinPriority(int nMinPriority);
 
-    /** The scheduled script callback will be called every 'interval' seconds.
-     If paused is YES, then it won't be called until it is resumed.
-     If 'interval' is 0, it will be called every frame.
-     return schedule script entry ID, used for unscheduleScriptFunc().
-     @js NA
-     */
-    unsigned int scheduleScriptFunc(unsigned int nHandler, float fInterval, bool bPaused);
-    
-    /** Unschedule a script entry. 
-     *  @js NA
-     */
-    void unscheduleScriptEntry(unsigned int uScheduleScriptEntryID);
-
     /** Pauses the target.
      All scheduled selectors/update for a given target won't be 'ticked' until the target is resumed.
      If the target is not present, nothing happens.
@@ -308,7 +282,6 @@ protected:
     bool m_bCurrentTargetSalvaged;
     // If true unschedule will not remove anything from a hash. Elements will only be marked for deletion.
     bool m_bUpdateHashLocked;
-    Array* m_pScriptHandlerEntries;
 };
 
 // end of global group

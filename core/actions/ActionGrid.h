@@ -77,11 +77,11 @@ public:
     /** returns the grid */
     virtual GridBase* getGrid(void);
     /** returns the vertex than belongs to certain position in the grid */
-    ccVertex3F vertex(const Point& position);
+    ccVertex3F vertex(const Vec2& position);
     /** returns the non-transformed vertex than belongs to certain position in the grid */
-    ccVertex3F originalVertex(const Point& position);
+    ccVertex3F originalVertex(const Vec2& position);
     /** sets a new vertex to a certain position of the grid */
-    void setVertex(const Point& position, const ccVertex3F& vertex);
+    void setVertex(const Vec2& position, const ccVertex3F& vertex);
 
 public:
     /** creates the action with size and duration 
@@ -96,11 +96,11 @@ class AX_DLL TiledGrid3DAction : public GridAction
 {
 public:
     /** returns the tile that belongs to a certain position of the grid */
-    ccQuad3 tile(const Point& position);
+    ccQuad3 tile(const Vec2& position);
     /** returns the non-transformed tile that belongs to a certain position of the grid */
-    ccQuad3 originalTile(const Point& position);
+    ccQuad3 originalTile(const Vec2& position);
     /** sets a new tile to a certain position of the grid */
-    void setTile(const Point& position, const ccQuad3& coords);
+    void setTile(const Vec2& position, const ccQuad3& coords);
 
     /** returns the grid */
     virtual GridBase* getGrid(void);

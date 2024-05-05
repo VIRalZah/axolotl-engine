@@ -28,7 +28,7 @@ THE SOFTWARE.
 #ifndef __AXScale9Sprite_H__
 #define __AXScale9Sprite_H__
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "../../ExtensionMacros.h"
 
 NS_AX_EXT_BEGIN

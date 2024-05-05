@@ -27,7 +27,7 @@ THE SOFTWARE.
 #define __AXTILE_MAP_ATLAS__
 
 
-#include "base_nodes/AtlasNode.h"
+#include "base/AtlasNode.h"
 
 NS_AX_BEGIN
 
@@ -82,17 +82,17 @@ public:
      For the moment only channel R is used
      @js getTileAt
      */
-    ccColor3B tileAt(const Point& position);
+    ccColor3B tileAt(const Vec2& position);
     /** sets a tile at position x,y.
     For the moment only channel R is used
     */
-    void setTile(const ccColor3B& tile, const Point& position);
+    void setTile(const ccColor3B& tile, const Vec2& position);
     /** dealloc the map from memory */
     void releaseMap();
 private:
     void loadTGAfile(const char *file);
     void calculateItemsToRender();
-    void updateAtlasValueAt(const Point& pos, const ccColor3B& value, unsigned int index);
+    void updateAtlasValueAt(const Vec2& pos, const ccColor3B& value, unsigned int index);
     void updateAtlasValues();
 
 protected:

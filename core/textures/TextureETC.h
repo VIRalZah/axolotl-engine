@@ -25,7 +25,7 @@
 #ifndef __AXETCTEXTURE_H__
 #define __AXETCTEXTURE_H__
 
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include "platform/PlatformMacros.h"
 #include "GL.h"
 

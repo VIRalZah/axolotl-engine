@@ -25,21 +25,21 @@ THE SOFTWARE.
 #ifndef __AX_AUTORELEASEPOOL_H__
 #define __AX_AUTORELEASEPOOL_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Array.h"
+#include "Object.h"
+#include "Array.h"
 
 NS_AX_BEGIN
 
 class AX_DLL AutoreleasePool : public Object
 {
 public:
-    AutoreleasePool(void);
-    ~AutoreleasePool(void);
+    AutoreleasePool();
+    virtual ~AutoreleasePool();
 
-    void addObject(Object *pObject);
-    void removeObject(Object *pObject);
+    virtual void addObject(Object *pObject);
+    virtual void removeObject(Object *pObject);
 
-    void clear();
+    virtual void clear();
 protected:
     Array* _managedObjectArray;
 };

@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __AX_EGLVIEW_TIZEN_H__
 #define __AX_EGLVIEW_TIZEN_H__
 
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 #include <FBase.h>
 

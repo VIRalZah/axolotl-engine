@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __AXSCENE_H__
 #define __AXSCENE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 
 NS_AX_BEGIN
 

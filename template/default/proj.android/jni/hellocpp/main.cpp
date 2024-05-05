@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "EventType.h"
 #include "platform/android/jni/JniHelper.h"
 #include <jni.h>

@@ -74,7 +74,7 @@ LabelTTF * LabelTTF::create()
 LabelTTF * LabelTTF::create(const std::string& string, const char *fontName, float fontSize)
 {
     return LabelTTF::create(string, fontName, fontSize,
-                              CCSizeZero, kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop);
+                              Size::ZERO, kCCTextAlignmentCenter, kCCVerticalTextAlignmentTop);
 }
 
 LabelTTF * LabelTTF::create(const std::string& string, const char *fontName, float fontSize,
@@ -123,7 +123,7 @@ bool LabelTTF::initWithString(const std::string& string, const char *fontName, f
 bool LabelTTF::initWithString(const std::string& string, const char *fontName, float fontSize)
 {
     return this->initWithString(string, fontName, fontSize, 
-                                CCSizeZero, kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
+                                Size::ZERO, kCCTextAlignmentLeft, kCCVerticalTextAlignmentTop);
 }
 
 bool LabelTTF::initWithString(const std::string& string, const char *fontName, float fontSize,
@@ -135,7 +135,7 @@ bool LabelTTF::initWithString(const std::string& string, const char *fontName, f
         // shader program
         this->setShaderProgram(ShaderCache::sharedShaderCache()->programForKey(SHADER_PROGRAM));
         
-        m_tDimensions = CCSizeMake(dimensions.width, dimensions.height);
+        m_tDimensions = Size(dimensions.width, dimensions.height);
         m_hAlignment  = hAlignment;
         m_vAlignment  = vAlignment;
         m_pFontName   = new std::string(fontName);
@@ -318,7 +318,7 @@ bool LabelTTF::updateTexture()
     tex->release();
     
     // set the size in the sprite
-    Rect rect =CCRectZero;
+    Rect rect =Rect::ZERO;
     rect.size   = m_pobTexture->getContentSize();
     this->setTextureRect(rect);
     
@@ -473,7 +473,7 @@ axFontDefinition *LabelTTF::getTextDefinition()
 
 void LabelTTF::_updateWithTextDefinition(axFontDefinition & textDefinition, bool mustUpdateTexture)
 {
-    m_tDimensions = CCSizeMake(textDefinition.m_dimensions.width, textDefinition.m_dimensions.height);
+    m_tDimensions = Size(textDefinition.m_dimensions.width, textDefinition.m_dimensions.height);
     m_hAlignment  = textDefinition.m_alignment;
     m_vAlignment  = textDefinition.m_vertAlignment;
     

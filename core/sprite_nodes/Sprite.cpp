@@ -38,9 +38,9 @@ THE SOFTWARE.
 #include "shaders/GLProgram.h"
 #include "base/Director.h"
 #include "support/PointExtension.h"
-#include "cocoa/Geometry.h"
+
 #include "textures/Texture2D.h"
-#include "cocoa/AffineTransform.h"
+#include "base/AffineTransform.h"
 #include "support/TransformUtils.h"
 #include "support/Profiling.h"
 #include "platform/Image.h"
@@ -145,7 +145,7 @@ Sprite* Sprite::create()
 
 bool Sprite::init(void)
 {
-    return initWithTexture(NULL, CCRectZero);
+    return initWithTexture(NULL, Rect::ZERO);
 }
 
 // designated initializer
@@ -166,10 +166,10 @@ bool Sprite::initWithTexture(Texture2D *pTexture, const Rect& rect, bool rotated
         m_bFlipX = m_bFlipY = false;
         
         // default transform anchor: center
-        setAnchorPoint(Point(0.5f, 0.5f));
+        setAnchorPoint(Vec2(0.5f, 0.5f));
         
         // zwoptex default values
-        m_obOffsetPosition = Point::ZERO;
+        m_obOffsetPosition = Vec2::ZERO;
         
         m_bHasChildren = false;
         
@@ -211,7 +211,7 @@ bool Sprite::initWithTexture(Texture2D *pTexture)
 {
     AXAssert(pTexture != NULL, "Invalid texture for sprite");
 
-    Rect rect = CCRectZero;
+    Rect rect = Rect::ZERO;
     rect.size = pTexture->getContentSize();
     
     return initWithTexture(pTexture, rect);
@@ -224,7 +224,7 @@ bool Sprite::initWithFile(const char *pszFilename)
     Texture2D *pTexture = TextureCache::sharedTextureCache()->addImage(pszFilename);
     if (pTexture)
     {
-        Rect rect = CCRectZero;
+        Rect rect = Rect::ZERO;
         rect.size = pTexture->getContentSize();
         return initWithTexture(pTexture, rect);
     }
@@ -289,7 +289,7 @@ Sprite* Sprite::initWithCGImage(CGImageRef pImage, const char *pszKey)
     Texture2D *pTexture = TextureCache::sharedTextureCache()->addCGImage(pImage, pszKey);
 
     const Size& size = pTexture->getContentSize();
-    Rect rect = CCRectMake(0 ,0, size.width, size.height);
+    Rect rect = Rect(0 ,0, size.width, size.height);
 
     return initWithTexture(texture, rect);
 }
@@ -320,7 +320,7 @@ void Sprite::setTextureRect(const Rect& rect, bool rotated, const Size& untrimme
     setVertexRect(rect);
     setTextureCoords(rect);
 
-    Point relativeOffset = m_obUnflippedOffsetPositionFromCenter;
+    Vec2 relativeOffset = m_obUnflippedOffsetPositionFromCenter;
 
     // issue #732
     if (m_bFlipX)
@@ -533,11 +533,11 @@ void Sprite::updateTransform(void)
 
 #if AX_SPRITE_DEBUG_DRAW
     // draw bounding box
-    Point vertices[4] = {
-        Point( m_sQuad.bl.vertices.x, m_sQuad.bl.vertices.y ),
-        Point( m_sQuad.br.vertices.x, m_sQuad.br.vertices.y ),
-        Point( m_sQuad.tr.vertices.x, m_sQuad.tr.vertices.y ),
-        Point( m_sQuad.tl.vertices.x, m_sQuad.tl.vertices.y ),
+    Vec2 vertices[4] = {
+        Vec2( m_sQuad.bl.vertices.x, m_sQuad.bl.vertices.y ),
+        Vec2( m_sQuad.br.vertices.x, m_sQuad.br.vertices.y ),
+        Vec2( m_sQuad.tr.vertices.x, m_sQuad.tr.vertices.y ),
+        Vec2( m_sQuad.tl.vertices.x, m_sQuad.tl.vertices.y ),
     };
     ccDrawPoly(vertices, 4, true);
 #endif // AX_SPRITE_DEBUG_DRAW
@@ -586,20 +586,20 @@ void Sprite::draw(void)
 
 #if AX_SPRITE_DEBUG_DRAW == 1
     // draw bounding box
-    Point vertices[4]={
-        Point(m_sQuad.tl.vertices.x,m_sQuad.tl.vertices.y),
-        Point(m_sQuad.bl.vertices.x,m_sQuad.bl.vertices.y),
-        Point(m_sQuad.br.vertices.x,m_sQuad.br.vertices.y),
-        Point(m_sQuad.tr.vertices.x,m_sQuad.tr.vertices.y),
+    Vec2 vertices[4]={
+        Vec2(m_sQuad.tl.vertices.x,m_sQuad.tl.vertices.y),
+        Vec2(m_sQuad.bl.vertices.x,m_sQuad.bl.vertices.y),
+        Vec2(m_sQuad.br.vertices.x,m_sQuad.br.vertices.y),
+        Vec2(m_sQuad.tr.vertices.x,m_sQuad.tr.vertices.y),
     };
     ccDrawPoly(vertices, 4, true);
 #elif AX_SPRITE_DEBUG_DRAW == 2
     // draw texture box
     Size s = this->getTextureRect().size;
-    Point offsetPix = this->getOffsetPosition();
-    Point vertices[4] = {
-        Point(offsetPix.x,offsetPix.y), Point(offsetPix.x+s.width,offsetPix.y),
-        Point(offsetPix.x+s.width,offsetPix.y+s.height), Point(offsetPix.x,offsetPix.y+s.height)
+    Vec2 offsetPix = this->getOffsetPosition();
+    Vec2 vertices[4] = {
+        Vec2(offsetPix.x,offsetPix.y), Vec2(offsetPix.x+s.width,offsetPix.y),
+        Vec2(offsetPix.x+s.width,offsetPix.y+s.height), Vec2(offsetPix.x,offsetPix.y+s.height)
     };
     ccDrawPoly(vertices, 4, true);
 #endif // AX_SPRITE_DEBUG_DRAW
@@ -775,7 +775,7 @@ void Sprite::setDirtyRecursively(bool bValue)
                         }                                            \
                     }
 
-void Sprite::setPosition(const Point& pos)
+void Sprite::setPosition(const Vec2& pos)
 {
     Node::setPosition(pos);
     SET_DIRTY_RECURSIVELY();
@@ -835,7 +835,7 @@ void Sprite::setVertexZ(float fVertexZ)
     SET_DIRTY_RECURSIVELY();
 }
 
-void Sprite::setAnchorPoint(const Point& anchor)
+void Sprite::setAnchorPoint(const Vec2& anchor)
 {
     Node::setAnchorPoint(anchor);
     SET_DIRTY_RECURSIVELY();

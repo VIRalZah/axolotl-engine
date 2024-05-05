@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_EGLVIEW_ANDROID_H__
 #define __AX_EGLVIEW_ANDROID_H__
 
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 
 NS_AX_BEGIN

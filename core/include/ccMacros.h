@@ -36,10 +36,9 @@ THE SOFTWARE.
 
 #ifndef AXAssert
 #if AXOLOTL_DEBUG > 0
-extern bool AX_DLL AX_assert_script_compatible(const char *msg);
 #define AXAssert(cond, msg) do {                              \
       if (!(cond)) {                                          \
-        if (!AX_assert_script_compatible(msg) && strlen(msg)) \
+        if (strlen(msg)) \
           axolotl::log("Assert failed: %s", msg);           \
         AX_ASSERT(cond);                                      \
       } \
@@ -130,39 +129,39 @@ On iPhone it returns 2 if RetinaDisplay is On. Otherwise it returns 1
  Converts a rect in pixels to points
  */
 #define AX_RECT_PIXELS_TO_POINTS(__rect_in_pixels__)                                                                        \
-    CCRectMake( (__rect_in_pixels__).origin.x / AX_CONTENT_SCALE_FACTOR(), (__rect_in_pixels__).origin.y / AX_CONTENT_SCALE_FACTOR(),    \
+    Rect( (__rect_in_pixels__).origin.x / AX_CONTENT_SCALE_FACTOR(), (__rect_in_pixels__).origin.y / AX_CONTENT_SCALE_FACTOR(),    \
             (__rect_in_pixels__).size.width / AX_CONTENT_SCALE_FACTOR(), (__rect_in_pixels__).size.height / AX_CONTENT_SCALE_FACTOR() )
 
 /** @def AX_RECT_POINTS_TO_PIXELS
  Converts a rect in points to pixels
  */
 #define AX_RECT_POINTS_TO_PIXELS(__rect_in_points_points__)                                                                        \
-    CCRectMake( (__rect_in_points_points__).origin.x * AX_CONTENT_SCALE_FACTOR(), (__rect_in_points_points__).origin.y * AX_CONTENT_SCALE_FACTOR(),    \
+    Rect( (__rect_in_points_points__).origin.x * AX_CONTENT_SCALE_FACTOR(), (__rect_in_points_points__).origin.y * AX_CONTENT_SCALE_FACTOR(),    \
             (__rect_in_points_points__).size.width * AX_CONTENT_SCALE_FACTOR(), (__rect_in_points_points__).size.height * AX_CONTENT_SCALE_FACTOR() )
 
 /** @def AX_POINT_PIXELS_TO_POINTS
  Converts a rect in pixels to points
  */
 #define AX_POINT_PIXELS_TO_POINTS(__pixels__)                                                                        \
-Point( (__pixels__).x / AX_CONTENT_SCALE_FACTOR(), (__pixels__).y / AX_CONTENT_SCALE_FACTOR())
+Vec2( (__pixels__).x / AX_CONTENT_SCALE_FACTOR(), (__pixels__).y / AX_CONTENT_SCALE_FACTOR())
 
 /** @def AX_POINT_POINTS_TO_PIXELS
  Converts a rect in points to pixels
  */
 #define AX_POINT_POINTS_TO_PIXELS(__points__)                                                                        \
-Point( (__points__).x * AX_CONTENT_SCALE_FACTOR(), (__points__).y * AX_CONTENT_SCALE_FACTOR())
+Vec2( (__points__).x * AX_CONTENT_SCALE_FACTOR(), (__points__).y * AX_CONTENT_SCALE_FACTOR())
 
 /** @def AX_POINT_PIXELS_TO_POINTS
  Converts a rect in pixels to points
  */
 #define AX_SIZE_PIXELS_TO_POINTS(__size_in_pixels__)                                                                        \
-CCSizeMake( (__size_in_pixels__).width / AX_CONTENT_SCALE_FACTOR(), (__size_in_pixels__).height / AX_CONTENT_SCALE_FACTOR())
+Size( (__size_in_pixels__).width / AX_CONTENT_SCALE_FACTOR(), (__size_in_pixels__).height / AX_CONTENT_SCALE_FACTOR())
 
 /** @def AX_POINT_POINTS_TO_PIXELS
  Converts a rect in points to pixels
  */
 #define AX_SIZE_POINTS_TO_PIXELS(__size_in_points__)                                                                        \
-CCSizeMake( (__size_in_points__).width * AX_CONTENT_SCALE_FACTOR(), (__size_in_points__).height * AX_CONTENT_SCALE_FACTOR())
+Size( (__size_in_points__).width * AX_CONTENT_SCALE_FACTOR(), (__size_in_points__).height * AX_CONTENT_SCALE_FACTOR())
 
 
 #ifndef FLT_EPSILON

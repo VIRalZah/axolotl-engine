@@ -27,7 +27,7 @@ THE SOFTWARE.
 #include "platform/Common.h"
 #include "ccMacros.h"
 #include "Application.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include <FApp.h>
 #include <FBase.h>
 #include <FIo.h>

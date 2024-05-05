@@ -1,7 +1,7 @@
 #ifndef __AXEGLVIEWPROTOCOL_H__
 #define __AXEGLVIEWPROTOCOL_H__
 
-#include "ccTypes.h"
+#include "base/Types.h"
 
 enum ResolutionPolicy
 {
@@ -94,7 +94,7 @@ public:
     /**
      * Get the visible origin point of opengl viewport.
      */
-    virtual Point getVisibleOrigin() const;
+    virtual Vec2 getVisibleOrigin() const;
 
     /**
      * Set the design resolution size.

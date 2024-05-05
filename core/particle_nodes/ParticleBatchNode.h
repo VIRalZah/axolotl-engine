@@ -29,7 +29,7 @@
 #ifndef __AXPARTICLEBATCHNODE_H__
 #define __AXPARTICLEBATCHNODE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Protocols.h"
 
 NS_AX_BEGIN

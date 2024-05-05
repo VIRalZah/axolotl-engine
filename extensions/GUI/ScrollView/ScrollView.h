@@ -26,7 +26,7 @@
 #ifndef __AXSCROLLVIEW_H__
 #define __AXSCROLLVIEW_H__
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "ExtensionMacros.h"
 
 NS_AX_EXT_BEGIN
@@ -111,8 +111,8 @@ public:
      * @param offset new offset
      * @param If YES, the view scrolls to the new offset
      */
-    void setContentOffset(Point offset, bool animated = false);
-    Point getContentOffset();
+    void setContentOffset(Vec2 offset, bool animated = false);
+    Vec2 getContentOffset();
     /**
      * Sets a new content offset. It ignores max/min offset. It just sets what's given. (just like UIKit's UIScrollView)
      * You can override the animation duration with this method.
@@ -120,7 +120,7 @@ public:
      * @param offset new offset
      * @param animation duration
      */
-    void setContentOffsetInDuration(Point offset, float dt); 
+    void setContentOffsetInDuration(Vec2 offset, float dt); 
 
     void setZoomScale(float s);
     /**
@@ -143,11 +143,11 @@ public:
     /**
      * Returns the current container's minimum offset. You may want this while you animate scrolling by yourself
      */
-    Point minContainerOffset();
+    Vec2 minContainerOffset();
     /**
      * Returns the current container's maximum offset. You may want this while you animate scrolling by yourself
      */
-    Point maxContainerOffset(); 
+    Vec2 maxContainerOffset(); 
     /**
      * Determines if a given node's bounding box is in visible bounds
      *
@@ -278,7 +278,7 @@ protected:
     /**
      * Content offset. Note that left-bottom point is the origin
      */
-    Point m_tContentOffset;
+    Vec2 m_tContentOffset;
 
     /**
      * Container holds scroll view contents, Sets the scrollable container object of the scroll view
@@ -291,11 +291,11 @@ protected:
     /**
      * max inset point to limit scrolling by touch
      */
-    Point m_fMaxInset;
+    Vec2 m_fMaxInset;
     /**
      * min inset point to limit scrolling by touch
      */
-    Point m_fMinInset;
+    Vec2 m_fMinInset;
     /**
      * Determines whether the scroll view is allowed to bounce or not.
      */
@@ -306,11 +306,11 @@ protected:
     /**
      * scroll speed
      */
-    Point m_tScrollDistance;
+    Vec2 m_tScrollDistance;
     /**
      * Touch point
      */
-    Point m_tTouchPoint;
+    Vec2 m_tTouchPoint;
     /**
      * length between two fingers
      */

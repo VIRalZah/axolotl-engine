@@ -4,7 +4,7 @@
 #include "../Classes/AppDelegate.h"
 
 // Cocos2dx headers
-#include "cocos2d.h"
+#include "axolotl.h"
 
 // Marmaladeheaders
 #include "IwGL.h"

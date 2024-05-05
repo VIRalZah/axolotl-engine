@@ -25,8 +25,8 @@ THE SOFTWARE.
 #ifndef __AXNOTIFICATIONCENTER_H__
 #define __AXNOTIFICATIONCENTER_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Array.h"
+#include "base/Object.h"
+#include "base/Array.h"
 
 NS_AX_BEGIN
 /**
@@ -70,15 +70,6 @@ public:
      */
     int removeAllObservers(Object *target);
 
-    /** @brief Registers one hander for script binding.
-     *  @note Only supports Lua Binding now.
-     *  @param handler The lua handler.
-     */
-    void registerScriptObserver(Object *target,int handler,const char* name);
-
-    /** Unregisters script observer */
-    void unregisterScriptObserver(Object *target,const char* name);
-    
     /** @brief Posts one notification event by name.
      *  @param name The name of this notification.
      */
@@ -89,18 +80,6 @@ public:
      *  @param object The extra parameter.
      */
     void postNotification(const char *name, Object *object);
-    
-    /** @brief Gets script handler.
-     *  @note Only supports Lua Binding now.
-     *  @return The script handle.
-     */
-    inline int getScriptHandler() { return m_scriptHandler; };
-    
-    /** @brief Gets observer script handler.
-     *  @param name The name of this notification.
-     *  @return The observer script handle.
-     */
-    int getObserverHandlerByName(const char* name);
 private:
     // internal functions
 
@@ -109,8 +88,7 @@ private:
     
     // variables
     //
-    Array *m_observers;
-    int     m_scriptHandler;
+    Array* m_observers;
 };
 
 /**
@@ -141,7 +119,6 @@ private:
     AX_PROPERTY_READONLY(SEL_CallFuncO, m_selector, Selector);
     AX_PROPERTY_READONLY(char *, m_name, Name);
     AX_PROPERTY_READONLY(Object *, m_object, Object);
-    AX_PROPERTY(int, m_nHandler,Handler);
 };
 
 NS_AX_END

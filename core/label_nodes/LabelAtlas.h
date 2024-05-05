@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __AXLABEL_ATLAS_H__
 #define __AXLABEL_ATLAS_H__
 
-#include "base_nodes/AtlasNode.h"
+#include "base/AtlasNode.h"
 
 NS_AX_BEGIN
 

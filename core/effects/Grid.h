@@ -25,15 +25,15 @@ THE SOFTWARE.
 #ifndef __EFFECTS_AXGRID_H__
 #define __EFFECTS_AXGRID_H__
 
-#include "cocoa/Object.h"
-#include "base_nodes/Node.h"
-#include "Camera.h"
-#include "ccTypes.h"
+#include "base/Object.h"
+#include "base/Node.h"
+#include "base/Camera.h"
+#include "base/Types.h"
 #include "textures/Texture2D.h"
 #include "base/Director.h"
 #include "kazmath/mat4.h"
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -88,11 +88,11 @@ public:
     /** pixels between the grids 
      *  @lua NA
      */
-    inline const Point& getStep(void) { return m_obStep; }
+    inline const Vec2& getStep(void) { return m_obStep; }
     /**
      *  @lua NA
      */
-    inline void setStep(const Point& step) { m_obStep = step; }
+    inline void setStep(const Vec2& step) { m_obStep = step; }
 
     /** is texture flipped 
      * @lua NA
@@ -151,11 +151,11 @@ protected:
     int  m_nReuseGrid;
     Size m_sGridSize;
     Texture2D *m_pTexture;
-    Point m_obStep;
+    Vec2 m_obStep;
     CCGrabber *m_pGrabber;
     bool m_bIsTextureFlipped;
     GLProgram* m_pShaderProgram;
-    ccDirectorProjection m_directorProjection;
+    Projection m_directorProjection;
 };
 
 /**
@@ -173,11 +173,11 @@ public:
     ~Grid3D(void);
 
     /** returns the vertex at a given position */
-    ccVertex3F vertex(const Point& pos);
+    ccVertex3F vertex(const Vec2& pos);
     /** returns the original (non-transformed) vertex at a given position */
-    ccVertex3F originalVertex(const Point& pos);
+    ccVertex3F originalVertex(const Vec2& pos);
     /** sets a new vertex at a given position */
-    void setVertex(const Point& pos, const ccVertex3F& vertex);
+    void setVertex(const Vec2& pos, const ccVertex3F& vertex);
 
     virtual void blit(void);
     virtual void reuse(void);
@@ -212,11 +212,11 @@ public:
     ~TiledGrid3D(void);
 
     /** returns the tile at the given position */
-    ccQuad3 tile(const Point& pos);
+    ccQuad3 tile(const Vec2& pos);
     /** returns the original tile (untransformed) at the given position */
-    ccQuad3 originalTile(const Point& pos);
+    ccQuad3 originalTile(const Vec2& pos);
     /** sets a new tile */
-    void setTile(const Point& pos, const ccQuad3& coords);
+    void setTile(const Vec2& pos, const ccQuad3& coords);
 
     virtual void blit(void);
     virtual void reuse(void);

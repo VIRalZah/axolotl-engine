@@ -1,5 +1,5 @@
 #include "../Classes/AppDelegate.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "EGLView.h"
 
 #include <stdlib.h>

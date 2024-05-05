@@ -34,7 +34,7 @@ THE SOFTWARE.
 #include "shaders/ccGLStateCache.h"
 #include "base/Director.h"
 #include "support/TransformUtils.h"
-#include "cocoa/Integer.h"
+#include "base/Integer.h"
 #include "platform/FileUtils.h"
 // external
 #include "kazmath/GL/matrix.h"
@@ -198,7 +198,7 @@ void LabelAtlas::setString(const std::string& label)
     m_sString = label;
     this->updateAtlasValues();
 
-    Size s = CCSizeMake(len * m_uItemWidth, m_uItemHeight);
+    Size s = Size(len * m_uItemWidth, m_uItemHeight);
 
     this->setContentSize(s);
 
@@ -218,9 +218,9 @@ void LabelAtlas::draw()
     AtlasNode::draw();
 
     const Size& s = this->getContentSize();
-    Point vertices[4]={
-        Point(0,0),Point(s.width,0),
-        Point(s.width,s.height),Point(0,s.height),
+    Vec2 vertices[4]={
+        Vec2(0,0),Vec2(s.width,0),
+        Vec2(s.width,s.height),Vec2(0,s.height),
     };
     ccDrawPoly(vertices, 4, true);
 }

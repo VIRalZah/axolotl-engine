@@ -23,7 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "EGLView.h"
-#include "cocoa/Set.h"
+#include "base/Set.h"
 #include "base/Director.h"
 #include "ccMacros.h"
 #include "base/Touch.h"

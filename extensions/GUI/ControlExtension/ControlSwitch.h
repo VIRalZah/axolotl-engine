@@ -79,7 +79,7 @@ public:
     bool hasMoved() { return m_bMoved; }
     virtual void setEnabled(bool enabled);
 
-    Point locationFromTouch(Touch* touch);
+    Vec2 locationFromTouch(Touch* touch);
     //events
     virtual bool ccTouchBegan(Touch *pTouch);
     virtual void ccTouchMoved(Touch *pTouch);

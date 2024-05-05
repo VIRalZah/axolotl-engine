@@ -26,7 +26,7 @@
 #ifndef __AXSORTING_H__
 #define __AXSORTING_H__
 
-#include "cocoa/Array.h"
+#include "base/Array.h"
 #include "ExtensionMacros.h"
 
 NS_AX_EXT_BEGIN

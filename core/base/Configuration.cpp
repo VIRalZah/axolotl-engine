@@ -23,20 +23,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/Configuration.h"
+#include "Configuration.h"
 #include "ccMacros.h"
 #include "ccConfig.h"
 #include <string.h>
-#include "cocoa/Dictionary.h"
-#include "cocoa/Integer.h"
-#include "cocoa/Bool.h"
-#include "cocos2d.h"
+#include "base/Dictionary.h"
+#include "base/Integer.h"
+#include "base/Bool.h"
+#include "axolotl.h"
 #include "platform/FileUtils.h"
 
 using namespace std;
 
 NS_AX_BEGIN
-
 
 Configuration* Configuration::s_gSharedConfiguration = NULL;
 
@@ -60,19 +59,19 @@ bool Configuration::init(void)
 	m_pValueDict = Dictionary::create();
 	m_pValueDict->retain();
 
-	m_pValueDict->setObject( String::create( cocos2dVersion() ), "cocos2d.x.version");
+	m_pValueDict->setObject(String::create(axolotlVersion().toString()), "axolotl.version");
 
 
 #if AX_ENABLE_PROFILERS
-	m_pValueDict->setObject( Bool::create(true), "cocos2d.x.compiled_with_profiler");
+	m_pValueDict->setObject( Bool::create(true), "axolotl.compiled_with_profiler");
 #else
-	m_pValueDict->setObject( Bool::create(false), "cocos2d.x.compiled_with_profiler");
+	m_pValueDict->setObject( Bool::create(false), "axolotl.compiled_with_profiler");
 #endif
 
 #if AX_ENABLE_GL_STATE_CACHE == 0
-	m_pValueDict->setObject( Bool::create(false), "cocos2d.x.compiled_with_gl_state_cache");
+	m_pValueDict->setObject( Bool::create(false), "axolotl.compiled_with_gl_state_cache");
 #else
-	m_pValueDict->setObject( Bool::create(true), "cocos2d.x.compiled_with_gl_state_cache");
+	m_pValueDict->setObject( Bool::create(true), "axolotl.compiled_with_gl_state_cache");
 #endif
 
 	return true;

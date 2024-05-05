@@ -88,28 +88,28 @@ bool CCControlStepper::initWithMinusSpriteAndPlusSprite(Sprite *minusSprite, Spr
     
         // Add the minus components
         this->setMinusSprite(minusSprite);
-		m_pMinusSprite->setPosition( Point(minusSprite->getContentSize().width / 2, minusSprite->getContentSize().height / 2) );
+		m_pMinusSprite->setPosition( Vec2(minusSprite->getContentSize().width / 2, minusSprite->getContentSize().height / 2) );
 		this->addChild(m_pMinusSprite);
         
         this->setMinusLabel( LabelTTF::create("-", AXControlStepperLabelFont, 40));
         m_pMinusLabel->setColor(AXControlStepperLabelColorDisabled);
-        m_pMinusLabel->setPosition(Point(m_pMinusSprite->getContentSize().width / 2, m_pMinusSprite->getContentSize().height / 2) );
+        m_pMinusLabel->setPosition(Vec2(m_pMinusSprite->getContentSize().width / 2, m_pMinusSprite->getContentSize().height / 2) );
         m_pMinusSprite->addChild(m_pMinusLabel);
         
         // Add the plus components 
         this->setPlusSprite( plusSprite );
-		m_pPlusSprite->setPosition( Point(minusSprite->getContentSize().width + plusSprite->getContentSize().width / 2, 
+		m_pPlusSprite->setPosition( Vec2(minusSprite->getContentSize().width + plusSprite->getContentSize().width / 2, 
                                                   minusSprite->getContentSize().height / 2) );
 		this->addChild(m_pPlusSprite);
         
         this->setPlusLabel( LabelTTF::create("+", AXControlStepperLabelFont, 40 ));
         m_pPlusLabel->setColor( AXControlStepperLabelColorEnabled );
-        m_pPlusLabel->setPosition( Point(m_pPlusSprite->getContentSize().width / 2, m_pPlusSprite->getContentSize().height / 2) );
+        m_pPlusLabel->setPosition( Vec2(m_pPlusSprite->getContentSize().width / 2, m_pPlusSprite->getContentSize().height / 2) );
         m_pPlusSprite->addChild(m_pPlusLabel);
         
         // Defines the content size
         Rect maxRect = CCControlUtils::CCRectUnion(m_pMinusSprite->boundingBox(), m_pPlusSprite->boundingBox());
-        this->setContentSize( CCSizeMake(m_pMinusSprite->getContentSize().width + m_pPlusSprite->getContentSize().height, maxRect.size.height) );
+        this->setContentSize( Size(m_pMinusSprite->getContentSize().width + m_pPlusSprite->getContentSize().height, maxRect.size.height) );
         return true;
     }
     return false;
@@ -251,7 +251,7 @@ void CCControlStepper::update(float dt)
 
 //#pragma mark CCControlStepper Private Methods
 
-void CCControlStepper::updateLayoutUsingTouchLocation(Point location)
+void CCControlStepper::updateLayoutUsingTouchLocation(Vec2 location)
 {
     if (location.x < m_pMinusSprite->getContentSize().width
         && m_dValue > m_dMinimumValue)
@@ -284,7 +284,7 @@ bool CCControlStepper::ccTouchBegan(Touch *pTouch)
         return false;
     }
     
-    Point location    = this->getTouchLocation(pTouch);
+    Vec2 location    = this->getTouchLocation(pTouch);
     this->updateLayoutUsingTouchLocation(location);
     
     m_bTouchInsideFlag = true;
@@ -301,7 +301,7 @@ void CCControlStepper::ccTouchMoved(Touch *pTouch)
 {
     if (this->isTouchInside(pTouch))
     {
-        Point location    = this->getTouchLocation(pTouch);
+        Vec2 location    = this->getTouchLocation(pTouch);
         this->updateLayoutUsingTouchLocation(location);
         
         if (!m_bTouchInsideFlag)
@@ -341,7 +341,7 @@ void CCControlStepper::ccTouchEnded(Touch *pTouch)
     
     if (this->isTouchInside(pTouch))
     {
-        Point location    = this->getTouchLocation(pTouch);
+        Vec2 location    = this->getTouchLocation(pTouch);
         
         this->setValue(m_dValue + ((location.x < m_pMinusSprite->getContentSize().width) ? (0.0-m_dStepValue) : m_dStepValue));
     }

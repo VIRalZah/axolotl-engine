@@ -30,7 +30,7 @@ THE SOFTWARE.
 #include "keypad_dispatcher/KeypadDispatcher.h"
 #include "base/EventDispatcher.h"
 #include "Application.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include "support/StringUtils.h"
 
 NS_AX_BEGIN
@@ -217,7 +217,7 @@ void EGLView::onMouseButton(int button, int action, int mods)
         if (GLFW_PRESS == action)
         {
             _captured = true;
-            if (getViewPortRect().equals(CCRectZero) ||
+            if (getViewPortRect().equals(Rect::ZERO) ||
                 getViewPortRect().containsPoint(_cursorPosition))
             {
                 int id = 0;
@@ -238,7 +238,7 @@ void EGLView::onMouseButton(int button, int action, int mods)
 
 void EGLView::onMouseMove(float x, float y)
 {
-    _cursorPosition.setPoint(x, y);
+    _cursorPosition.setVec2(x, y);
 
     if (_captured)
     {
@@ -466,7 +466,7 @@ Size getMonitorResolution(GLFWmonitor* monitor)
     {
         return Size(vidMode->width, vidMode->height);
     }
-    return CCSizeZero;
+    return Size::ZERO;
 }
 
 static std::map<int, KeyCode> _keys = {

@@ -108,7 +108,7 @@ To enabled set it to 1. Disabled by default.
  Default: 0,0 (bottom-left corner)
  */
 #ifndef AX_DIRECTOR_FPS_POSITION
-#define AX_DIRECTOR_FPS_POSITION Point(0,0)
+#define AX_DIRECTOR_FPS_POSITION Vec2(0,0)
 #endif
 
 /** @def AX_DIRECTOR_DISPATCH_FAST_EVENTS

@@ -32,7 +32,7 @@ NS_AX_BEGIN
 //implementation TMXObjectGroup
 
 TMXObjectGroup::TMXObjectGroup()
-    :m_tPositionOffset(Point::ZERO)
+    :m_tPositionOffset(Vec2::ZERO)
     ,m_sGroupName("")        
 {
     m_pObjects = Array::create();

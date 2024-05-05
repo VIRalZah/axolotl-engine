@@ -58,7 +58,7 @@ class AX_EX_DLL CCControlSlider: public CCControl
     virtual void setMaximumValue(float val);
     virtual void setEnabled(bool enabled);
     virtual bool isTouchInside(Touch * touch);
-    Point locationFromTouch(Touch* touch);
+    Vec2 locationFromTouch(Touch* touch);
 
     AX_SYNTHESIZE(float, m_minimumAllowedValue, MinimumAllowedValue);
     AX_SYNTHESIZE(float, m_maximumAllowedValue, MaximumAllowedValue);
@@ -98,16 +98,16 @@ public:
 
     virtual void needsLayout();
 protected:
-    void sliderBegan(Point location);
-    void sliderMoved(Point location);
-    void sliderEnded(Point location);
+    void sliderBegan(Vec2 location);
+    void sliderMoved(Vec2 location);
+    void sliderEnded(Vec2 location);
 
     virtual bool ccTouchBegan(Touch* touch);
     virtual void ccTouchMoved(Touch *pTouch);
     virtual void ccTouchEnded(Touch *pTouch);
 
 /** Returns the value for the given location. */
-    float valueForLocation(Point location);
+    float valueForLocation(Vec2 location);
 };
 
 // end of GUI group

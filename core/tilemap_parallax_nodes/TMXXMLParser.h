@@ -28,9 +28,9 @@ THE SOFTWARE.
 #ifndef __AX_TM_XML_PARSER__
 #define __AX_TM_XML_PARSER__
 
-#include "cocoa/Array.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/Geometry.h"
+#include "base/Array.h"
+#include "base/Dictionary.h"
+
 #include "platform/SAXParser.h"
 
 #include <string>
@@ -98,7 +98,7 @@ public:
     bool                m_bOwnTiles;
     unsigned int        m_uMinGID;
     unsigned int        m_uMaxGID;
-    Point             m_tOffset;
+    Vec2             m_tOffset;
 public:
     TMXLayerInfo();
     virtual ~TMXLayerInfo();

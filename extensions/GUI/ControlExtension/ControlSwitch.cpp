@@ -26,7 +26,7 @@
  */
 
 #include "ControlSwitch.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 
 NS_AX_EXT_BEGIN
 // CCControlSwitchSprite
@@ -195,21 +195,21 @@ void CCControlSwitchSprite::draw()
 
 void CCControlSwitchSprite::needsLayout()
 {
-    m_pOnSprite->setPosition(Point(m_pOnSprite->getContentSize().width / 2 + m_fSliderXPosition,
+    m_pOnSprite->setPosition(Vec2(m_pOnSprite->getContentSize().width / 2 + m_fSliderXPosition,
         m_pOnSprite->getContentSize().height / 2));
-    m_pOffSprite->setPosition(Point(m_pOnSprite->getContentSize().width + m_pOffSprite->getContentSize().width / 2 + m_fSliderXPosition, 
+    m_pOffSprite->setPosition(Vec2(m_pOnSprite->getContentSize().width + m_pOffSprite->getContentSize().width / 2 + m_fSliderXPosition, 
         m_pOffSprite->getContentSize().height / 2));
-    m_ThumbSprite->setPosition(Point(m_pOnSprite->getContentSize().width + m_fSliderXPosition,
+    m_ThumbSprite->setPosition(Vec2(m_pOnSprite->getContentSize().width + m_fSliderXPosition,
         m_pMaskTexture->getContentSize().height / 2));
 
     if (m_pOnLabel)
     {
-        m_pOnLabel->setPosition(Point(m_pOnSprite->getPosition().x - m_ThumbSprite->getContentSize().width / 6,
+        m_pOnLabel->setPosition(Vec2(m_pOnSprite->getPosition().x - m_ThumbSprite->getContentSize().width / 6,
             m_pOnSprite->getContentSize().height / 2));
     }
     if (m_pOffLabel)
     {
-        m_pOffLabel->setPosition(Point(m_pOffSprite->getPosition().x + m_ThumbSprite->getContentSize().width / 6,
+        m_pOffLabel->setPosition(Vec2(m_pOffSprite->getPosition().x + m_ThumbSprite->getContentSize().width / 6,
             m_pOffSprite->getContentSize().height / 2));
     }
 
@@ -317,11 +317,11 @@ bool CCControlSwitch::initWithMaskSprite(Sprite *maskSprite, Sprite * onSprite, 
                                            thumbSprite,
                                            onLabel,
                                            offLabel);
-        m_pSwitchSprite->setPosition(Point (m_pSwitchSprite->getContentSize().width / 2, m_pSwitchSprite->getContentSize().height / 2));
+        m_pSwitchSprite->setPosition(Vec2 (m_pSwitchSprite->getContentSize().width / 2, m_pSwitchSprite->getContentSize().height / 2));
         addChild(m_pSwitchSprite);
         
         ignoreAnchorPointForPosition(false);
-        setAnchorPoint(Point (0.5f, 0.5f));
+        setAnchorPoint(Vec2 (0.5f, 0.5f));
         setContentSize(m_pSwitchSprite->getContentSize());
         return true;
     }
@@ -379,9 +379,9 @@ void CCControlSwitch::setEnabled(bool enabled)
     } 
 }
 
-Point CCControlSwitch::locationFromTouch(Touch* pTouch)
+Vec2 CCControlSwitch::locationFromTouch(Touch* pTouch)
 {
-    Point touchLocation   = pTouch->getLocation();                      // Get the touch position
+    Vec2 touchLocation   = pTouch->getLocation();                      // Get the touch position
     touchLocation           = this->convertToNodeSpace(touchLocation);                  // Convert to the node space of this class
     
     return touchLocation;
@@ -396,7 +396,7 @@ bool CCControlSwitch::ccTouchBegan(Touch *pTouch)
     
     m_bMoved = false;
     
-    Point location = this->locationFromTouch(pTouch);
+    Vec2 location = this->locationFromTouch(pTouch);
     
     m_fInitialTouchXPosition = location.x - m_pSwitchSprite->getSliderXPosition();
     
@@ -408,8 +408,8 @@ bool CCControlSwitch::ccTouchBegan(Touch *pTouch)
 
 void CCControlSwitch::ccTouchMoved(Touch *pTouch)
 {
-    Point location    = this->locationFromTouch(pTouch);
-    location            = Point (location.x - m_fInitialTouchXPosition, 0);
+    Vec2 location    = this->locationFromTouch(pTouch);
+    location            = Vec2 (location.x - m_fInitialTouchXPosition, 0);
     
     m_bMoved              = true;
     
@@ -418,7 +418,7 @@ void CCControlSwitch::ccTouchMoved(Touch *pTouch)
 
 void CCControlSwitch::ccTouchEnded(Touch *pTouch)
 {
-    Point location   = this->locationFromTouch(pTouch);
+    Vec2 location   = this->locationFromTouch(pTouch);
     
     m_pSwitchSprite->getThumbSprite()->setColor(ccWHITE);
     
@@ -434,7 +434,7 @@ void CCControlSwitch::ccTouchEnded(Touch *pTouch)
 
 void CCControlSwitch::ccTouchCancelled(Touch *pTouch)
 {
-    Point location   = this->locationFromTouch(pTouch);
+    Vec2 location   = this->locationFromTouch(pTouch);
     
     m_pSwitchSprite->getThumbSprite()->setColor(ccWHITE);
     

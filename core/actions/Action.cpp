@@ -26,10 +26,10 @@ THE SOFTWARE.
 
 #include "Action.h"
 #include "ActionInterval.h"
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "support/PointExtension.h"
 #include "base/Director.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 //
@@ -211,7 +211,7 @@ Follow::~Follow()
     AX_SAFE_RELEASE(m_pobFollowedNode);
 }
 
-Follow* Follow::create(Node *pFollowedNode, const Rect& rect/* = CCRectZero*/)
+Follow* Follow::create(Node *pFollowedNode, const Rect& rect/* = Rect::ZERO*/)
 {
     Follow *pRet = new Follow();
     if (pRet && pRet->initWithTarget(pFollowedNode, rect))
@@ -223,13 +223,13 @@ Follow* Follow::create(Node *pFollowedNode, const Rect& rect/* = CCRectZero*/)
     return NULL;
 }
 
-bool Follow::initWithTarget(Node *pFollowedNode, const Rect& rect/* = CCRectZero*/)
+bool Follow::initWithTarget(Node *pFollowedNode, const Rect& rect/* = Rect::ZERO*/)
 {
     AXAssert(pFollowedNode != NULL, "");
  
     pFollowedNode->retain();
     m_pobFollowedNode = pFollowedNode;
-    if (rect.equals(CCRectZero))
+    if (rect.equals(Rect::ZERO))
     {
         m_bBoundarySet = false;
     }
@@ -241,7 +241,7 @@ bool Follow::initWithTarget(Node *pFollowedNode, const Rect& rect/* = CCRectZero
     m_bBoundaryFullyCovered = false;
 
     Size winSize = Director::sharedDirector()->getWinSize();
-    m_obFullScreenSize = Point(winSize.width, winSize.height);
+    m_obFullScreenSize = Vec2(winSize.width, winSize.height);
     m_obHalfScreenSize = PointMult(m_obFullScreenSize, 0.5f);
 
     if (m_bBoundarySet)
@@ -303,9 +303,9 @@ void Follow::step(float dt)
         if(m_bBoundaryFullyCovered)
             return;
 
-        Point tempPos = PointSub( m_obHalfScreenSize, m_pobFollowedNode->getPosition());
+        Vec2 tempPos = PointSub( m_obHalfScreenSize, m_pobFollowedNode->getPosition());
 
-        m_pTarget->setPosition(Point(clampf(tempPos.x, m_fLeftBoundary, m_fRightBoundary), 
+        m_pTarget->setPosition(Vec2(clampf(tempPos.x, m_fLeftBoundary, m_fRightBoundary), 
                                    clampf(tempPos.y, m_fBottomBoundary, m_fTopBoundary)));
     }
     else

@@ -1,4 +1,4 @@
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "AppDelegate.h"
 
 USING_NS_CC;

@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "Animation.h"
 #include "SpriteFrame.h"
 #include "SpriteFrameCache.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include "platform/FileUtils.h"
 
 using namespace std;

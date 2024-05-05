@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "axCArray.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 
 NS_AX_BEGIN
 

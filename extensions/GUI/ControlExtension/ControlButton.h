@@ -88,7 +88,7 @@ protected:
     /** Adjust the button zooming on touchdown. Default value is YES. */
     AX_PROPERTY(bool, m_zoomOnTouchDown, ZoomOnTouchDown);
 
-    AX_PROPERTY(Point, m_labelAnchorPoint, LabelAnchorPoint);
+    AX_PROPERTY(Vec2, m_labelAnchorPoint, LabelAnchorPoint);
 
     /* Override setter to affect a background sprite too */
     virtual GLubyte getOpacity(void);

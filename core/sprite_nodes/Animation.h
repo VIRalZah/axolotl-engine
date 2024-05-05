@@ -27,10 +27,10 @@ THE SOFTWARE.
 #define __AX_ANIMATION_H__
 
 #include "platform/PlatformConfig.h"
-#include "cocoa/Object.h"
-#include "cocoa/Array.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/Geometry.h"
+#include "base/Object.h"
+#include "base/Array.h"
+#include "base/Dictionary.h"
+
 #include "SpriteFrame.h"
 #include <string>
 

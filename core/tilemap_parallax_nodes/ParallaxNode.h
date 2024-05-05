@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __AXPARALLAX_NODE_H__
 #define __AXPARALLAX_NODE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 /*#include "support/data_support/axArray.h"*/
 
 NS_AX_BEGIN
@@ -62,16 +62,16 @@ public:
     virtual ~ParallaxNode();
 
     static ParallaxNode * create();
-    virtual void addChild(Node * child, unsigned int z, const Point& parallaxRatio, const Point& positionOffset);
+    virtual void addChild(Node * child, unsigned int z, const Vec2& parallaxRatio, const Vec2& positionOffset);
     // super methods
     virtual void addChild(Node * child, unsigned int zOrder, int tag);
     virtual void removeChild(Node* child, bool cleanup);
     virtual void removeAllChildrenWithCleanup(bool cleanup);
     virtual void visit(void);
 private:
-    Point absolutePosition();
+    Vec2 absolutePosition();
 protected:
-    Point    m_tLastPosition;
+    Vec2    m_tLastPosition;
 };
 
 // end of tilemap_parallax_nodes group

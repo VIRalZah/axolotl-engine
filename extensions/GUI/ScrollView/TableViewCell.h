@@ -26,7 +26,7 @@
 #ifndef __AXTABLEVIEWCELL_H__
 #define __AXTABLEVIEWCELL_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Sorting.h"
 
 NS_AX_EXT_BEGIN

@@ -27,10 +27,10 @@ THE SOFTWARE.
 #ifndef __AXTMX_OBJECT_GROUP_H__
 #define __AXTMX_OBJECT_GROUP_H__
 
-#include "cocoa/Geometry.h"
-#include "cocoa/String.h"
-#include "cocoa/Array.h"
-#include "cocoa/Dictionary.h"
+
+#include "base/String.h"
+#include "base/Array.h"
+#include "base/Dictionary.h"
 
 NS_AX_BEGIN
 
@@ -45,7 +45,7 @@ NS_AX_BEGIN
 class AX_DLL TMXObjectGroup : public Object
 {
     /** offset position of child objects */
-    AX_SYNTHESIZE_PASS_BY_REF(Point, m_tPositionOffset, PositionOffset);
+    AX_SYNTHESIZE_PASS_BY_REF(Vec2, m_tPositionOffset, PositionOffset);
     /** list of properties stored in a dictionary */
     AX_PROPERTY(Dictionary*, m_pProperties, Properties);
     /** array of the objects */

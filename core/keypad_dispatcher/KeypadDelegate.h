@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __AXKEYPAD_DELEGATE_H__
 
 
-#include "cocoa/Object.h"
+#include "base/Object.h"
 
 NS_AX_BEGIN
 

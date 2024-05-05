@@ -35,7 +35,7 @@
 #include "ccMacros.h"
 #include "support/PointExtension.h"
 #include "ActionCatmullRom.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 using namespace std;
 
@@ -67,18 +67,18 @@ PointArray* PointArray::create(unsigned int capacity)
 
 bool PointArray::initWithCapacity(unsigned int capacity)
 {
-    m_pControlPoints = new vector<Point*>();
+    m_pControlPoints = new vector<Vec2*>();
     
     return true;
 }
 
 Object* PointArray::copyWithZone(axolotl::Zone *zone)
 {
-    vector<Point*> *newArray = new vector<Point*>();
-    vector<Point*>::iterator iter;
+    vector<Vec2*> *newArray = new vector<Vec2*>();
+    vector<Vec2*>::iterator iter;
     for (iter = m_pControlPoints->begin(); iter != m_pControlPoints->end(); ++iter)
     {
-        newArray->push_back(new Point((*iter)->x, (*iter)->y));
+        newArray->push_back(new Vec2((*iter)->x, (*iter)->y));
     }
     
     PointArray *points = new PointArray();
@@ -90,7 +90,7 @@ Object* PointArray::copyWithZone(axolotl::Zone *zone)
 
 PointArray::~PointArray()
 {
-    vector<Point*>::iterator iter;
+    vector<Vec2*>::iterator iter;
     for (iter = m_pControlPoints->begin(); iter != m_pControlPoints->end(); ++iter)
     {
         delete *iter;
@@ -100,17 +100,17 @@ PointArray::~PointArray()
 
 PointArray::PointArray() :m_pControlPoints(NULL){}
 
-const std::vector<Point*>* PointArray::getControlPoints()
+const std::vector<Vec2*>* PointArray::getControlPoints()
 {
     return m_pControlPoints;
 }
 
-void PointArray::setControlPoints(vector<Point*> *controlPoints)
+void PointArray::setControlPoints(vector<Vec2*> *controlPoints)
 {
     AXAssert(controlPoints != NULL, "control points should not be NULL");
     
     // delete old points
-    vector<Point*>::iterator iter;
+    vector<Vec2*>::iterator iter;
     for (iter = m_pControlPoints->begin(); iter != m_pControlPoints->end(); ++iter)
     {
         delete *iter;
@@ -120,35 +120,35 @@ void PointArray::setControlPoints(vector<Point*> *controlPoints)
     m_pControlPoints = controlPoints;
 }
 
-void PointArray::addControlPoint(Point controlPoint)
+void PointArray::addControlPoint(Vec2 controlPoint)
 {    
-    m_pControlPoints->push_back(new Point(controlPoint.x, controlPoint.y));
+    m_pControlPoints->push_back(new Vec2(controlPoint.x, controlPoint.y));
 }
 
-void PointArray::insertControlPoint(Point &controlPoint, unsigned int index)
+void PointArray::insertControlPoint(Vec2 &controlPoint, unsigned int index)
 {
-    Point *temp = new Point(controlPoint.x, controlPoint.y);
+    Vec2 *temp = new Vec2(controlPoint.x, controlPoint.y);
     m_pControlPoints->insert(m_pControlPoints->begin() + index, temp);
 }
 
-Point PointArray::getControlPointAtIndex(unsigned int index)
+Vec2 PointArray::getControlPointAtIndex(unsigned int index)
 {
     index = MIN(m_pControlPoints->size()-1, MAX(index, 0));
     return *(m_pControlPoints->at(index));
 }
 
-void PointArray::replaceControlPoint(axolotl::Point &controlPoint, unsigned int index)
+void PointArray::replaceControlPoint(axolotl::Vec2 &controlPoint, unsigned int index)
 {
 
-    Point *temp = m_pControlPoints->at(index);
+    Vec2 *temp = m_pControlPoints->at(index);
     temp->x = controlPoint.x;
     temp->y = controlPoint.y;
 }
 
 void PointArray::removeControlPointAtIndex(unsigned int index)
 {
-    vector<Point*>::iterator iter = m_pControlPoints->begin() + index;
-    Point* pRemovedPoint = *iter;
+    vector<Vec2*>::iterator iter = m_pControlPoints->begin() + index;
+    Vec2* pRemovedPoint = *iter;
     m_pControlPoints->erase(iter);
     delete pRemovedPoint;
 }
@@ -160,13 +160,13 @@ unsigned int PointArray::count()
 
 PointArray* PointArray::reverse()
 {
-    vector<Point*> *newArray = new vector<Point*>();
-    vector<Point*>::reverse_iterator iter;
-    Point *point = NULL;
+    vector<Vec2*> *newArray = new vector<Vec2*>();
+    vector<Vec2*>::reverse_iterator iter;
+    Vec2 *point = NULL;
     for (iter = m_pControlPoints->rbegin(); iter != m_pControlPoints->rend(); ++iter)
     {
         point = *iter;
-        newArray->push_back(new Point(point->x, point->y));
+        newArray->push_back(new Vec2(point->x, point->y));
     }
     PointArray *config = PointArray::create(0);
     config->setControlPoints(newArray);
@@ -177,8 +177,8 @@ PointArray* PointArray::reverse()
 void PointArray::reverseInline()
 {
     unsigned int l = m_pControlPoints->size();
-    Point *p1 = NULL;
-    Point *p2 = NULL;
+    Vec2 *p1 = NULL;
+    Vec2 *p2 = NULL;
     int x, y;
     for (unsigned int i = 0; i < l/2; ++i)
     {
@@ -197,7 +197,7 @@ void PointArray::reverseInline()
 }
 
 // CatmullRom Spline formula:
-Point ccCardinalSplineAt(Point &p0, Point &p1, Point &p2, Point &p3, float tension, float t)
+Vec2 ccCardinalSplineAt(Vec2 &p0, Vec2 &p1, Vec2 &p2, Vec2 &p3, float tension, float t)
 {
     float t2 = t * t;
     float t3 = t2 * t;
@@ -215,7 +215,7 @@ Point ccCardinalSplineAt(Point &p0, Point &p1, Point &p2, Point &p3, float tensi
     float x = (p0.x*b1 + p1.x*b2 + p2.x*b3 + p3.x*b4);
     float y = (p0.y*b1 + p1.y*b2 + p2.y*b3 + p3.y*b4);
 	
-	return Point(x,y);
+	return Vec2(x,y);
 }
 
 /* Implementation of CardinalSplineTo
@@ -276,7 +276,7 @@ void CardinalSplineTo::startWithTarget(axolotl::Node *pTarget)
     m_fDeltaT = (float) 1 / (m_pPoints->count() - 1);
 
     m_previousPosition = pTarget->getPosition();
-    m_accumulatedDiff = Point::ZERO;
+    m_accumulatedDiff = Vec2::ZERO;
 }
 
 CardinalSplineTo* CardinalSplineTo::copyWithZone(axolotl::Zone *pZone)
@@ -322,17 +322,17 @@ void CardinalSplineTo::update(float time)
     }
     
 	// Interpolate    
-    Point pp0 = m_pPoints->getControlPointAtIndex(p-1);
-    Point pp1 = m_pPoints->getControlPointAtIndex(p+0);
-    Point pp2 = m_pPoints->getControlPointAtIndex(p+1);
-    Point pp3 = m_pPoints->getControlPointAtIndex(p+2);
+    Vec2 pp0 = m_pPoints->getControlPointAtIndex(p-1);
+    Vec2 pp1 = m_pPoints->getControlPointAtIndex(p+0);
+    Vec2 pp2 = m_pPoints->getControlPointAtIndex(p+1);
+    Vec2 pp3 = m_pPoints->getControlPointAtIndex(p+2);
 	
-    Point newPos = ccCardinalSplineAt(pp0, pp1, pp2, pp3, m_fTension, lt);
+    Vec2 newPos = ccCardinalSplineAt(pp0, pp1, pp2, pp3, m_fTension, lt);
 	
 #if AX_ENABLE_STACKABLE_ACTIONS
     // Support for stacked actions
     Node *node = m_pTarget;
-    Point diff = PointSub( node->getPosition(), m_previousPosition);
+    Vec2 diff = PointSub( node->getPosition(), m_previousPosition);
     if( diff.x !=0 || diff.y != 0 ) {
         m_accumulatedDiff = PointAdd( m_accumulatedDiff, diff);
         newPos = PointAdd( newPos, m_accumulatedDiff);
@@ -342,7 +342,7 @@ void CardinalSplineTo::update(float time)
     this->updatePosition(newPos);
 }
 
-void CardinalSplineTo::updatePosition(axolotl::Point &newPos)
+void CardinalSplineTo::updatePosition(axolotl::Vec2 &newPos)
 {
     m_pTarget->setPosition(newPos);
     m_previousPosition = newPos;
@@ -380,9 +380,9 @@ CardinalSplineBy::CardinalSplineBy() : m_startPosition(0,0)
 {
 }
 
-void CardinalSplineBy::updatePosition(axolotl::Point &newPos)
+void CardinalSplineBy::updatePosition(axolotl::Vec2 &newPos)
 {
-    Point p = PointAdd(newPos, m_startPosition);
+    Vec2 p = PointAdd(newPos, m_startPosition);
     m_pTarget->setPosition(p);
     m_previousPosition = p;
 }
@@ -394,11 +394,11 @@ ActionInterval* CardinalSplineBy::reverse()
 	//
 	// convert "absolutes" to "diffs"
 	//
-    Point p = copyConfig->getControlPointAtIndex(0);
+    Vec2 p = copyConfig->getControlPointAtIndex(0);
     for (unsigned int i = 1; i < copyConfig->count(); ++i)
     {
-        Point current = copyConfig->getControlPointAtIndex(i);
-        Point diff = PointSub(current, p);
+        Vec2 current = copyConfig->getControlPointAtIndex(i);
+        Vec2 diff = PointSub(current, p);
         copyConfig->replaceControlPoint(diff, i);
         
         p = current;
@@ -420,9 +420,9 @@ ActionInterval* CardinalSplineBy::reverse()
     
     for (unsigned int i = 1; i < pReverse->count(); ++i)
     {
-        Point current = pReverse->getControlPointAtIndex(i);
+        Vec2 current = pReverse->getControlPointAtIndex(i);
         current = PointNeg(current);
-        Point abs = PointAdd(current, p);
+        Vec2 abs = PointAdd(current, p);
         pReverse->replaceControlPoint(abs, i);
         
         p = abs;

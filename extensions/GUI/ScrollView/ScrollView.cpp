@@ -105,7 +105,7 @@ bool CCScrollView::initWithViewSize(Size size, Node *container/* = NULL*/)
         {
             m_pContainer = Layer::create();
             this->m_pContainer->ignoreAnchorPointForPosition(false);
-            this->m_pContainer->setAnchorPoint(Point(0.0f, 0.0f));
+            this->m_pContainer->setAnchorPoint(Vec2(0.0f, 0.0f));
         }
 
         this->setViewSize(size);
@@ -115,9 +115,9 @@ bool CCScrollView::initWithViewSize(Size size, Node *container/* = NULL*/)
         _delegate = NULL;
         m_bBounceable = true;
         m_bClippingToBounds = true;
-        //m_pContainer->setContentSize(CCSizeZero);
+        //m_pContainer->setContentSize(Size::ZERO);
         m_eDirection  = kCCScrollViewDirectionBoth;
-        m_pContainer->setPosition(Point(0.0f, 0.0f));
+        m_pContainer->setPosition(Vec2(0.0f, 0.0f));
         m_fTouchLength = 0.0f;
         
         this->addChild(m_pContainer);
@@ -130,18 +130,18 @@ bool CCScrollView::initWithViewSize(Size size, Node *container/* = NULL*/)
 
 bool CCScrollView::init()
 {
-    return this->initWithViewSize(CCSizeMake(200, 200), NULL);
+    return this->initWithViewSize(Size(200, 200), NULL);
 }
 
 bool CCScrollView::isNodeVisible(Node* node)
 {
-    const Point offset = this->getContentOffset();
+    const Vec2 offset = this->getContentOffset();
     const Size  size   = this->getViewSize();
     const float   scale  = this->getZoomScale();
     
     Rect viewRect;
     
-    viewRect = CCRectMake(-offset.x/scale, -offset.y/scale, size.width/scale, size.height/scale); 
+    viewRect = Rect(-offset.x/scale, -offset.y/scale, size.width/scale, size.height/scale); 
     
     return viewRect.intersectsRect(node->boundingBox());
 }
@@ -185,7 +185,7 @@ void CCScrollView::setTouchEnabled(bool e)
     }
 }
 
-void CCScrollView::setContentOffset(Point offset, bool animated/* = false*/)
+void CCScrollView::setContentOffset(Vec2 offset, bool animated/* = false*/)
 {
     if (animated)
     { //animate scrolling
@@ -195,8 +195,8 @@ void CCScrollView::setContentOffset(Point offset, bool animated/* = false*/)
     { //set the container position directly
         if (!m_bBounceable)
         {
-            const Point minOffset = this->minContainerOffset();
-            const Point maxOffset = this->maxContainerOffset();
+            const Vec2 minOffset = this->minContainerOffset();
+            const Vec2 maxOffset = this->maxContainerOffset();
             
             offset.x = MAX(minOffset.x, MIN(maxOffset.x, offset.x));
             offset.y = MAX(minOffset.y, MIN(maxOffset.y, offset.y));
@@ -211,7 +211,7 @@ void CCScrollView::setContentOffset(Point offset, bool animated/* = false*/)
     }
 }
 
-void CCScrollView::setContentOffsetInDuration(Point offset, float dt)
+void CCScrollView::setContentOffsetInDuration(Vec2 offset, float dt)
 {
     FiniteTimeAction *scroll, *expire;
     
@@ -221,7 +221,7 @@ void CCScrollView::setContentOffsetInDuration(Point offset, float dt)
     this->schedule(schedule_selector(CCScrollView::performedAnimatedScroll));
 }
 
-Point CCScrollView::getContentOffset()
+Vec2 CCScrollView::getContentOffset()
 {
     return m_pContainer->getPosition();
 }
@@ -230,12 +230,12 @@ void CCScrollView::setZoomScale(float s)
 {
     if (m_pContainer->getScale() != s)
     {
-        Point oldCenter, newCenter;
-        Point center;
+        Vec2 oldCenter, newCenter;
+        Vec2 center;
         
         if (m_fTouchLength == 0.0f) 
         {
-            center = Point(m_tViewSize.width*0.5f, m_tViewSize.height*0.5f);
+            center = Vec2(m_tViewSize.width*0.5f, m_tViewSize.height*0.5f);
             center = this->convertToWorldSpace(center);
         }
         else
@@ -247,7 +247,7 @@ void CCScrollView::setZoomScale(float s)
         m_pContainer->setScale(MAX(m_fMinScale, MIN(m_fMaxScale, s)));
         newCenter = m_pContainer->convertToWorldSpace(oldCenter);
         
-        const Point offset = PointSub(center, newCenter);
+        const Vec2 offset = PointSub(center, newCenter);
         if (_delegate != NULL)
         {
             _delegate->scrollViewDidZoom(this);
@@ -312,7 +312,7 @@ void CCScrollView::setContainer(Node * pContainer)
     this->m_pContainer = pContainer;
 
     this->m_pContainer->ignoreAnchorPointForPosition(false);
-    this->m_pContainer->setAnchorPoint(Point(0.0f, 0.0f));
+    this->m_pContainer->setAnchorPoint(Vec2(0.0f, 0.0f));
 
     this->addChild(this->m_pContainer);
 
@@ -321,7 +321,7 @@ void CCScrollView::setContainer(Node * pContainer)
 
 void CCScrollView::relocateContainer(bool animated)
 {
-    Point oldPoint, min, max;
+    Vec2 oldPoint, min, max;
     float newX, newY;
     
     min = this->minContainerOffset();
@@ -345,18 +345,18 @@ void CCScrollView::relocateContainer(bool animated)
 
     if (newY != oldPoint.y || newX != oldPoint.x)
     {
-        this->setContentOffset(Point(newX, newY), animated);
+        this->setContentOffset(Vec2(newX, newY), animated);
     }
 }
 
-Point CCScrollView::maxContainerOffset()
+Vec2 CCScrollView::maxContainerOffset()
 {
-    return Point(0.0f, 0.0f);
+    return Vec2(0.0f, 0.0f);
 }
 
-Point CCScrollView::minContainerOffset()
+Vec2 CCScrollView::minContainerOffset()
 {
-    return Point(m_tViewSize.width - m_pContainer->getContentSize().width*m_pContainer->getScaleX(), 
+    return Vec2(m_tViewSize.width - m_pContainer->getContentSize().width*m_pContainer->getScaleX(), 
                m_tViewSize.height - m_pContainer->getContentSize().height*m_pContainer->getScaleY());
 }
 
@@ -369,7 +369,7 @@ void CCScrollView::deaccelerateScrolling(float dt)
     }
     
     float newX, newY;
-    Point maxInset, minInset;
+    Vec2 maxInset, minInset;
     
     m_pContainer->setPosition(PointAdd(m_pContainer->getPosition(), m_tScrollDistance));
     
@@ -393,9 +393,9 @@ void CCScrollView::deaccelerateScrolling(float dt)
     newX = m_pContainer->getPosition().x;
     newY = m_pContainer->getPosition().y;
     
-    m_tScrollDistance     = PointSub(m_tScrollDistance, Point(newX - m_pContainer->getPosition().x, newY - m_pContainer->getPosition().y));
+    m_tScrollDistance     = PointSub(m_tScrollDistance, Vec2(newX - m_pContainer->getPosition().x, newY - m_pContainer->getPosition().y));
     m_tScrollDistance     = PointMult(m_tScrollDistance, SCROLL_DEAAXEL_RATE);
-    this->setContentOffset(Point(newX,newY));
+    this->setContentOffset(Vec2(newX,newY));
     
     if ((fabsf(m_tScrollDistance.x) <= SCROLL_DEAAXEL_DIST &&
          fabsf(m_tScrollDistance.y) <= SCROLL_DEAAXEL_DIST) ||
@@ -453,10 +453,10 @@ void CCScrollView::updateInset()
 	if (this->getContainer() != NULL)
 	{
 		m_fMaxInset = this->maxContainerOffset();
-		m_fMaxInset = Point(m_fMaxInset.x + m_tViewSize.width * INSET_RATIO,
+		m_fMaxInset = Vec2(m_fMaxInset.x + m_tViewSize.width * INSET_RATIO,
 			m_fMaxInset.y + m_tViewSize.height * INSET_RATIO);
 		m_fMinInset = this->minContainerOffset();
-		m_fMinInset = Point(m_fMinInset.x - m_tViewSize.width * INSET_RATIO,
+		m_fMinInset = Vec2(m_fMinInset.x - m_tViewSize.width * INSET_RATIO,
 			m_fMinInset.y - m_tViewSize.height * INSET_RATIO);
 	}
 }
@@ -467,7 +467,7 @@ void CCScrollView::updateInset()
 void CCScrollView::addChild(Node * child, int zOrder, int tag)
 {
     child->ignoreAnchorPointForPosition(false);
-    child->setAnchorPoint(Point(0.0f, 0.0f));
+    child->setAnchorPoint(Vec2(0.0f, 0.0f));
     if (m_pContainer != child) {
         m_pContainer->addChild(child, zOrder, tag);
     } else {
@@ -620,7 +620,7 @@ bool CCScrollView::ccTouchBegan(Touch* touch)
         m_tTouchPoint     = this->convertTouchToNodeSpace(touch);
         m_bTouchMoved     = false;
         m_bDragging     = true; //dragging started
-        m_tScrollDistance = Point(0.0f, 0.0f);
+        m_tScrollDistance = Vec2(0.0f, 0.0f);
         m_fTouchLength    = 0.0f;
     }
     else if (m_pTouches->count() == 2)
@@ -645,7 +645,7 @@ void CCScrollView::ccTouchMoved(Touch* touch)
     {
         if (m_pTouches->count() == 1 && m_bDragging)
         { // scrolling
-            Point moveDistance, newPoint, maxInset, minInset;
+            Vec2 moveDistance, newPoint, maxInset, minInset;
             Rect  frame;
             float newX, newY;
             
@@ -676,7 +676,7 @@ void CCScrollView::ccTouchMoved(Touch* touch)
             
             if (!m_bTouchMoved)
             {
-                moveDistance = Point::ZERO;
+                moveDistance = Vec2::ZERO;
             }
             
             m_tTouchPoint = newPoint;
@@ -687,10 +687,10 @@ void CCScrollView::ccTouchMoved(Touch* touch)
                 switch (m_eDirection)
                 {
                     case kCCScrollViewDirectionVertical:
-                        moveDistance = Point(0.0f, moveDistance.y);
+                        moveDistance = Vec2(0.0f, moveDistance.y);
                         break;
                     case kCCScrollViewDirectionHorizontal:
-                        moveDistance = Point(moveDistance.x, 0.0f);
+                        moveDistance = Vec2(moveDistance.x, 0.0f);
                         break;
                     default:
                         break;
@@ -703,7 +703,7 @@ void CCScrollView::ccTouchMoved(Touch* touch)
                 newY     = m_pContainer->getPosition().y + moveDistance.y;
 
                 m_tScrollDistance = moveDistance;
-                this->setContentOffset(Point(newX, newY));
+                this->setContentOffset(Vec2(newX, newY));
             }
         }
         else if (m_pTouches->count() == 2 && !m_bDragging)
@@ -753,7 +753,7 @@ void CCScrollView::ccTouchCancelled(Touch* touch)
 
 Rect CCScrollView::getViewRect()
 {
-    Point screenPos = this->convertToWorldSpace(Point::ZERO);
+    Vec2 screenPos = this->convertToWorldSpace(Vec2::ZERO);
     
     float scaleX = this->getScaleX();
     float scaleY = this->getScaleY();
@@ -775,7 +775,7 @@ Rect CCScrollView::getViewRect()
         scaleY = -scaleY;
     }
 
-    return CCRectMake(screenPos.x, screenPos.y, m_tViewSize.width*scaleX, m_tViewSize.height*scaleY);
+    return Rect(screenPos.x, screenPos.y, m_tViewSize.width*scaleX, m_tViewSize.height*scaleY);
 }
 
 void CCScrollView::registerScriptHandler(int nFunID,int nScriptEventType)

@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __AXTMX_TILE_MAP_H__
 #define __AXTMX_TILE_MAP_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "TMXObjectGroup.h"
 
 NS_AX_BEGIN

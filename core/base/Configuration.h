@@ -26,9 +26,9 @@ THE SOFTWARE.
 #ifndef __AXCONFIGURATION_H__
 #define __AXCONFIGURATION_H__
 
-#include "cocoa/Object.h"
+#include "Object.h"
 #include "GL.h"
-#include "cocoa/String.h"
+#include "String.h"
 #include <string>
 
 

@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __AXSHADERCACHE_H__
 #define __AXSHADERCACHE_H__
 
-#include "cocoa/Dictionary.h"
+#include "base/Dictionary.h"
 
 NS_AX_BEGIN
 

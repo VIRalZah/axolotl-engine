@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __AX_FILEUTILS_NACL_H__
 
 #include "platform/FileUtils.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 #include <string>
 
 NS_AX_BEGIN

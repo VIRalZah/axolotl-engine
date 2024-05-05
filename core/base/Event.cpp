@@ -48,7 +48,7 @@ Event::~Event()
 
 // EventTouch
 
-EventTouch::EventTouch(Point position, TouchType eventType, int id)
+EventTouch::EventTouch(Vec2 position, TouchType eventType, int id)
 {
 	_position = position;
 	_eventType = eventType;

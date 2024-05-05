@@ -76,11 +76,11 @@ static inline ccVertex2F v2fforangle(float _a_)
 
 static inline ccVertex2F v2fnormalize(const ccVertex2F &p)
 {
-	Point r = PointNormalize(Point(p.x, p.y));
+	Vec2 r = PointNormalize(Vec2(p.x, p.y));
 	return v2f(r.x, r.y);
 }
 
-static inline ccVertex2F __v2f(const Point &v)
+static inline ccVertex2F __v2f(const Vec2 &v)
 {
 //#ifdef __LP64__
 	return v2f(v.x, v.y);
@@ -237,7 +237,7 @@ void DrawNode::draw()
     render();
 }
 
-void DrawNode::drawDot(const Point &pos, float radius, const ccColor4F &color)
+void DrawNode::drawDot(const Vec2 &pos, float radius, const ccColor4F &color)
 {
     unsigned int vertex_count = 2*3;
     ensureCapacity(vertex_count);
@@ -258,7 +258,7 @@ void DrawNode::drawDot(const Point &pos, float radius, const ccColor4F &color)
 	m_bDirty = true;
 }
 
-void DrawNode::drawSegment(const Point &from, const Point &to, float radius, const ccColor4F &color)
+void DrawNode::drawSegment(const Vec2 &from, const Vec2 &to, float radius, const ccColor4F &color)
 {
     unsigned int vertex_count = 6*3;
     ensureCapacity(vertex_count);
@@ -331,7 +331,7 @@ void DrawNode::drawSegment(const Point &from, const Point &to, float radius, con
 	m_bDirty = true;
 }
 
-void DrawNode::drawPolygon(Point *verts, unsigned int count, const ccColor4F &fillColor, float borderWidth, const ccColor4F &borderColor)
+void DrawNode::drawPolygon(Vec2 *verts, unsigned int count, const ccColor4F &fillColor, float borderWidth, const ccColor4F &borderColor)
 {
     struct ExtrudeVerts {ccVertex2F offset, n;};
 	struct ExtrudeVerts* extrude = (struct ExtrudeVerts*)malloc(sizeof(struct ExtrudeVerts)*count);

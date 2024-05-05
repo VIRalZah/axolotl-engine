@@ -31,7 +31,7 @@ THE SOFTWARE.
  */
 
 #include "ActionEase.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 

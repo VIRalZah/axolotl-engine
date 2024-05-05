@@ -110,11 +110,11 @@ public:
     /** Set whether lens is concave */
     inline void setConcave(bool bConcave) { m_bConcave = bConcave; }
   
-    inline const Point& getPosition(void) { return m_position; }
-    void setPosition(const Point& position);
+    inline const Vec2& getPosition(void) { return m_position; }
+    void setPosition(const Vec2& position);
 
     /** initializes the action with center position, radius, a grid size and duration */
-    bool initWithDuration(float duration, const Size& gridSize, const Point& position, float radius);
+    bool initWithDuration(float duration, const Size& gridSize, const Vec2& position, float radius);
     /**
      *  @js NA
      *  @lua NA
@@ -124,10 +124,10 @@ public:
 
 public:
     /** creates the action with center position, radius, a grid size and duration */
-    static Lens3D* create(float duration, const Size& gridSize, const Point& position, float radius);
+    static Lens3D* create(float duration, const Size& gridSize, const Vec2& position, float radius);
 protected:
     /* lens center position */
-    Point m_position;
+    Vec2 m_position;
     float m_fRadius;
     /** lens effect. Defaults to 0.7 - 0 means no effect, 1 is very strong effect */
     float m_fLensEffect;
@@ -142,9 +142,9 @@ class AX_DLL Ripple3D : public Grid3DAction
 {
 public:
     /** get center position */
-    inline const Point& getPosition(void) { return m_position; }
+    inline const Vec2& getPosition(void) { return m_position; }
     /** set center position */
-    void setPosition(const Point& position);
+    void setPosition(const Vec2& position);
 
     inline float getAmplitude(void) { return m_fAmplitude; }
     inline void setAmplitude(float fAmplitude) { m_fAmplitude = fAmplitude; }
@@ -153,7 +153,7 @@ public:
     inline void setAmplitudeRate(float fAmplitudeRate) { m_fAmplitudeRate = fAmplitudeRate; }
 
     /** initializes the action with radius, number of waves, amplitude, a grid size and duration */
-    bool initWithDuration(float duration, const Size& gridSize, const Point& position, float radius, unsigned int waves, float amplitude);
+    bool initWithDuration(float duration, const Size& gridSize, const Vec2& position, float radius, unsigned int waves, float amplitude);
     /**
      *  @js NA
      *  @lua NA
@@ -163,10 +163,10 @@ public:
 
 public:
     /** creates the action with radius, number of waves, amplitude, a grid size and duration */
-    static Ripple3D* create(float duration, const Size& gridSize, const Point& position, float radius, unsigned int waves, float amplitude);
+    static Ripple3D* create(float duration, const Size& gridSize, const Vec2& position, float radius, unsigned int waves, float amplitude);
 protected:
     /* center position */
-    Point m_position;
+    Vec2 m_position;
     float m_fRadius;
     unsigned int m_nWaves;
     float m_fAmplitude;
@@ -258,9 +258,9 @@ class AX_DLL Twirl : public Grid3DAction
 {
 public:
     /** get twirl center */
-    inline const Point& getPosition(void) { return m_position; }
+    inline const Vec2& getPosition(void) { return m_position; }
     /** set twirl center */
-    void setPosition(const Point& position);
+    void setPosition(const Vec2& position);
 
     inline float getAmplitude(void) { return m_fAmplitude; }
     inline void setAmplitude(float fAmplitude) { m_fAmplitude = fAmplitude; }
@@ -269,7 +269,7 @@ public:
     inline void setAmplitudeRate(float fAmplitudeRate) { m_fAmplitudeRate = fAmplitudeRate; }
 
     /** initializes the action with center position, number of twirls, amplitude, a grid size and duration */
-    bool initWithDuration(float duration, const Size& gridSize, Point position, unsigned int twirls, float amplitude);
+    bool initWithDuration(float duration, const Size& gridSize, Vec2 position, unsigned int twirls, float amplitude);
     /**
      *  @js NA
      *  @lua NA
@@ -279,10 +279,10 @@ public:
 
 public:
     /** creates the action with center position, number of twirls, amplitude, a grid size and duration */
-    static Twirl* create(float duration, const Size& gridSize, Point position, unsigned int twirls, float amplitude);
+    static Twirl* create(float duration, const Size& gridSize, Vec2 position, unsigned int twirls, float amplitude);
 protected:
     /* twirl center */
-    Point m_position;
+    Vec2 m_position;
     unsigned int m_nTwirls;
     float m_fAmplitude;
     float m_fAmplitudeRate;

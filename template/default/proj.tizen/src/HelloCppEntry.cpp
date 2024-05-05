@@ -27,7 +27,7 @@ THE SOFTWARE.
 // This file contains the Tizen application entry point.
 //
 #include "../../Classes/AppDelegate.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 
 USING_NS_CC;
 

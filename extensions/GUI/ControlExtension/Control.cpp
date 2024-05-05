@@ -120,18 +120,6 @@ void CCControl::sendActionsForControlEvents(CCControlEvent controlEvents)
                 CCInvocation* invocation = (CCInvocation*)pObj;
                 invocation->invoke(this);
             }
-            //Call ScriptFunc
-            if (kScriptTypeNone != m_eScriptType)
-            {
-                int nHandler = this->getHandleOfControlEvent(controlEvents);
-                if (-1 != nHandler) {
-                    Array* pArrayArgs = Array::createWithCapacity(3);
-                    pArrayArgs->addObject(String::create(""));
-                    pArrayArgs->addObject(this);
-                    pArrayArgs->addObject(Integer::create(1 << i));
-                    ScriptEngineManager::sharedManager()->getScriptEngine()->executeEventWithArgs(nHandler, pArrayArgs);
-                }
-            }
         }
     }
 }
@@ -248,9 +236,9 @@ bool CCControl::isOpacityModifyRGB()
 }
 
 
-Point CCControl::getTouchLocation(Touch* touch)
+Vec2 CCControl::getTouchLocation(Touch* touch)
 {
-    Point touchLocation = touch->getLocation();            // Get the touch position
+    Vec2 touchLocation = touch->getLocation();            // Get the touch position
     touchLocation = this->convertToNodeSpace(touchLocation);  // Convert to the node space of this class
     
     return touchLocation;
@@ -258,7 +246,7 @@ Point CCControl::getTouchLocation(Touch* touch)
 
 bool CCControl::isTouchInside(Touch* touch)
 {
-    Point touchLocation = touch->getLocation(); // Get the touch position
+    Vec2 touchLocation = touch->getLocation(); // Get the touch position
     touchLocation = this->getParent()->convertToNodeSpace(touchLocation);
     Rect bBox=boundingBox();
     return bBox.containsPoint(touchLocation);

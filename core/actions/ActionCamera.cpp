@@ -24,10 +24,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "ActionCamera.h"
-#include "base_nodes/Node.h"
-#include "Camera.h"
+#include "base/Node.h"
+#include "base/Camera.h"
 #include "StdC.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 //

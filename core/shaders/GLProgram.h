@@ -29,7 +29,7 @@ THE SOFTWARE.
 #define __AXGLPROGRAM_H__
 
 #include "ccMacros.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 
 #include "GL.h"
 

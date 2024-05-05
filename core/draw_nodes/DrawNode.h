@@ -30,8 +30,8 @@
 #ifndef __AXDRAWNODES_AXDRAW_NODE_H__
 #define __AXDRAWNODES_AXDRAW_NODE_H__
 
-#include "base_nodes/Node.h"
-#include "ccTypes.h"
+#include "base/Node.h"
+#include "base/Types.h"
 
 NS_AX_BEGIN
 
@@ -64,10 +64,10 @@ public:
     virtual void draw();
     
     /** draw a dot at a position, with a given radius and color */
-    void drawDot(const Point &pos, float radius, const ccColor4F &color);
+    void drawDot(const Vec2 &pos, float radius, const ccColor4F &color);
     
     /** draw a segment with a radius and color */
-    void drawSegment(const Point &from, const Point &to, float radius, const ccColor4F &color);
+    void drawSegment(const Vec2 &from, const Vec2 &to, float radius, const ccColor4F &color);
     
     /** draw a polygon with a fill color and line color 
      * @code
@@ -75,7 +75,7 @@ public:
      * js:var drawPolygon(var verts, var fillColor,var borderWidth,var borderColor)
      * @endcode
      */
-    void drawPolygon(Point *verts, unsigned int count, const ccColor4F &fillColor, float borderWidth, const ccColor4F &borderColor);
+    void drawPolygon(Vec2 *verts, unsigned int count, const ccColor4F &fillColor, float borderWidth, const ccColor4F &borderColor);
     
     /** Clear the geometry in the node's buffer. */
     void clear();

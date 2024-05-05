@@ -25,7 +25,7 @@ THE SOFTWARE.
 
 #include "OspApplication.h"
 #include "OspForm.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 
 USING_NS_CC;
 using namespace Tizen::App;

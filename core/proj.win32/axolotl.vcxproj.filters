@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="base_nodes">
-      <UniqueIdentifier>{cc64f5ad-2234-494c-9c51-b7a20c8887aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="cocoa">
-      <UniqueIdentifier>{aec8225f-81a7-4213-b97b-7004d5535398}</UniqueIdentifier>
-    </Filter>
     <Filter Include="effects">
       <UniqueIdentifier>{736cf4ab-e0d6-40ba-912a-b062d28d318a}</UniqueIdentifier>
     </Filter>
@@ -64,9 +58,6 @@
     <Filter Include="text_input_node">
       <UniqueIdentifier>{535c04b0-fe2b-44c9-9a8c-9029e2b6de5c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="script_support">
-      <UniqueIdentifier>{5b082c5c-d396-43ca-b3b1-997d0f6247d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="kazmath">
       <UniqueIdentifier>{7751500e-ac9e-4604-a96d-670b30b7d8bd}</UniqueIdentifier>
     </Filter>
@@ -105,39 +96,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\base_nodes\AtlasNode.cpp">
-      <Filter>base_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\base_nodes\Node.cpp">
-      <Filter>base_nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\AffineTransform.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Array.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Dictionary.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Geometry.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\NS.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Object.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Set.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\String.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\cocoa\Zone.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
     <ClCompile Include="..\effects\Grabber.cpp">
       <Filter>effects</Filter>
     </ClCompile>
@@ -360,9 +318,6 @@
     <ClCompile Include="..\text_input_node\TextFieldTTF.cpp">
       <Filter>text_input_node</Filter>
     </ClCompile>
-    <ClCompile Include="..\script_support\ScriptSupport.cpp">
-      <Filter>script_support</Filter>
-    </ClCompile>
     <ClCompile Include="..\kazmath\src\aabb.c">
       <Filter>kazmath\src</Filter>
     </ClCompile>
@@ -402,7 +357,6 @@
     <ClCompile Include="..\kazmath\src\GL\matrix.c">
       <Filter>kazmath\src\GL</Filter>
     </ClCompile>
-    <ClCompile Include="..\Camera.cpp" />
     <ClCompile Include="..\draw_nodes\DrawingPrimitives.cpp">
       <Filter>draw_nodes</Filter>
     </ClCompile>
@@ -445,10 +399,6 @@
     <ClCompile Include="..\support\tinyxml2\tinyxml2.cpp">
       <Filter>support\tinyxml2</Filter>
     </ClCompile>
-    <ClCompile Include="..\cocoa\DataVisitor.cpp">
-      <Filter>cocoa</Filter>
-    </ClCompile>
-    <ClCompile Include="..\ccFPSImages.c" />
     <ClCompile Include="..\textures\TextureETC.cpp">
       <Filter>textures</Filter>
     </ClCompile>
@@ -459,7 +409,6 @@
       <Filter>support\component</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="..\cocos2d.cpp" />
     <ClCompile Include="..\base\Director.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -487,44 +436,49 @@
     <ClCompile Include="..\base\PoolManager.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="..\base\Types.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\axolotl.cpp" />
+    <ClCompile Include="..\base\Camera.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Object.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Dictionary.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\NS.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Set.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\String.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Zone.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\AffineTransform.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Array.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\DataVisitor.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Node.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\AtlasNode.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\axFPSImages.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\base_nodes\AtlasNode.h">
-      <Filter>base_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\base_nodes\Node.h">
-      <Filter>base_nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\AffineTransform.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Array.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Dictionary.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Geometry.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Integer.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\NS.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Object.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Set.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\String.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Zone.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
     <ClInclude Include="..\effects\Grabber.h">
       <Filter>effects</Filter>
     </ClInclude>
@@ -580,9 +534,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Protocols.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\ccTypes.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\label_nodes\LabelAtlas.h">
@@ -795,9 +746,6 @@
     <ClInclude Include="..\text_input_node\TextFieldTTF.h">
       <Filter>text_input_node</Filter>
     </ClInclude>
-    <ClInclude Include="..\script_support\ScriptSupport.h">
-      <Filter>script_support</Filter>
-    </ClInclude>
     <ClInclude Include="..\kazmath\include\kazmath\aabb.h">
       <Filter>kazmath\include\kazmath</Filter>
     </ClInclude>
@@ -840,7 +788,6 @@
     <ClInclude Include="..\kazmath\include\kazmath\GL\matrix.h">
       <Filter>kazmath\include\kazmath\GL</Filter>
     </ClInclude>
-    <ClInclude Include="..\Camera.h" />
     <ClInclude Include="..\draw_nodes\DrawingPrimitives.h">
       <Filter>draw_nodes</Filter>
     </ClInclude>
@@ -922,22 +869,9 @@
     <ClInclude Include="..\support\tinyxml2\tinyxml2.h">
       <Filter>support\tinyxml2</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocoa\DataVisitor.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Bool.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Double.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cocoa\Float.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
     <ClInclude Include="..\textures\TextureETC.h">
       <Filter>textures</Filter>
     </ClInclude>
-    <ClInclude Include="..\ccFPSImages.h" />
     <ClInclude Include="..\support\component\Component.h">
       <Filter>support\component</Filter>
     </ClInclude>
@@ -945,7 +879,6 @@
       <Filter>support\component</Filter>
     </ClInclude>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="..\cocos2d.h" />
     <ClInclude Include="..\base\Director.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -967,14 +900,64 @@
     <ClInclude Include="..\support\StringUtils.h">
       <Filter>support</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocoa\Number.h">
-      <Filter>cocoa</Filter>
-    </ClInclude>
     <ClInclude Include="..\base\AutoreleasePool.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="..\base\PoolManager.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="..\base\Types.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\axolotl.h" />
+    <ClInclude Include="..\base\Camera.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Object.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Dictionary.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Double.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Float.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Integer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\NS.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Set.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\String.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Zone.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\AffineTransform.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Array.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Bool.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\DataVisitor.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Node.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\AtlasNode.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\axFPSImages.h" />
   </ItemGroup>
 </Project>

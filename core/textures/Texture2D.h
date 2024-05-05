@@ -27,11 +27,11 @@ THE SOFTWARE.
 #define __AXTEXTURE2D_H__
 
 #include <string>
-#include "cocoa/Object.h"
-#include "cocoa/Geometry.h"
-#include "ccTypes.h"
+#include "base/Object.h"
+
+#include "base/Types.h"
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -147,7 +147,7 @@ public:
     These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_COORD_ARRAY client states to be enabled.
     */
     /** draws a texture at a given point */
-    void drawAtPoint(const Point& point);
+    void drawAtPoint(const Vec2& point);
     /** draws a texture inside a rect */
     void drawInRect(const Rect& rect);
 

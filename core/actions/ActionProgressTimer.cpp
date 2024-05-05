@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 #include "ActionProgressTimer.h"
 #include "misc_nodes/ProgressTimer.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 

@@ -27,9 +27,8 @@ THE SOFTWARE.
 #ifndef __ACTIONS_AXACTION_H__
 #define __ACTIONS_AXACTION_H__
 
-#include "cocoa/Object.h"
-#include "cocoa/Geometry.h"
-#include "platform/PlatformMacros.h"
+#include "base/Object.h"
+#include "base/Types.h"
 
 NS_AX_BEGIN
 
@@ -251,7 +250,7 @@ public:
     inline void setBoudarySet(bool bValue) { m_bBoundarySet = bValue; }
 
     /** initializes the action with a set boundary */
-    bool initWithTarget(Node *pFollowedNode, const Rect& rect = CCRectZero);
+    bool initWithTarget(Node *pFollowedNode, const Rect& rect = Rect::ZERO);
     /**
      *  @js NA
      *  @lua NA
@@ -263,9 +262,9 @@ public:
 
 public:
     /** creates the action with a set boundary,
-    It will work with no boundary if @param rect is equal to CCRectZero.
+    It will work with no boundary if @param rect is equal to Rect::ZERO.
     */
-    static Follow* create(Node *pFollowedNode, const Rect& rect = CCRectZero);
+    static Follow* create(Node *pFollowedNode, const Rect& rect = Rect::ZERO);
 protected:
     // node to follow
     Node *m_pobFollowedNode;
@@ -277,8 +276,8 @@ protected:
     bool m_bBoundaryFullyCovered;
 
     // fast access to the screen dimensions
-    Point m_obHalfScreenSize;
-    Point m_obFullScreenSize;
+    Vec2 m_obHalfScreenSize;
+    Vec2 m_obFullScreenSize;
 
     // world boundaries
     float m_fLeftBoundary;

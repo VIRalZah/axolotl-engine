@@ -38,7 +38,7 @@ MotionStreak::MotionStreak()
 : m_bFastMode(false)
 , m_bStartingPositionInitialized(false)
 , m_pTexture(NULL)
-, m_tPositionR(Point::ZERO)
+, m_tPositionR(Vec2::ZERO)
 , m_fStroke(0.0f)
 , m_fFadeDelta(0.0f)
 , m_fMinSeg(0.0f)
@@ -101,12 +101,12 @@ bool MotionStreak::initWithFade(float fade, float minSeg, float stroke, const cc
 
 bool MotionStreak::initWithFade(float fade, float minSeg, float stroke, const ccColor3B& color, Texture2D* texture)
 {
-    Node::setPosition(Point::ZERO);
-    setAnchorPoint(Point::ZERO);
+    Node::setPosition(Vec2::ZERO);
+    setAnchorPoint(Vec2::ZERO);
     ignoreAnchorPointForPosition(true);
     m_bStartingPositionInitialized = false;
 
-    m_tPositionR = Point::ZERO;
+    m_tPositionR = Vec2::ZERO;
     m_bFastMode = true;
     m_fMinSeg = (minSeg == -1.0f) ? stroke/5.0f : minSeg;
     m_fMinSeg *= m_fMinSeg;
@@ -117,7 +117,7 @@ bool MotionStreak::initWithFade(float fade, float minSeg, float stroke, const cc
     m_uMaxPoints = (int)(fade*60.0f)+2;
     m_uNuPoints = 0;
     m_pPointState = (float *)malloc(sizeof(float) * m_uMaxPoints);
-    m_pPointVertexes = (Point*)malloc(sizeof(Point) * m_uMaxPoints);
+    m_pPointVertexes = (Vec2*)malloc(sizeof(Vec2) * m_uMaxPoints);
 
     m_pVertices = (ccVertex2F*)malloc(sizeof(ccVertex2F) * m_uMaxPoints * 2);
     m_pTexCoords = (ccTex2F*)malloc(sizeof(ccTex2F) * m_uMaxPoints * 2);
@@ -137,7 +137,7 @@ bool MotionStreak::initWithFade(float fade, float minSeg, float stroke, const cc
     return true;
 }
 
-void MotionStreak::setPosition(const Point& position)
+void MotionStreak::setPosition(const Vec2& position)
 {
     m_bStartingPositionInitialized = true;
     m_tPositionR = position;

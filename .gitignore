@@ -63,10 +63,4 @@ DerivedData/
 
 # Ignore vim swaps
 *.swp
-
-# Ignore config files in javascript bindings generator
-tools/tojs/user.cfg
-# ... userconf.ini generated if running from tools/tojs
-tools/tojs/userconf.ini
-# ... userconf.ini generated if running from tools/jenkins_scripts/mac/android/
-tools/jenkins_scripts/mac/android/userconf.ini
+/template/default/proj.win32/.vs

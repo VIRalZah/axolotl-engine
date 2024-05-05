@@ -27,9 +27,9 @@ THE SOFTWARE.
 #define __AXPARTICLE_SYSTEM_H__
 
 #include "Protocols.h"
-#include "base_nodes/Node.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/String.h"
+#include "base/Node.h"
+#include "base/Dictionary.h"
+#include "base/String.h"
 
 NS_AX_BEGIN
 
@@ -92,8 +92,8 @@ enum {
 Structure that contains the values of each particle
 */
 typedef struct sCCParticle {
-    Point     pos;
-    Point     startPos;
+    Vec2     pos;
+    Vec2     startPos;
 
     ccColor4F    color;
     ccColor4F    deltaColor;
@@ -110,7 +110,7 @@ typedef struct sCCParticle {
 
     //! Mode A: gravity, direction, radial accel, tangential accel
     struct {
-        Point        dir;
+        Vec2        dir;
         float        radialAccel;
         float        tangentialAccel;
     } modeA;
@@ -125,7 +125,7 @@ typedef struct sCCParticle {
 
 }tCCParticle;
 
-//typedef void (*AX_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, Point);
+//typedef void (*AX_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, Vec2);
 
 class Texture2D;
 
@@ -183,7 +183,7 @@ protected:
     //! Mode A:Gravity + Tangential Accel + Radial Accel
     struct {
         /** Gravity value. Only available in 'Gravity' mode. */
-        Point gravity;
+        Vec2 gravity;
         /** speed of each particle. Only available in 'Gravity' mode.  */
         float speed;
         /** speed variance of each particle. Only available in 'Gravity' mode. */
@@ -250,9 +250,9 @@ protected:
     /** How many seconds the emitter will run. -1 means 'forever' */
     AX_PROPERTY(float, m_fDuration, Duration)
     /** sourcePosition of the emitter */
-    AX_PROPERTY_PASS_BY_REF(Point, m_tSourcePosition, SourcePosition)
+    AX_PROPERTY_PASS_BY_REF(Vec2, m_tSourcePosition, SourcePosition)
     /** Position variance of the emitter */
-    AX_PROPERTY_PASS_BY_REF(Point, m_tPosVar, PosVar)
+    AX_PROPERTY_PASS_BY_REF(Vec2, m_tPosVar, PosVar)
     /** life, and life variation of each particle */
     AX_PROPERTY(float, m_fLife, Life)
     /** life variance of each particle */
@@ -265,8 +265,8 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 public:
     // mode A
-    virtual const Point& getGravity();
-    virtual void setGravity(const Point& g);
+    virtual const Vec2& getGravity();
+    virtual void setGravity(const Vec2& g);
     virtual float getSpeed();
     virtual void setSpeed(float speed);
     virtual float getSpeedVar();
@@ -422,7 +422,7 @@ public:
     bool isFull();
 
     //! should be overridden by subclasses
-    virtual void updateQuadWithParticle(tCCParticle* particle, const Point& newPosition);
+    virtual void updateQuadWithParticle(tCCParticle* particle, const Vec2& newPosition);
     //! should be overridden by subclasses
     virtual void postStep();
 

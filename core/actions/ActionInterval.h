@@ -27,7 +27,7 @@ THE SOFTWARE.
 #ifndef __ACTION_AXINTERVAL_ACTION_H__
 #define __ACTION_AXINTERVAL_ACTION_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Action.h"
 #include "Protocols.h"
 #include "sprite_nodes/SpriteFrame.h"
@@ -395,7 +395,7 @@ class AX_DLL MoveBy : public ActionInterval
 {
 public:
     /** initializes the action */
-    bool initWithDuration(float duration, const Point& deltaPosition);
+    bool initWithDuration(float duration, const Vec2& deltaPosition);
     /**
      *  @js NA
      *  @lua NA
@@ -407,11 +407,11 @@ public:
 
 public:
     /** creates the action */
-    static MoveBy* create(float duration, const Point& deltaPosition);
+    static MoveBy* create(float duration, const Vec2& deltaPosition);
 protected:
-    Point m_positionDelta;
-    Point m_startPosition;
-    Point m_previousPosition;
+    Vec2 m_positionDelta;
+    Vec2 m_startPosition;
+    Vec2 m_previousPosition;
 };
 
 /** Moves a Node object to the position x,y. x and y are absolute coordinates by modifying it's position attribute.
@@ -423,7 +423,7 @@ class AX_DLL MoveTo : public MoveBy
 {
 public:
     /** initializes the action */
-    bool initWithDuration(float duration, const Point& position);
+    bool initWithDuration(float duration, const Vec2& position);
     /**
      *  @js NA
      *  @lua NA
@@ -433,9 +433,9 @@ public:
 
 public:
     /** creates the action */
-    static MoveTo* create(float duration, const Point& position);
+    static MoveTo* create(float duration, const Vec2& position);
 protected:
-    Point m_endPosition;
+    Vec2 m_endPosition;
 };
 
 /** Skews a Node object to given angles by modifying it's skewX and skewY attributes
@@ -494,7 +494,7 @@ class AX_DLL JumpBy : public ActionInterval
 {
 public:
     /** initializes the action */
-    bool initWithDuration(float duration, const Point& position, float height, unsigned int jumps);
+    bool initWithDuration(float duration, const Vec2& position, float height, unsigned int jumps);
     /**
      *  @js NA
      *  @lua NA
@@ -506,13 +506,13 @@ public:
 
 public:
     /** creates the action */
-    static JumpBy* create(float duration, const Point& position, float height, unsigned int jumps);
+    static JumpBy* create(float duration, const Vec2& position, float height, unsigned int jumps);
 protected:
-    Point         m_startPosition;
-    Point         m_delta;
+    Vec2         m_startPosition;
+    Vec2         m_delta;
     float           m_height;
     unsigned int    m_nJumps;
-    Point         m_previousPos;
+    Vec2         m_previousPos;
 };
 
 /** @brief Moves a Node object to a parabolic position simulating a jump movement by modifying it's position attribute.
@@ -529,18 +529,18 @@ public:
 
 public:
     /** creates the action */
-    static JumpTo* create(float duration, const Point& position, float height, int jumps);
+    static JumpTo* create(float duration, const Vec2& position, float height, int jumps);
 };
 
 /** @typedef bezier configuration structure
  */
 typedef struct _ccBezierConfig {
     //! end position of the bezier
-    Point endPosition;
+    Vec2 endPosition;
     //! Bezier control point 1
-    Point controlPoint_1;
+    Vec2 controlPoint_1;
     //! Bezier control point 2
-    Point controlPoint_2;
+    Vec2 controlPoint_2;
 } ccBezierConfig;
 
 /** @brief An action that moves the target with a cubic Bezier curve by a certain distance.
@@ -577,8 +577,8 @@ public:
     static BezierBy* create(float t, const ccBezierConfig& c);
 protected:
     ccBezierConfig m_sConfig;
-    Point m_startPosition;
-    Point m_previousPosition;
+    Vec2 m_startPosition;
+    Vec2 m_previousPosition;
 };
 
 /** @brief An action that moves the target with a cubic Bezier curve to a destination point.

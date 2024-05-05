@@ -31,7 +31,6 @@ THE SOFTWARE.
 #include "Accelerometer.h"
 #include "base/Director.h"
 #include "support/PointExtension.h"
-#include "script_support/ScriptSupport.h"
 #include "shaders/ShaderCache.h"
 #include "shaders/GLProgram.h"
 #include "shaders/ccGLStateCache.h"
@@ -47,23 +46,17 @@ Layer::Layer()
 : _touchEnabled(false)
 , m_bAccelerometerEnabled(false)
 , m_bKeypadEnabled(false)
-, m_pScriptTouchHandlerEntry(NULL)
-, m_pScriptKeypadHandlerEntry(NULL)
-, m_pScriptAccelerateHandlerEntry(NULL)
 , _touchPriority(0)
 , _touchHandler(nullptr)
 , _keyboardPriority(0)
 , _keyboardHandler(nullptr)
 {
     m_bIgnoreAnchorPointForPosition = true;
-    setAnchorPoint(Point(0.5f, 0.5f));
+    setAnchorPoint(Vec2(0.5f, 0.5f));
 }
 
 Layer::~Layer()
 {
-    unregisterScriptTouchHandler();
-    unregisterScriptKeypadHandler();
-    unregisterScriptAccelerateHandler();
 }
 
 bool Layer::init()
@@ -113,28 +106,6 @@ void Layer::registerWithTouchDispatcher()
     }
 
     Director::sharedDirector()->getEventDispatcher()->addHandler(_touchHandler);
-}
-
-void Layer::registerScriptTouchHandler(int nHandler, bool bIsMultiTouches, int nPriority, bool bSwallowsTouches)
-{
-    unregisterScriptTouchHandler();
-    m_pScriptTouchHandlerEntry = CCTouchScriptHandlerEntry::create(nHandler, bIsMultiTouches, nPriority, bSwallowsTouches);
-    m_pScriptTouchHandlerEntry->retain();
-}
-
-void Layer::unregisterScriptTouchHandler(void)
-{
-    AX_SAFE_RELEASE_NULL(m_pScriptTouchHandlerEntry);
-    }
-
-int Layer::excuteScriptTouchHandler(int nEventType, Touch *pTouch)
-{
-    return ScriptEngineManager::sharedManager()->getScriptEngine()->executeLayerTouchEvent(this, nEventType, pTouch);
-}
-
-int Layer::excuteScriptTouchHandler(int nEventType, Set *pTouches)
-{
-    return ScriptEngineManager::sharedManager()->getScriptEngine()->executeLayerTouchesEvent(this, nEventType, pTouches);
 }
 
 /// isTouchEnabled getter
@@ -273,22 +244,6 @@ void Layer::setAccelerometerInterval(double interval) {
 void Layer::didAccelerate(Acceleration* pAccelerationValue)
 {
    AX_UNUSED_PARAM(pAccelerationValue);
-   if ( m_eScriptType != kScriptTypeNone)
-   {
-       ScriptEngineManager::sharedManager()->getScriptEngine()->executeAccelerometerEvent(this, pAccelerationValue);
-   }
-}
-
-void Layer::registerScriptAccelerateHandler(int nHandler)
-{
-    unregisterScriptAccelerateHandler();
-    m_pScriptAccelerateHandlerEntry = CCScriptHandlerEntry::create(nHandler);
-    m_pScriptAccelerateHandlerEntry->retain();
-}
-
-void Layer::unregisterScriptAccelerateHandler(void)
-{
-    AX_SAFE_RELEASE_NULL(m_pScriptAccelerateHandlerEntry);
 }
 
 /// isKeypadEnabled getter
@@ -318,32 +273,12 @@ void Layer::setKeypadEnabled(bool enabled)
     }
 }
 
-void Layer::registerScriptKeypadHandler(int nHandler)
+void Layer::keyBackClicked()
 {
-    unregisterScriptKeypadHandler();
-    m_pScriptKeypadHandlerEntry = CCScriptHandlerEntry::create(nHandler);
-    m_pScriptKeypadHandlerEntry->retain();
 }
 
-void Layer::unregisterScriptKeypadHandler(void)
+void Layer::keyMenuClicked()
 {
-    AX_SAFE_RELEASE_NULL(m_pScriptKeypadHandlerEntry);
-}
-
-void Layer::keyBackClicked(void)
-{
-    if (m_pScriptKeypadHandlerEntry || m_eScriptType == kScriptTypeJavascript)
-    {
-        ScriptEngineManager::sharedManager()->getScriptEngine()->executeLayerKeypadEvent(this, kTypeBackClicked);
-    }
-}
-
-void Layer::keyMenuClicked(void)
-{
-    if (m_pScriptKeypadHandlerEntry)
-    {
-        ScriptEngineManager::sharedManager()->getScriptEngine()->executeLayerKeypadEvent(this, kTypeMenuClicked);
-    }
 }
 
 /// Callbacks
@@ -674,7 +609,7 @@ bool LayerColor::initWithColor(const ccColor4B& color, GLfloat w, GLfloat h)
         }
 
         updateColor();
-        setContentSize(CCSizeMake(w, h));
+        setContentSize(Size(w, h));
 
         setShaderProgram(ShaderCache::sharedShaderCache()->programForKey(kAXShader_PositionColor));
     }
@@ -701,17 +636,17 @@ void LayerColor::setContentSize(const Size & size)
 
 void LayerColor::changeWidthAndHeight(GLfloat w ,GLfloat h)
 {
-    this->setContentSize(CCSizeMake(w, h));
+    this->setContentSize(Size(w, h));
 }
 
 void LayerColor::changeWidth(GLfloat w)
 {
-    this->setContentSize(CCSizeMake(w, m_obContentSize.height));
+    this->setContentSize(Size(w, m_obContentSize.height));
 }
 
 void LayerColor::changeHeight(GLfloat h)
 {
-    this->setContentSize(CCSizeMake(m_obContentSize.width, h));
+    this->setContentSize(Size(m_obContentSize.width, h));
 }
 
 void LayerColor::updateColor()
@@ -780,7 +715,7 @@ LayerGradient* LayerGradient::create(const ccColor4B& start, const ccColor4B& en
     return NULL;
 }
 
-LayerGradient* LayerGradient::create(const ccColor4B& start, const ccColor4B& end, const Point& v)
+LayerGradient* LayerGradient::create(const ccColor4B& start, const ccColor4B& end, const Vec2& v)
 {
     LayerGradient * pLayer = new LayerGradient();
     if( pLayer && pLayer->initWithColor(start, end, v))
@@ -813,10 +748,10 @@ bool LayerGradient::init()
 
 bool LayerGradient::initWithColor(const ccColor4B& start, const ccColor4B& end)
 {
-    return initWithColor(start, end, Point(0, -1));
+    return initWithColor(start, end, Vec2(0, -1));
 }
 
-bool LayerGradient::initWithColor(const ccColor4B& start, const ccColor4B& end, const Point& v)
+bool LayerGradient::initWithColor(const ccColor4B& start, const ccColor4B& end, const Vec2& v)
 {
     m_endColor.r  = end.r;
     m_endColor.g  = end.g;
@@ -840,7 +775,7 @@ void LayerGradient::updateColor()
         return;
 
     float c = sqrtf(2.0f);
-    Point u = Point(m_AlongVector.x / h, m_AlongVector.y / h);
+    Vec2 u = Vec2(m_AlongVector.x / h, m_AlongVector.y / h);
 
     // Compressed Interpolation mode
     if (m_bCompressedInterpolation)
@@ -930,13 +865,13 @@ GLubyte LayerGradient::getEndOpacity()
     return m_cEndOpacity;
 }
 
-void LayerGradient::setVector(const Point& var)
+void LayerGradient::setVector(const Vec2& var)
 {
     m_AlongVector = var;
     updateColor();
 }
 
-const Point& LayerGradient::getVector()
+const Vec2& LayerGradient::getVector()
 {
     return m_AlongVector;
 }

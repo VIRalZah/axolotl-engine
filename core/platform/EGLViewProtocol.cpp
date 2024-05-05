@@ -2,9 +2,9 @@
 
 #include "base/Touch.h"
 #include "base/Director.h"
-#include "cocoa/Set.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/Integer.h"
+#include "base/Set.h"
+#include "base/Dictionary.h"
+#include "base/Integer.h"
 #include "base/EventDispatcher.h"
 
 NS_AX_BEGIN
@@ -84,7 +84,7 @@ void EGLViewProtocol::setFrameSize(float width, float height)
 {
     _screenSize.setSize(width, height);
 
-    if (_designResolutionSize.equals(Point::ZERO))
+    if (_designResolutionSize.equals(Vec2::ZERO))
     {
         _designResolutionSize.setSize(width, height);
     }
@@ -94,7 +94,7 @@ Size  EGLViewProtocol::getVisibleSize() const
 {
     if (_resolutionPolicy == kResolutionNoBorder)
     {
-        return CCSizeMake(_screenSize.width/_scaleX, _screenSize.height/_scaleY);
+        return Size(_screenSize.width/_scaleX, _screenSize.height/_scaleY);
     }
     else 
     {
@@ -102,16 +102,16 @@ Size  EGLViewProtocol::getVisibleSize() const
     }
 }
 
-Point EGLViewProtocol::getVisibleOrigin() const
+Vec2 EGLViewProtocol::getVisibleOrigin() const
 {
     if (_resolutionPolicy == kResolutionNoBorder)
     {
-        return Point((_designResolutionSize.width - _screenSize.width/_scaleX)/2, 
+        return Vec2((_designResolutionSize.width - _screenSize.width/_scaleX)/2, 
                            (_designResolutionSize.height - _screenSize.height/_scaleY)/2);
     }
     else 
     {
-        return Point::ZERO;
+        return Vec2::ZERO;
     }
 }
 
@@ -149,7 +149,7 @@ Rect EGLViewProtocol::getScissorRect()
 	float y = (params[1] - _viewPortRect.origin.y) / _scaleY;
 	float w = params[2] / _scaleX;
 	float h = params[3] / _scaleY;
-	return CCRectMake(x, y, w, h);
+	return Rect(x, y, w, h);
 }
 
 void EGLViewProtocol::setViewName(const std::string& viewName)
@@ -171,7 +171,7 @@ void EGLViewProtocol::handleTouchesBegin(int num, int ids[], float xs[], float y
         float y = ys[i];
 
         EventTouch event(
-            Point(
+            Vec2(
                 (x - _viewPortRect.origin.x) / _scaleX,
                 (y - _viewPortRect.origin.y) / _scaleY
             ),
@@ -191,7 +191,7 @@ void EGLViewProtocol::handleTouchesMove(int num, int ids[], float xs[], float ys
         float y = ys[i];
 
         EventTouch event(
-            Point(
+            Vec2(
                 (x - _viewPortRect.origin.x) / _scaleX,
                 (y - _viewPortRect.origin.y) / _scaleY
             ),
@@ -211,7 +211,7 @@ void EGLViewProtocol::handleTouchesEnd(int num, int ids[], float xs[], float ys[
         float y = ys[i];
 
         EventTouch event(
-            Point(
+            Vec2(
                 (x - _viewPortRect.origin.x) / _scaleX,
                 (y - _viewPortRect.origin.y) / _scaleY
             ),

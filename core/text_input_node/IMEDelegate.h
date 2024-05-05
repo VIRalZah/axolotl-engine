@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_IME_DELEGATE_H__
 #define __AX_IME_DELEGATE_H__
 
-#include "cocoa/Geometry.h"
+
 
 NS_AX_BEGIN
 

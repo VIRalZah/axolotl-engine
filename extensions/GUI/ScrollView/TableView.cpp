@@ -23,7 +23,7 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "TableView.h"
 #include "TableViewCell.h"
 #include "menu_nodes/Menu.h"
@@ -269,7 +269,7 @@ void CCTableView::_addCellIfNecessary(CCTableViewCell * cell)
 
 void CCTableView::_updateContentSize()
 {
-    Size size = CCSizeZero;
+    Size size = Size::ZERO;
     unsigned int cellsCount = m_pDataSource->numberOfCellsInTableView(this);
 
     if (cellsCount > 0)
@@ -279,10 +279,10 @@ void CCTableView::_updateContentSize()
         switch (this->getDirection())
         {
             case kCCScrollViewDirectionHorizontal:
-                size = CCSizeMake(maxPosition, m_tViewSize.height);
+                size = Size(maxPosition, m_tViewSize.height);
                 break;
             default:
-                size = CCSizeMake(m_tViewSize.width, maxPosition);
+                size = Size(m_tViewSize.width, maxPosition);
                 break;
         }
     }
@@ -293,20 +293,20 @@ void CCTableView::_updateContentSize()
 	{
 		if (m_eDirection == kCCScrollViewDirectionHorizontal)
 		{
-			this->setContentOffset(Point(0,0));
+			this->setContentOffset(Vec2(0,0));
 		}
 		else
 		{
-			this->setContentOffset(Point(0,this->minContainerOffset().y));
+			this->setContentOffset(Vec2(0,this->minContainerOffset().y));
 		}
 		m_eOldDirection = m_eDirection;
 	}
 
 }
 
-Point CCTableView::_offsetFromIndex(unsigned int index)
+Vec2 CCTableView::_offsetFromIndex(unsigned int index)
 {
-    Point offset = this->__offsetFromIndex(index);
+    Vec2 offset = this->__offsetFromIndex(index);
 
     const Size cellSize = m_pDataSource->tableCellSizeForIndex(this, index);
     if (m_eVordering == kCCTableViewFillTopDown)
@@ -316,25 +316,25 @@ Point CCTableView::_offsetFromIndex(unsigned int index)
     return offset;
 }
 
-Point CCTableView::__offsetFromIndex(unsigned int index)
+Vec2 CCTableView::__offsetFromIndex(unsigned int index)
 {
-    Point offset;
+    Vec2 offset;
     Size  cellSize;
 
     switch (this->getDirection())
     {
         case kCCScrollViewDirectionHorizontal:
-            offset = Point(m_vCellsPositions[index], 0.0f);
+            offset = Vec2(m_vCellsPositions[index], 0.0f);
             break;
         default:
-            offset = Point(0.0f, m_vCellsPositions[index]);
+            offset = Vec2(0.0f, m_vCellsPositions[index]);
             break;
     }
 
     return offset;
 }
 
-unsigned int CCTableView::_indexFromOffset(Point offset)
+unsigned int CCTableView::_indexFromOffset(Vec2 offset)
 {
     int index = 0;
     const int maxIdx = m_pDataSource->numberOfCellsInTableView(this)-1;
@@ -356,7 +356,7 @@ unsigned int CCTableView::_indexFromOffset(Point offset)
     return index;
 }
 
-int CCTableView::__indexFromOffset(Point offset)
+int CCTableView::__indexFromOffset(Vec2 offset)
 {
     int low = 0;
     int high = m_pDataSource->numberOfCellsInTableView(this) - 1;
@@ -416,7 +416,7 @@ void CCTableView::_moveCellOutOfSight(CCTableViewCell *cell)
 
 void CCTableView::_setIndexForCell(unsigned int index, CCTableViewCell *cell)
 {
-    cell->setAnchorPoint(Point(0.0f, 0.0f));
+    cell->setAnchorPoint(Vec2(0.0f, 0.0f));
     cell->setPosition(this->_offsetFromIndex(index));
     cell->setIdx(index);
 }
@@ -461,7 +461,7 @@ void CCTableView::scrollViewDidScroll(CCScrollView* view)
     }
 
     unsigned int startIdx = 0, endIdx = 0, idx = 0, maxIdx = 0;
-    Point offset = PointMult(this->getContentOffset(), -1);
+    Vec2 offset = PointMult(this->getContentOffset(), -1);
     maxIdx = MAX(uCountOfItems-1, 0);
 
     if (m_eVordering == kCCTableViewFillTopDown)
@@ -593,7 +593,7 @@ bool CCTableView::ccTouchBegan(Touch *pTouch)
 
     if(m_pTouches->count() == 1) {
         unsigned int        index;
-        Point           point;
+        Vec2           point;
 
         point = this->getContainer()->convertTouchToNodeSpace(pTouch);
 

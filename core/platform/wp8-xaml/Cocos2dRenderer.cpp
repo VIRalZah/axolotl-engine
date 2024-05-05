@@ -24,7 +24,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "Cocos2dRenderer.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "Application.h"
 #include "EGLView.h"
 #include "AppDelegate.h"

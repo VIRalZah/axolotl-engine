@@ -25,7 +25,7 @@ THE SOFTWARE.
 #ifndef __AX_FRAMEWORK_COMPONENT_H__
 #define __AX_FRAMEWORK_COMPONENT_H__
 
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include <string>
 
 NS_AX_BEGIN

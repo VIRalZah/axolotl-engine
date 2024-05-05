@@ -20,7 +20,7 @@ bool HelloWorld::init()
     
     auto director = Director::sharedDirector();
 
-    Point origin = director->getVisibleOrigin();
+    Vec2 origin = director->getVisibleOrigin();
     Size visibleSize = director->getVisibleSize();
 
     auto closeItem = MenuItemImage::create(
@@ -31,7 +31,7 @@ bool HelloWorld::init()
     );
     
 	closeItem->setPosition(
-        Point
+        Vec2
         (
             origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
             origin.y + closeItem->getContentSize().height / 2
@@ -39,13 +39,13 @@ bool HelloWorld::init()
     );
 
     Menu* menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Point::ZERO);
+    menu->setPosition(Vec2::ZERO);
     addChild(menu, 1);
 
     auto helloWorld = Sprite::create("HelloWorld.png");
 
     helloWorld->setPosition(
-        Point(
+        Vec2(
             visibleSize.width / 2 + origin.x,
             visibleSize.height / 2 + origin.y
         )
@@ -59,4 +59,9 @@ bool HelloWorld::init()
 void HelloWorld::menuCloseCallback(Object* pSender)
 {
     Director::sharedDirector()->end();
+}
+
+void HelloWorld::draw()
+{
+    Layer::draw();
 }

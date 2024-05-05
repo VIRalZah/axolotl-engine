@@ -159,7 +159,7 @@
     <ClInclude Include="..\GUI\ControlExtension\Invocation.h" />
     <ClInclude Include="..\GUI\ControlExtension\Scale9Sprite.h" />
     <ClInclude Include="..\GUI\ScrollView\ScrollView.h" />
-    <ClInclude Include="..\cocos-ext.h" />
+    <ClInclude Include="..\ax-ext.h" />
     <ClInclude Include="..\ExtensionMacros.h" />
     <ClInclude Include="..\GUI\ScrollView\Sorting.h" />
     <ClInclude Include="..\GUI\ScrollView\TableView.h" />

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "EGLView.h"
-#include "cocoa/Set.h"
+#include "base/Set.h"
 #include "base/Director.h"
 #include "ccMacros.h"
 

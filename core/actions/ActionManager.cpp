@@ -26,12 +26,12 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "ActionManager.h"
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "base/Scheduler.h"
 #include "ccMacros.h"
 #include "support/data_support/axCArray.h"
 #include "support/data_support/uthash.h"
-#include "cocoa/Set.h"
+#include "base/Set.h"
 
 NS_AX_BEGIN
 //

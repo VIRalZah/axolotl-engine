@@ -29,7 +29,7 @@
 
 NS_AX_BEGIN
 
-void ccVertexLineToPolygon(Point *points, float stroke, ccVertex2F *vertices, unsigned int offset, unsigned int nuPoints)
+void ccVertexLineToPolygon(Vec2 *points, float stroke, ccVertex2F *vertices, unsigned int offset, unsigned int nuPoints)
 {
     nuPoints += offset;
     if(nuPoints<=1) return;
@@ -42,8 +42,8 @@ void ccVertexLineToPolygon(Point *points, float stroke, ccVertex2F *vertices, un
     for(unsigned int i = offset; i<nuPoints; i++)
     {
         idx = i*2;
-        Point p1 = points[i];
-        Point perpVector;
+        Vec2 p1 = points[i];
+        Vec2 perpVector;
 
         if(i == 0)
             perpVector = PointPerp(PointNormalize(PointSub(p1, points[i+1])));
@@ -51,11 +51,11 @@ void ccVertexLineToPolygon(Point *points, float stroke, ccVertex2F *vertices, un
             perpVector = PointPerp(PointNormalize(PointSub(points[i-1], p1)));
         else
         {
-            Point p2 = points[i+1];
-            Point p0 = points[i-1];
+            Vec2 p2 = points[i+1];
+            Vec2 p0 = points[i-1];
 
-            Point p2p1 = PointNormalize(PointSub(p2, p1));
-            Point p0p1 = PointNormalize(PointSub(p0, p1));
+            Vec2 p2p1 = PointNormalize(PointSub(p2, p1));
+            Vec2 p0p1 = PointNormalize(PointSub(p0, p1));
 
             // Calculate angle between vectors
             float angle = acosf(PointDot(p2p1, p0p1));
@@ -87,7 +87,7 @@ void ccVertexLineToPolygon(Point *points, float stroke, ccVertex2F *vertices, un
         ccVertex2F p4 = vertices[idx1+1];
 
         float s;
-        //BOOL fixVertex = !PointLineIntersect(Point(p1.x, p1.y), Point(p4.x, p4.y), Point(p2.x, p2.y), Point(p3.x, p3.y), &s, &t);
+        //BOOL fixVertex = !PointLineIntersect(Vec2(p1.x, p1.y), Vec2(p4.x, p4.y), Vec2(p2.x, p2.y), Vec2(p3.x, p3.y), &s, &t);
         bool fixVertex = !ccVertexLineIntersect(p1.x, p1.y, p4.x, p4.y, p2.x, p2.y, p3.x, p3.y, &s);
         if(!fixVertex)
             if (s<0.0f || s>1.0f)

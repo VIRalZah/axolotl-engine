@@ -96,7 +96,7 @@ public:
     virtual bool initWithDuration(float duration, const Size& gridSize, unsigned int seed);
     void shuffle(unsigned int *pArray, unsigned int nLen);
     Size getDelta(const Size& pos);
-    void placeTile(const Point& pos, Tile *t);
+    void placeTile(const Vec2& pos, Tile *t);
 
     virtual void startWithTarget(Node *pTarget);
     virtual void update(float time);
@@ -123,9 +123,9 @@ class AX_DLL FadeOutTRTiles : public TiledGrid3DAction
 {
 public:
     virtual float testFunc(const Size& pos, float time);
-    void turnOnTile(const Point& pos);
-    void turnOffTile(const Point& pos);
-    virtual void transformTile(const Point& pos, float distance);
+    void turnOnTile(const Vec2& pos);
+    void turnOffTile(const Vec2& pos);
+    virtual void transformTile(const Vec2& pos, float distance);
     virtual void update(float time);
 
 public:
@@ -155,7 +155,7 @@ class AX_DLL FadeOutUpTiles : public FadeOutTRTiles
 {
 public:
     virtual float testFunc(const Size& pos, float time);
-    virtual void transformTile(const Point& pos, float distance);
+    virtual void transformTile(const Vec2& pos, float distance);
 
 public:
     /** creates the action with the grid size and the duration */
@@ -191,8 +191,8 @@ public:
     /** initializes the action with a random seed, the grid size and the duration */
     virtual bool initWithDuration(float duration, const Size& gridSize, unsigned int seed);
     void shuffle(unsigned int *pArray, unsigned int nLen);
-    void turnOnTile(const Point& pos);
-    void turnOffTile(const Point& pos);
+    void turnOnTile(const Vec2& pos);
+    void turnOffTile(const Vec2& pos);
     /**
      *  @js NA
      *  @lua NA

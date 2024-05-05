@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 #include "StdC.h"
 #include "platform/Common.h"
-#include "cocoa/Geometry.h"
+
 #include "platform/EGLViewProtocol.h"
 #include <agile.h>
 

@@ -26,11 +26,11 @@ THE SOFTWARE.
 
 #include "ActionInterval.h"
 #include "sprite_nodes/Sprite.h"
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "support/PointExtension.h"
 #include "StdC.h"
 #include "ActionInstant.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 #include <stdarg.h>
 
 NS_AX_BEGIN
@@ -1005,7 +1005,7 @@ ActionInterval* RotateBy::reverse(void)
 // MoveBy
 //
 
-MoveBy* MoveBy::create(float duration, const Point& deltaPosition)
+MoveBy* MoveBy::create(float duration, const Vec2& deltaPosition)
 {
     MoveBy *pRet = new MoveBy();
     pRet->initWithDuration(duration, deltaPosition);
@@ -1014,7 +1014,7 @@ MoveBy* MoveBy::create(float duration, const Point& deltaPosition)
     return pRet;
 }
 
-bool MoveBy::initWithDuration(float duration, const Point& deltaPosition)
+bool MoveBy::initWithDuration(float duration, const Vec2& deltaPosition)
 {
     if (ActionInterval::initWithDuration(duration))
     {
@@ -1056,7 +1056,7 @@ void MoveBy::startWithTarget(Node *pTarget)
 
 ActionInterval* MoveBy::reverse(void)
 {
-    return MoveBy::create(m_fDuration, Point( -m_positionDelta.x, -m_positionDelta.y));
+    return MoveBy::create(m_fDuration, Vec2( -m_positionDelta.x, -m_positionDelta.y));
 }
 
 
@@ -1065,10 +1065,10 @@ void MoveBy::update(float t)
     if (m_pTarget)
     {
 #if AX_ENABLE_STACKABLE_ACTIONS
-        Point currentPos = m_pTarget->getPosition();
-        Point diff = PointSub(currentPos, m_previousPosition);
+        Vec2 currentPos = m_pTarget->getPosition();
+        Vec2 diff = PointSub(currentPos, m_previousPosition);
         m_startPosition = PointAdd( m_startPosition, diff);
-        Point newPos =  PointAdd( m_startPosition, PointMult(m_positionDelta, t) );
+        Vec2 newPos =  PointAdd( m_startPosition, PointMult(m_positionDelta, t) );
         m_pTarget->setPosition(newPos);
         m_previousPosition = newPos;
 #else
@@ -1081,7 +1081,7 @@ void MoveBy::update(float t)
 // MoveTo
 //
 
-MoveTo* MoveTo::create(float duration, const Point& position)
+MoveTo* MoveTo::create(float duration, const Vec2& position)
 {
     MoveTo *pRet = new MoveTo();
     pRet->initWithDuration(duration, position);
@@ -1090,7 +1090,7 @@ MoveTo* MoveTo::create(float duration, const Point& position)
     return pRet;
 }
 
-bool MoveTo::initWithDuration(float duration, const Point& position)
+bool MoveTo::initWithDuration(float duration, const Vec2& position)
 {
     if (ActionInterval::initWithDuration(duration))
     {
@@ -1311,7 +1311,7 @@ ActionInterval* SkewBy::reverse()
 // JumpBy
 //
 
-JumpBy* JumpBy::create(float duration, const Point& position, float height, unsigned int jumps)
+JumpBy* JumpBy::create(float duration, const Vec2& position, float height, unsigned int jumps)
 {
     JumpBy *pJumpBy = new JumpBy();
     pJumpBy->initWithDuration(duration, position, height, jumps);
@@ -1320,7 +1320,7 @@ JumpBy* JumpBy::create(float duration, const Point& position, float height, unsi
     return pJumpBy;
 }
 
-bool JumpBy::initWithDuration(float duration, const Point& position, float height, unsigned int jumps)
+bool JumpBy::initWithDuration(float duration, const Vec2& position, float height, unsigned int jumps)
 {
     if (ActionInterval::initWithDuration(duration))
     {
@@ -1374,24 +1374,24 @@ void JumpBy::update(float t)
 
         float x = m_delta.x * t;
 #if AX_ENABLE_STACKABLE_ACTIONS
-        Point currentPos = m_pTarget->getPosition();
+        Vec2 currentPos = m_pTarget->getPosition();
 
-        Point diff = PointSub( currentPos, m_previousPos );
+        Vec2 diff = PointSub( currentPos, m_previousPos );
         m_startPosition = PointAdd( diff, m_startPosition);
 
-        Point newPos = PointAdd( m_startPosition, Point(x,y));
+        Vec2 newPos = PointAdd( m_startPosition, Vec2(x,y));
         m_pTarget->setPosition(newPos);
 
         m_previousPos = newPos;
 #else
-        m_pTarget->setPosition(PointAdd( m_startPosition, Point(x,y)));
+        m_pTarget->setPosition(PointAdd( m_startPosition, Vec2(x,y)));
 #endif // !AX_ENABLE_STACKABLE_ACTIONS
     }
 }
 
 ActionInterval* JumpBy::reverse(void)
 {
-    return JumpBy::create(m_fDuration, Point(-m_delta.x, -m_delta.y),
+    return JumpBy::create(m_fDuration, Vec2(-m_delta.x, -m_delta.y),
         m_height, m_nJumps);
 }
 
@@ -1399,7 +1399,7 @@ ActionInterval* JumpBy::reverse(void)
 // JumpTo
 //
 
-JumpTo* JumpTo::create(float duration, const Point& position, float height, int jumps)
+JumpTo* JumpTo::create(float duration, const Vec2& position, float height, int jumps)
 {
     JumpTo *pJumpTo = new JumpTo();
     pJumpTo->initWithDuration(duration, position, height, jumps);
@@ -1434,7 +1434,7 @@ Object* JumpTo::copyWithZone(Zone* pZone)
 void JumpTo::startWithTarget(Node *pTarget)
 {
     JumpBy::startWithTarget(pTarget);
-    m_delta = Point(m_delta.x - m_startPosition.x, m_delta.y - m_startPosition.y);
+    m_delta = Vec2(m_delta.x - m_startPosition.x, m_delta.y - m_startPosition.y);
 }
 
 // Bezier cubic formula:
@@ -1520,16 +1520,16 @@ void BezierBy::update(float time)
         float y = bezierat(ya, yb, yc, yd, time);
 
 #if AX_ENABLE_STACKABLE_ACTIONS
-        Point currentPos = m_pTarget->getPosition();
-        Point diff = PointSub(currentPos, m_previousPosition);
+        Vec2 currentPos = m_pTarget->getPosition();
+        Vec2 diff = PointSub(currentPos, m_previousPosition);
         m_startPosition = PointAdd( m_startPosition, diff);
 
-        Point newPos = PointAdd( m_startPosition, Point(x,y));
+        Vec2 newPos = PointAdd( m_startPosition, Vec2(x,y));
         m_pTarget->setPosition(newPos);
 
         m_previousPosition = newPos;
 #else
-        m_pTarget->setPosition(PointAdd( m_startPosition, Point(x,y)));
+        m_pTarget->setPosition(PointAdd( m_startPosition, Vec2(x,y)));
 #endif // !AX_ENABLE_STACKABLE_ACTIONS
     }
 }

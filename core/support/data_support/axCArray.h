@@ -43,7 +43,7 @@ THE SOFTWARE.
 #define AX_ARRAY_H
 
 #include "ccMacros.h"
-#include "cocoa/Object.h"
+#include "base/Object.h"
 
 #include <stdlib.h>
 #include <string.h>

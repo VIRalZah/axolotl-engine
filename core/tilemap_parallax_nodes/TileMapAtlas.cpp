@@ -28,8 +28,8 @@ THE SOFTWARE.
 #include "textures/TextureAtlas.h"
 #include "support/image_support/TGAlib.h"
 #include "ccConfig.h"
-#include "cocoa/Dictionary.h"
-#include "cocoa/Integer.h"
+#include "base/Dictionary.h"
+#include "base/Integer.h"
 #include "base/Director.h"
 #include "support/PointExtension.h"
 
@@ -58,7 +58,7 @@ bool TileMapAtlas::initWithTileFile(const char *tile, const char *mapFile, int t
     {
         m_pPosToAtlasIndex = new Dictionary();
         this->updateAtlasValues();
-        this->setContentSize(CCSizeMake((float)(m_pTGAInfo->width*m_uItemWidth),
+        this->setContentSize(Size((float)(m_pTGAInfo->width*m_uItemWidth),
                                         (float)(m_pTGAInfo->height*m_uItemHeight)));
         return true;
     }
@@ -132,7 +132,7 @@ void TileMapAtlas::loadTGAfile(const char *file)
 }
 
 // TileMapAtlas - Atlas generation / updates
-void TileMapAtlas::setTile(const ccColor3B& tile, const Point& position)
+void TileMapAtlas::setTile(const ccColor3B& tile, const Vec2& position)
 {
     AXAssert(m_pTGAInfo != NULL, "tgaInfo must not be nil");
     AXAssert(m_pPosToAtlasIndex != NULL, "posToAtlasIndex must not be nil");
@@ -159,7 +159,7 @@ void TileMapAtlas::setTile(const ccColor3B& tile, const Point& position)
     }    
 }
 
-ccColor3B TileMapAtlas::tileAt(const Point& position)
+ccColor3B TileMapAtlas::tileAt(const Vec2& position)
 {
     AXAssert( m_pTGAInfo != NULL, "tgaInfo must not be nil");
     AXAssert( position.x < m_pTGAInfo->width, "Invalid position.x");
@@ -171,7 +171,7 @@ ccColor3B TileMapAtlas::tileAt(const Point& position)
     return value;    
 }
 
-void TileMapAtlas::updateAtlasValueAt(const Point& pos, const ccColor3B& value, unsigned int index)
+void TileMapAtlas::updateAtlasValueAt(const Vec2& pos, const ccColor3B& value, unsigned int index)
 {
     AXAssert( index >= 0 && index < m_pTextureAtlas->getCapacity(), "updateAtlasValueAt: Invalid index");
 
@@ -252,7 +252,7 @@ void TileMapAtlas::updateAtlasValues()
 
                 if( value.r != 0 )
                 {
-                    this->updateAtlasValueAt(Point(x,y), value, total);
+                    this->updateAtlasValueAt(Vec2(x,y), value, total);
 
                     String *key = String::createWithFormat("%d,%d", x,y);
                     Integer *num = Integer::create(total);

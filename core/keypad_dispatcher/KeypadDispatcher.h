@@ -26,7 +26,7 @@ THE SOFTWARE.
 #define __AXKEYPAD_DISPATCHER_H__
 
 #include "KeypadDelegate.h"
-#include "cocoa/Array.h"
+#include "base/Array.h"
 
 NS_AX_BEGIN
 

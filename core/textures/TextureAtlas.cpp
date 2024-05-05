@@ -35,7 +35,7 @@ THE SOFTWARE.
 #include "GL.h"
 // support
 #include "Texture2D.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 #include <stdlib.h>
 
 //According to some tests GL_TRIANGLE_STRIP is slower, MUCH slower. Probably I'm doing something very wrong

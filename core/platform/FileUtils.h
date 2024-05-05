@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include <vector>
 #include <map>
 #include "PlatformMacros.h"
-#include "ccTypes.h"
+#include "base/Types.h"
 #include "ccTypeInfo.h"
 
 NS_AX_BEGIN

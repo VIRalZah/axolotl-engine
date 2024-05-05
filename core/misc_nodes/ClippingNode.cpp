@@ -256,8 +256,8 @@ void ClippingNode::visit()
     glStencilOp(!m_bInverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
     
     // draw a fullscreen solid rectangle to clear the stencil buffer
-    //ccDrawSolidRect(Point::ZERO, PointFromSize([[Director sharedDirector] winSize]), ccc4f(1, 1, 1, 1));
-    ccDrawSolidRect(Point::ZERO, PointFromSize(Director::sharedDirector()->getWinSize()), ccc4f(1, 1, 1, 1));
+    //ccDrawSolidRect(Vec2::ZERO, PointFromSize([[Director sharedDirector] winSize]), ccc4f(1, 1, 1, 1));
+    ccDrawSolidRect(Vec2::ZERO, PointFromSize(Director::sharedDirector()->getWinSize()), ccc4f(1, 1, 1, 1));
     
     ///////////////////////////////////
     // DRAW CLIPPING STENCIL

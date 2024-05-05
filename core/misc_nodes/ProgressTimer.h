@@ -27,7 +27,7 @@ THE SOFTWARE.
 
 #include "sprite_nodes/Sprite.h"
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -90,7 +90,7 @@ public:
     void setReverseProgress(bool reverse);
 
     virtual void draw(void);
-    void setAnchorPoint(Point anchorPoint);
+    void setAnchorPoint(Vec2 anchorPoint);
 
     virtual void setColor(const ccColor3B& color);
     virtual const ccColor3B& getColor() const;
@@ -104,13 +104,13 @@ public:
     /** Creates a progress timer with the sprite as the shape the timer goes through */
     static ProgressTimer* create(Sprite* sp);
 protected:
-    ccTex2F textureCoordFromAlphaPoint(Point alpha);
-    ccVertex2F vertexFromAlphaPoint(Point alpha);
+    ccTex2F textureCoordFromAlphaPoint(Vec2 alpha);
+    ccVertex2F vertexFromAlphaPoint(Vec2 alpha);
     void updateProgress(void);
     void updateBar(void);
     void updateRadial(void);
     void updateColor(void);
-    Point boundaryTexCoord(char index);
+    Vec2 boundaryTexCoord(char index);
 
 protected:
     CCProgressTimerType m_eType;
@@ -124,20 +124,20 @@ protected:
      *    If you're using radials type then the midpoint changes the center point
      *    If you're using bar type the the midpoint changes the bar growth
      *        it expands from the center but clamps to the sprites edge so:
-     *        you want a left to right then set the midpoint all the way to Point(0,y)
-     *        you want a right to left then set the midpoint all the way to Point(1,y)
-     *        you want a bottom to top then set the midpoint all the way to Point(x,0)
-     *        you want a top to bottom then set the midpoint all the way to Point(x,1)
+     *        you want a left to right then set the midpoint all the way to Vec2(0,y)
+     *        you want a right to left then set the midpoint all the way to Vec2(1,y)
+     *        you want a bottom to top then set the midpoint all the way to Vec2(x,0)
+     *        you want a top to bottom then set the midpoint all the way to Vec2(x,1)
      */
-    AX_PROPERTY(Point, m_tMidpoint, Midpoint);
+    AX_PROPERTY(Vec2, m_tMidpoint, Midpoint);
 
     /**
      *    This allows the bar type to move the component at a specific rate
      *    Set the component to 0 to make sure it stays at 100%.
      *    For example you want a left to right bar but not have the height stay 100%
-     *    Set the rate to be Point(0,1); and set the midpoint to = Point(0,.5f);
+     *    Set the rate to be Vec2(0,1); and set the midpoint to = Vec2(0,.5f);
      */
-    AX_SYNTHESIZE(Point, m_tBarChangeRate, BarChangeRate);
+    AX_SYNTHESIZE(Vec2, m_tBarChangeRate, BarChangeRate);
 
     bool m_bReverseDirection;
 };

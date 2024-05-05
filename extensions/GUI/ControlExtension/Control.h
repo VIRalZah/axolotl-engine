@@ -32,7 +32,7 @@
 
 #include "Invocation.h"
 #include "ControlUtils.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 
 NS_AX_EXT_BEGIN
 
@@ -194,7 +194,7 @@ public:
     * control space coordinates.
     * @param touch A Touch object that represents a touch.
     */
-    virtual Point getTouchLocation(Touch* touch);
+    virtual Vec2 getTouchLocation(Touch* touch);
 
     
     /**

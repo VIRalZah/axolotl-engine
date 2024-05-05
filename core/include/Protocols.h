@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __AXPROTOCOLS_H__
 #define __AXPROTOCOLS_H__
 
-#include "ccTypes.h"
+#include "base/Types.h"
 #include "textures/Texture2D.h"
 #include <string>
 

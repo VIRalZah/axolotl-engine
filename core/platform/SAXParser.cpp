@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #include "SAXParser.h"
-#include "cocoa/Dictionary.h"
+#include "base/Dictionary.h"
 #include "FileUtils.h"
 #include "support/tinyxml2/tinyxml2.h"
 

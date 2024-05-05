@@ -25,10 +25,9 @@
  ****************************************************************************/
 
 #include "ActionInstant.h"
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "sprite_nodes/Sprite.h"
-#include "script_support/ScriptSupport.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 //
@@ -333,7 +332,7 @@ Object* FlipY::copyWithZone(Zone *pZone) {
 // Place
 //
 
-Place* Place::create(const Point& pos)
+Place* Place::create(const Vec2& pos)
 {
     Place *pRet = new Place();
 
@@ -346,7 +345,7 @@ Place* Place::create(const Point& pos)
     return NULL;
 }
 
-bool Place::initWithPosition(const Point& pos) {
+bool Place::initWithPosition(const Vec2& pos) {
     m_tPosition = pos;
     return true;
 }
@@ -390,20 +389,6 @@ CallFunc * CallFunc::create(Object* pSelectorTarget, SEL_CallFunc selector)
     return NULL;
 }
 
-CallFunc * CallFunc::create(int nHandler)
-{
-	CallFunc *pRet = new CallFunc();
-
-	if (pRet) {
-		pRet->m_nScriptHandler = nHandler;
-		pRet->autorelease();
-	}
-	else{
-		AX_SAFE_DELETE(pRet);
-	}
-	return pRet;
-}
-
 bool CallFunc::initWithTarget(Object* pSelectorTarget) {
     if (pSelectorTarget) 
     {
@@ -421,10 +406,6 @@ bool CallFunc::initWithTarget(Object* pSelectorTarget) {
 
 CallFunc::~CallFunc(void)
 {
-    if (m_nScriptHandler)
-    {
-        axolotl::ScriptEngineManager::sharedManager()->getScriptEngine()->removeScriptHandler(m_nScriptHandler);
-    }
     AX_SAFE_RELEASE(m_pSelectorTarget);
 }
 
@@ -443,9 +424,6 @@ Object * CallFunc::copyWithZone(Zone *pZone) {
     ActionInstant::copyWithZone(pZone);
     pRet->initWithTarget(m_pSelectorTarget);
     pRet->m_pCallFunc = m_pCallFunc;
-    if (m_nScriptHandler > 0 ) {
-        pRet->m_nScriptHandler = axolotl::ScriptEngineManager::sharedManager()->getScriptEngine()->reallocateScriptHandler(m_nScriptHandler);
-    }
     AX_SAFE_DELETE(pNewZone);
     return pRet;
 }
@@ -459,9 +437,6 @@ void CallFunc::execute() {
     if (m_pCallFunc) {
         (m_pSelectorTarget->*m_pCallFunc)();
     }
-	if (m_nScriptHandler) {
-		ScriptEngineManager::sharedManager()->getScriptEngine()->executeCallFuncActionEvent(this);
-	}
 }
 
 //
@@ -471,9 +446,6 @@ void CallFuncN::execute() {
     if (m_pCallFuncN) {
         (m_pSelectorTarget->*m_pCallFuncN)(m_pTarget);
     }
-	if (m_nScriptHandler) {
-		ScriptEngineManager::sharedManager()->getScriptEngine()->executeCallFuncActionEvent(this, m_pTarget);
-	}
 }
 
 CallFuncN * CallFuncN::create(Object* pSelectorTarget, SEL_CallFuncN selector)
@@ -488,20 +460,6 @@ CallFuncN * CallFuncN::create(Object* pSelectorTarget, SEL_CallFuncN selector)
 
     AX_SAFE_DELETE(pRet);
     return NULL;
-}
-
-CallFuncN * CallFuncN::create(int nHandler)
-{
-	CallFuncN *pRet = new CallFuncN();
-
-	if (pRet) {
-		pRet->m_nScriptHandler = nHandler;
-		pRet->autorelease();
-	}
-	else{
-		AX_SAFE_DELETE(pRet);
-	}
-	return pRet;
 }
 
 bool CallFuncN::initWithTarget(Object* pSelectorTarget,

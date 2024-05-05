@@ -29,21 +29,21 @@ THE SOFTWARE.
 
 /**
  @file
- Point extensions based on Chipmunk's cpVect file.
- These extensions work both with Point and cpVect.
+ Vec2 extensions based on Chipmunk's cpVect file.
+ These extensions work both with Vec2 and cpVect.
  
- The "Point" prefix means: "CoCos2d Point"
+ The "Vec2" prefix means: "CoCos2d Vec2"
  
  Examples:
-  - PointAdd( Point(1,1), Point(2,2) ); // preferred cocos2d way
-  - PointAdd( Point(1,1), Point(2,2) ); // also ok but more verbose
+  - PointAdd( Vec2(1,1), Vec2(2,2) ); // preferred cocos2d way
+  - PointAdd( Vec2(1,1), Vec2(2,2) ); // also ok but more verbose
   
   - cpvadd( cpv(1,1), cpv(2,2) ); // way of the chipmunk
   - PointAdd( cpv(1,1), cpv(2,2) ); // mixing chipmunk and cocos2d (avoid)
-  - cpvadd( Point(1,1), Point(2,2) ); // mixing chipmunk and CG (avoid)
+  - cpvadd( Vec2(1,1), Vec2(2,2) ); // mixing chipmunk and CG (avoid)
  */
 
-#include "cocoa/Geometry.h"
+
 #include <math.h>
 
 NS_AX_BEGIN
@@ -54,51 +54,51 @@ NS_AX_BEGIN
  */
 
 /** Returns opposite of point.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointNeg(const Point& v)
+static inline Vec2
+PointNeg(const Vec2& v)
 {
     return -v;
 }
 
 /** Calculates sum of two points.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointAdd(const Point& v1, const Point& v2)
+static inline Vec2
+PointAdd(const Vec2& v1, const Vec2& v2)
 {
     return v1 + v2;
 }
 
 /** Calculates difference of two points.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointSub(const Point& v1, const Point& v2)
+static inline Vec2
+PointSub(const Vec2& v1, const Vec2& v2)
 {
     return v1 - v2;
 }
 
 /** Returns point multiplied by given factor.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointMult(const Point& v, const float s)
+static inline Vec2
+PointMult(const Vec2& v, const float s)
 {
     return v * s;
 }
 
 /** Calculates midpoint between two points.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointMidpoint(const Point& v1, const Point& v2)
+static inline Vec2
+PointMidpoint(const Vec2& v1, const Vec2& v2)
 {
     return (v1 + v2) / 2.f;
 }
@@ -108,7 +108,7 @@ PointMidpoint(const Point& v1, const Point& v2)
  @since v0.7.2
  */
 static inline float
-PointDot(const Point& v1, const Point& v2)
+PointDot(const Vec2& v1, const Vec2& v2)
 {
     return v1.dot(v2);
 }
@@ -118,67 +118,67 @@ PointDot(const Point& v1, const Point& v2)
  @since v0.7.2
  */
 static inline float
-PointCross(const Point& v1, const Point& v2)
+PointCross(const Vec2& v1, const Vec2& v2)
 {
     return v1.cross(v2);
 }
 
 /** Calculates perpendicular of v, rotated 90 degrees counter-clockwise -- cross(v, perp(v)) >= 0
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointPerp(const Point& v)
+static inline Vec2
+PointPerp(const Vec2& v)
 {
     return v.getPerp();
 }
 
 /** Calculates perpendicular of v, rotated 90 degrees clockwise -- cross(v, rperp(v)) <= 0
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointRPerp(const Point& v)
+static inline Vec2
+PointRPerp(const Vec2& v)
 {
     return v.getRPerp();
 }
 
 /** Calculates the projection of v1 over v2.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointProject(const Point& v1, const Point& v2)
+static inline Vec2
+PointProject(const Vec2& v1, const Vec2& v2)
 {
     return v1.project(v2);
 }
 
 /** Rotates two points.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointRotate(const Point& v1, const Point& v2)
+static inline Vec2
+PointRotate(const Vec2& v1, const Vec2& v2)
 {
     return v1.rotate(v2);
 }
 
 /** Unrotates two points.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-static inline Point
-PointUnrotate(const Point& v1, const Point& v2)
+static inline Vec2
+PointUnrotate(const Vec2& v1, const Vec2& v2)
 {
     return v1.unrotate(v2);
 }
 
-/** Calculates the square length of a Point (not calling sqrt() )
+/** Calculates the square length of a Vec2 (not calling sqrt() )
  @return float
  @since v0.7.2
  */
 static inline float
-PointLengthSQ(const Point& v)
+PointLengthSQ(const Vec2& v)
 {
     return v.getLengthSq();
 }
@@ -189,7 +189,7 @@ PointLengthSQ(const Point& v)
  @since v1.1
 */
 static inline float
-PointDistanceSQ(const Point p1, const Point p2)
+PointDistanceSQ(const Vec2 p1, const Vec2 p2)
 {
     return (p1 - p2).getLengthSq();
 }
@@ -199,31 +199,31 @@ PointDistanceSQ(const Point p1, const Point p2)
  @return float
  @since v0.7.2
  */
-float AX_DLL PointLength(const Point& v);
+float AX_DLL PointLength(const Vec2& v);
 
 /** Calculates the distance between two points
  @return float
  @since v0.7.2
  */
-float AX_DLL PointDistance(const Point& v1, const Point& v2);
+float AX_DLL PointDistance(const Vec2& v1, const Vec2& v2);
 
 /** Returns point multiplied to a length of 1.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-Point AX_DLL PointNormalize(const Point& v);
+Vec2 AX_DLL PointNormalize(const Vec2& v);
 
 /** Converts radians to a normalized vector.
- @return Point
+ @return Vec2
  @since v0.7.2
  */
-Point AX_DLL PointForAngle(const float a);
+Vec2 AX_DLL PointForAngle(const float a);
 
 /** Converts a vector to radians.
  @return float
  @since v0.7.2
  */
-float AX_DLL PointToAngle(const Point& v);
+float AX_DLL PointToAngle(const Vec2& v);
 
 
 /** Clamp a value between from and to.
@@ -234,12 +234,12 @@ float AX_DLL clampf(float value, float min_inclusive, float max_inclusive);
 /** Clamp a point between from and to.
  @since v0.99.1
  */
-Point AX_DLL PointClamp(const Point& p, const Point& from, const Point& to);
+Vec2 AX_DLL PointClamp(const Vec2& p, const Vec2& from, const Vec2& to);
 
-/** Quickly convert Size to a Point
+/** Quickly convert Size to a Vec2
  @since v0.99.1
  */
-Point AX_DLL PointFromSize(const Size& s);
+Vec2 AX_DLL PointFromSize(const Size& s);
 
 /** Run a math operation function on each point component
  * absf, fllorf, ceilf, roundf
@@ -248,7 +248,7 @@ Point AX_DLL PointFromSize(const Size& s);
  * PointCompOp(p,floorf);
  @since v0.99.1
  */
-Point AX_DLL PointCompOp(const Point& p, float (*opFunc)(float));
+Vec2 AX_DLL PointCompOp(const Vec2& p, float (*opFunc)(float));
 
 /** Linear Interpolation between two points a and b
  @returns
@@ -257,30 +257,30 @@ Point AX_DLL PointCompOp(const Point& p, float (*opFunc)(float));
     otherwise a value between a..b
  @since v0.99.1
  */
-Point AX_DLL PointLerp(const Point& a, const Point& b, float alpha);
+Vec2 AX_DLL PointLerp(const Vec2& a, const Vec2& b, float alpha);
 
 
 /** @returns if points have fuzzy equality which means equal with some degree of variance.
  @since v0.99.1
  */
-bool AX_DLL PointFuzzyEqual(const Point& a, const Point& b, float variance);
+bool AX_DLL PointFuzzyEqual(const Vec2& a, const Vec2& b, float variance);
 
 
 /** Multiplies a and b components, a.x*b.x, a.y*b.y
  @returns a component-wise multiplication
  @since v0.99.1
  */
-Point AX_DLL PointCompMult(const Point& a, const Point& b);
+Vec2 AX_DLL PointCompMult(const Vec2& a, const Vec2& b);
 
 /** @returns the signed angle in radians between two vector directions
  @since v0.99.1
  */
-float AX_DLL PointAngleSigned(const Point& a, const Point& b);
+float AX_DLL PointAngleSigned(const Vec2& a, const Vec2& b);
 
 /** @returns the angle in radians between two vector directions
  @since v0.99.1
 */
-float AX_DLL PointAngle(const Point& a, const Point& b);
+float AX_DLL PointAngle(const Vec2& a, const Vec2& b);
 
 /** Rotates a point counter clockwise by the angle around a pivot
  @param v is the point to rotate
@@ -289,7 +289,7 @@ float AX_DLL PointAngle(const Point& a, const Point& b);
  @returns the rotated point
  @since v0.99.1
  */
-Point AX_DLL PointRotateByAngle(const Point& v, const Point& pivot, float angle);
+Vec2 AX_DLL PointRotateByAngle(const Vec2& v, const Vec2& pivot, float angle);
 
 /** A general line-line intersection test
  @param p1 
@@ -312,21 +312,21 @@ Point AX_DLL PointRotateByAngle(const Point& v, const Point& pivot, float angle)
     the hit point also is    p1 + s * (p2 - p1);
  @since v0.99.1
  */
-bool AX_DLL PointLineIntersect(const Point& p1, const Point& p2, 
-                      const Point& p3, const Point& p4,
+bool AX_DLL PointLineIntersect(const Vec2& p1, const Vec2& p2, 
+                      const Vec2& p3, const Vec2& p4,
                       float *s, float *t);
 
 /*
 PointSegmentIntersect returns YES if Segment A-B intersects with segment C-D
 @since v1.0.0
 */
-bool AX_DLL PointSegmentIntersect(const Point& A, const Point& B, const Point& C, const Point& D);
+bool AX_DLL PointSegmentIntersect(const Vec2& A, const Vec2& B, const Vec2& C, const Vec2& D);
 
 /*
 PointIntersectPoint returns the intersection point of line A-B, C-D
 @since v1.0.0
 */
-Point AX_DLL PointIntersectPoint(const Point& A, const Point& B, const Point& C, const Point& D);
+Vec2 AX_DLL PointIntersectPoint(const Vec2& A, const Vec2& B, const Vec2& C, const Vec2& D);
 
 // end of data_structures group
 /// @}

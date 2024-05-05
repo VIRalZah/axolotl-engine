@@ -27,14 +27,14 @@ THE SOFTWARE.
 #ifndef __SPITE_NODE_AXSPRITE_H__
 #define __SPITE_NODE_AXSPRITE_H__
 
-#include "base_nodes/Node.h"
+#include "base/Node.h"
 #include "Protocols.h"
 #include "textures/TextureAtlas.h"
-#include "ccTypes.h"
-#include "cocoa/Dictionary.h"
+#include "base/Types.h"
+#include "base/Dictionary.h"
 #include <string>
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -43,7 +43,7 @@ class SpriteBatchNode;
 class SpriteFrame;
 class Animation;
 class Rect;
-class Point;
+class Vec2;
 class Size;
 class Texture2D;
 struct transformValues_;
@@ -282,7 +282,7 @@ public:
     /**
      * @lua NA
      */
-    virtual void setPosition(const Point& pos);
+    virtual void setPosition(const Vec2& pos);
     virtual void setRotation(float fRotation);
     virtual void setRotationX(float fRotationX);
     virtual void setRotationY(float fRotationY);
@@ -297,7 +297,7 @@ public:
     virtual void sortAllChildren();
     virtual void setScale(float fScale);
     virtual void setVertexZ(float fVertexZ);
-    virtual void setAnchorPoint(const Point& anchor);
+    virtual void setAnchorPoint(const Vec2& anchor);
     virtual void ignoreAnchorPointForPosition(bool value);
     virtual void setVisible(bool bVisible);
     virtual void draw(void);
@@ -334,7 +334,7 @@ public:
      * @warning This method is not recommended for game developers. Sample code for using batch node
      * @code
      * SpriteBatchNode *batch = SpriteBatchNode::create("Images/grossini_dance_atlas.png", 15);
-     * Sprite *sprite = Sprite::createWithTexture(batch->getTexture(), CCRectMake(0, 0, 57, 57));
+     * Sprite *sprite = Sprite::createWithTexture(batch->getTexture(), Rect(0, 0, 57, 57));
      * batch->addChild(sprite);
      * layer->addChild(batch);
      * @endcode
@@ -459,7 +459,7 @@ public:
     /** 
      * Gets the offset position of the sprite. Calculated automatically by editors like Zwoptex.
      */
-    inline const Point& getOffsetPosition(void) { return m_obOffsetPosition; }
+    inline const Vec2& getOffsetPosition(void) { return m_obOffsetPosition; }
 
 
     /** 
@@ -537,8 +537,8 @@ protected:
     bool   m_bRectRotated;                      /// Whether the texture is rotated
 
     // Offset Position (used by Zwoptex)
-    Point m_obOffsetPosition;
-    Point m_obUnflippedOffsetPositionFromCenter;
+    Vec2 m_obOffsetPosition;
+    Vec2 m_obUnflippedOffsetPositionFromCenter;
 
     // vertex coords, texture coords and color info
     ccV3F_C4B_T2F_Quad m_sQuad;

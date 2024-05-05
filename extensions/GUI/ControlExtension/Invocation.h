@@ -30,7 +30,7 @@
 #ifndef __AXINVOCATION_H__
 #define __AXINVOCATION_H__
 
-#include "cocoa/Object.h"
+#include "base/Object.h"
 #include "../../ExtensionMacros.h"
 
 NS_AX_EXT_BEGIN

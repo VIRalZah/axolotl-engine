@@ -23,8 +23,8 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "EventDispatcher.h"
-#include "base/Touch.h"
-#include "cocoa/Array.h"
+#include "Touch.h"
+#include "Array.h"
 #include <map>
 
 NS_AX_BEGIN
@@ -38,7 +38,6 @@ EventDispatcher::EventDispatcher()
 	, _locked(false)
 {
 	_handlers = new Array();
-	AX_SAFE_RETAIN(_handlers);
 }
 
 EventDispatcher::~EventDispatcher()

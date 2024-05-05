@@ -162,7 +162,7 @@ void GridBase::setActive(bool bActive)
     if (! bActive)
     {
         Director *pDirector = Director::sharedDirector();
-        ccDirectorProjection proj = pDirector->getProjection();
+        Projection proj = pDirector->getProjection();
         pDirector->setProjection(proj);
     }
 }
@@ -204,7 +204,7 @@ void GridBase::beforeDraw(void)
     m_directorProjection = director->getProjection();
 
     // 2d projection
-    //    [director setProjection:kCCDirectorProjection2D];
+    //    [director setProjection:ORTHOGRAPHIC];
     set2DProjection();
     m_pGrabber->beforeRender(m_pTexture);
 }
@@ -219,7 +219,7 @@ void GridBase::afterDraw(axolotl::Node *pTarget)
 
     if (pTarget->getCamera()->isDirty())
     {
-        Point offset = pTarget->getAnchorPointInPoints();
+        Vec2 offset = pTarget->getAnchorPointInPoints();
 
         //
         // XXX: Camera should be applied in the AnchorPoint
@@ -401,7 +401,7 @@ void Grid3D::calculateVertexPoints(void)
             ccVertex3F l2[4] = {e, f, g, h};
 
             int tex1[4] = {a*2, b*2, c*2, d*2};
-            Point tex2[4] = {Point(x1, y1), Point(x2, y1), Point(x2, y2), Point(x1, y2)};
+            Vec2 tex2[4] = {Vec2(x1, y1), Vec2(x2, y1), Vec2(x2, y2), Vec2(x1, y2)};
 
             for (i = 0; i < 4; ++i)
             {
@@ -425,7 +425,7 @@ void Grid3D::calculateVertexPoints(void)
     memcpy(m_pOriginalVertices, m_pVertices, (m_sGridSize.width+1) * (m_sGridSize.height+1) * sizeof(ccVertex3F));
 }
 
-ccVertex3F Grid3D::vertex(const Point& pos)
+ccVertex3F Grid3D::vertex(const Vec2& pos)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     
@@ -437,7 +437,7 @@ ccVertex3F Grid3D::vertex(const Point& pos)
     return vert;
 }
 
-ccVertex3F Grid3D::originalVertex(const Point& pos)
+ccVertex3F Grid3D::originalVertex(const Vec2& pos)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     
@@ -449,7 +449,7 @@ ccVertex3F Grid3D::originalVertex(const Point& pos)
     return vert;
 }
 
-void Grid3D::setVertex(const Point& pos, const ccVertex3F& vertex)
+void Grid3D::setVertex(const Vec2& pos, const ccVertex3F& vertex)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     int index = (pos.x * (m_sGridSize.height + 1) + pos.y) * 3;
@@ -645,7 +645,7 @@ void TiledGrid3D::calculateVertexPoints(void)
     memcpy(m_pOriginalVertices, m_pVertices, numQuads * 12 * sizeof(GLfloat));
 }
 
-void TiledGrid3D::setTile(const Point& pos, const ccQuad3& coords)
+void TiledGrid3D::setTile(const Vec2& pos, const ccQuad3& coords)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     int idx = (m_sGridSize.height * pos.x + pos.y) * 4 * 3;
@@ -653,7 +653,7 @@ void TiledGrid3D::setTile(const Point& pos, const ccQuad3& coords)
     memcpy(&vertArray[idx], &coords, sizeof(ccQuad3));
 }
 
-ccQuad3 TiledGrid3D::originalTile(const Point& pos)
+ccQuad3 TiledGrid3D::originalTile(const Vec2& pos)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     int idx = (m_sGridSize.height * pos.x + pos.y) * 4 * 3;
@@ -665,7 +665,7 @@ ccQuad3 TiledGrid3D::originalTile(const Point& pos)
     return ret;
 }
 
-ccQuad3 TiledGrid3D::tile(const Point& pos)
+ccQuad3 TiledGrid3D::tile(const Vec2& pos)
 {
     AXAssert( pos.x == (unsigned int)pos.x && pos.y == (unsigned int) pos.y , "Numbers must be integers");
     int idx = (m_sGridSize.height * pos.x + pos.y) * 4 * 3;

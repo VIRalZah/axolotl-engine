@@ -33,7 +33,7 @@ NS_AX_BEGIN
 Scene::Scene()
 {
     m_bIgnoreAnchorPointForPosition = true;
-    setAnchorPoint(Point(0.5f, 0.5f));
+    setAnchorPoint(Vec2(0.5f, 0.5f));
 }
 
 Scene::~Scene()

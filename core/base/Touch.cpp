@@ -37,37 +37,37 @@ Touch::~Touch()
 {
 }
 
-Point Touch::getLocation() const
+Vec2 Touch::getLocation() const
 {
     return Director::sharedDirector()->convertToGL(_point);
 }
 
-Point Touch::getPreviousLocation() const
+Vec2 Touch::getPreviousLocation() const
 {
     return Director::sharedDirector()->convertToGL(_prevPoint);
 }
 
-Point Touch::getStartLocation() const
+Vec2 Touch::getStartLocation() const
 {
     return Director::sharedDirector()->convertToGL(_startPoint);
 }
 
-Point Touch::getDelta() const
+Vec2 Touch::getDelta() const
 {
     return getLocation() - getPreviousLocation();
 }
 
-Point Touch::getLocationInView() const 
+Vec2 Touch::getLocationInView() const 
 { 
     return _point; 
 }
 
-Point Touch::getPreviousLocationInView() const 
+Vec2 Touch::getPreviousLocationInView() const 
 { 
     return _prevPoint; 
 }
 
-Point Touch::getStartLocationInView() const 
+Vec2 Touch::getStartLocationInView() const 
 { 
     return _startPoint; 
 }

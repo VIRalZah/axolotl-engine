@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include "ccMacros.h"
 #include "platform/FileUtils.h"
 #include "support/data_support/uthash.h"
-#include "cocoa/String.h"
+#include "base/String.h"
 // extern
 #include "kazmath/GL/matrix.h"
 #include "kazmath/kazmath.h"

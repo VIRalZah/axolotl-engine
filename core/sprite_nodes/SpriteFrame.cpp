@@ -49,7 +49,7 @@ SpriteFrame* SpriteFrame::createWithTexture(Texture2D *pobTexture, const Rect& r
     return pSpriteFrame;
 }
 
-SpriteFrame* SpriteFrame::createWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Point& offset, const Size& originalSize)
+SpriteFrame* SpriteFrame::createWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
 {
     SpriteFrame *pSpriteFrame = new SpriteFrame();;
     pSpriteFrame->initWithTexture(pobTexture, rect, rotated, offset, originalSize);
@@ -58,7 +58,7 @@ SpriteFrame* SpriteFrame::createWithTexture(Texture2D* pobTexture, const Rect& r
     return pSpriteFrame;
 }
 
-SpriteFrame* SpriteFrame::create(const char* filename, const Rect& rect, bool rotated, const Point& offset, const Size& originalSize)
+SpriteFrame* SpriteFrame::create(const char* filename, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
 {
     SpriteFrame *pSpriteFrame = new SpriteFrame();;
     pSpriteFrame->initWithTextureFilename(filename, rect, rotated, offset, originalSize);
@@ -70,16 +70,16 @@ SpriteFrame* SpriteFrame::create(const char* filename, const Rect& rect, bool ro
 bool SpriteFrame::initWithTexture(Texture2D* pobTexture, const Rect& rect)
 {
     Rect rectInPixels = AX_RECT_POINTS_TO_PIXELS(rect);
-    return initWithTexture(pobTexture, rectInPixels, false, Point::ZERO, rectInPixels.size);
+    return initWithTexture(pobTexture, rectInPixels, false, Vec2::ZERO, rectInPixels.size);
 }
 
 bool SpriteFrame::initWithTextureFilename(const char* filename, const Rect& rect)
 {
     Rect rectInPixels = AX_RECT_POINTS_TO_PIXELS( rect );
-    return initWithTextureFilename(filename, rectInPixels, false, Point::ZERO, rectInPixels.size);
+    return initWithTextureFilename(filename, rectInPixels, false, Vec2::ZERO, rectInPixels.size);
 }
 
-bool SpriteFrame::initWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Point& offset, const Size& originalSize)
+bool SpriteFrame::initWithTexture(Texture2D* pobTexture, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
 {
     m_pobTexture = pobTexture;
 
@@ -99,7 +99,7 @@ bool SpriteFrame::initWithTexture(Texture2D* pobTexture, const Rect& rect, bool 
     return true;
 }
 
-bool SpriteFrame::initWithTextureFilename(const char* filename, const Rect& rect, bool rotated, const Point& offset, const Size& originalSize)
+bool SpriteFrame::initWithTextureFilename(const char* filename, const Rect& rect, bool rotated, const Vec2& offset, const Size& originalSize)
 {
     m_pobTexture = NULL;
     m_strTextureFilename = filename;
@@ -142,23 +142,23 @@ void SpriteFrame::setRectInPixels(const Rect& rectInPixels)
     m_obRect = AX_RECT_PIXELS_TO_POINTS(rectInPixels);
 }
 
-const Point& SpriteFrame::getOffset(void)
+const Vec2& SpriteFrame::getOffset(void)
 {
     return m_obOffset;
 }
 
-void SpriteFrame::setOffset(const Point& offsets)
+void SpriteFrame::setOffset(const Vec2& offsets)
 {
     m_obOffset = offsets;
     m_obOffsetInPixels = AX_POINT_POINTS_TO_PIXELS( m_obOffset );
 }
 
-const Point& SpriteFrame::getOffsetInPixels(void)
+const Vec2& SpriteFrame::getOffsetInPixels(void)
 {
     return m_obOffsetInPixels;
 }
 
-void SpriteFrame::setOffsetInPixels(const Point& offsetInPixels)
+void SpriteFrame::setOffsetInPixels(const Vec2& offsetInPixels)
 {
     m_obOffsetInPixels = offsetInPixels;
     m_obOffset = AX_POINT_PIXELS_TO_POINTS( m_obOffsetInPixels );

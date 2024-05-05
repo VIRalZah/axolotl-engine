@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "ActionGrid.h"
 #include "base/Director.h"
 #include "effects/Grid.h"
-#include "cocoa/Zone.h"
+#include "base/Zone.h"
 
 NS_AX_BEGIN
 // implementation of GridAction
@@ -136,19 +136,19 @@ GridBase* Grid3DAction::getGrid(void)
     return Grid3D::create(m_sGridSize);
 }
 
-ccVertex3F Grid3DAction::vertex(const Point& position)
+ccVertex3F Grid3DAction::vertex(const Vec2& position)
 {
     Grid3D *g = (Grid3D*)m_pTarget->getGrid();
     return g->vertex(position);
 }
 
-ccVertex3F Grid3DAction::originalVertex(const Point& position)
+ccVertex3F Grid3DAction::originalVertex(const Vec2& position)
 {
     Grid3D *g = (Grid3D*)m_pTarget->getGrid();
     return g->originalVertex(position);
 }
 
-void Grid3DAction::setVertex(const Point& position, const ccVertex3F& vertex)
+void Grid3DAction::setVertex(const Vec2& position, const ccVertex3F& vertex)
 {
     Grid3D *g = (Grid3D*)m_pTarget->getGrid();
     g->setVertex(position, vertex);
@@ -161,19 +161,19 @@ GridBase* TiledGrid3DAction::getGrid(void)
     return TiledGrid3D::create(m_sGridSize);
 }
 
-ccQuad3 TiledGrid3DAction::tile(const Point& pos)
+ccQuad3 TiledGrid3DAction::tile(const Vec2& pos)
 {
     TiledGrid3D *g = (TiledGrid3D*)m_pTarget->getGrid();
     return g->tile(pos);
 }
 
-ccQuad3 TiledGrid3DAction::originalTile(const Point& pos)
+ccQuad3 TiledGrid3DAction::originalTile(const Vec2& pos)
 {
     TiledGrid3D *g = (TiledGrid3D*)m_pTarget->getGrid();
     return g->originalTile(pos);
 }
 
-void TiledGrid3DAction::setTile(const Point& pos, const ccQuad3& coords)
+void TiledGrid3DAction::setTile(const Vec2& pos, const ccQuad3& coords)
 {
     TiledGrid3D *g = (TiledGrid3D*)m_pTarget->getGrid();
     return g->setTile(pos, coords);

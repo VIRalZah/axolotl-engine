@@ -1,4 +1,4 @@
-#include "cocoa/Geometry.h"
+
 #include "platform/android/Accelerometer.h"
 #include "../EGLView.h"
 #include "JniHelper.h"

@@ -75,7 +75,7 @@
     <ClInclude Include="..\GUI\ScrollView\ScrollView.h">
       <Filter>GUI\ScrollView</Filter>
     </ClInclude>
-    <ClInclude Include="..\cocos-ext.h" />
+    <ClInclude Include="..\ax-ext.h" />
     <ClInclude Include="..\ExtensionMacros.h" />
     <ClInclude Include="..\network\HttpClient.h">
       <Filter>network</Filter>

@@ -57,7 +57,7 @@ class AX_EX_DLL CCControlSaturationBrightnessPicker : public CCControl
     AX_SYNTHESIZE_READONLY(Sprite*, m_overlay, Overlay);
     AX_SYNTHESIZE_READONLY(Sprite*, m_shadow, Shadow);
     AX_SYNTHESIZE_READONLY(Sprite*, m_slider, Slider);
-    AX_SYNTHESIZE_READONLY(Point, m_startPos, StartPos);
+    AX_SYNTHESIZE_READONLY(Vec2, m_startPos, StartPos);
 
 protected:
     int         boxPos;
@@ -66,17 +66,17 @@ protected:
 public:
     CCControlSaturationBrightnessPicker();
     virtual ~CCControlSaturationBrightnessPicker();
-    virtual bool initWithTargetAndPos(Node* target, Point pos);
+    virtual bool initWithTargetAndPos(Node* target, Vec2 pos);
 
-    static CCControlSaturationBrightnessPicker* create(Node* target, Point pos);
+    static CCControlSaturationBrightnessPicker* create(Node* target, Vec2 pos);
 
     virtual void setEnabled(bool enabled);
     virtual void updateWithHSV(HSV hsv);
     virtual void updateDraggerWithHSV(HSV hsv);
 
 protected:    
-    void updateSliderPosition(Point location);
-    bool checkSliderPosition(Point location);
+    void updateSliderPosition(Vec2 location);
+    bool checkSliderPosition(Vec2 location);
 
     virtual bool ccTouchBegan(Touch* touch);
     virtual void ccTouchMoved(Touch *pTouch);

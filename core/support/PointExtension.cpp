@@ -33,36 +33,36 @@ NS_AX_BEGIN
 #define kAXPointEpsilon FLT_EPSILON
 
 float
-PointLength(const Point& v)
+PointLength(const Vec2& v)
 {
     return v.getLength();
 }
 
 float
-PointDistance(const Point& v1, const Point& v2)
+PointDistance(const Vec2& v1, const Vec2& v2)
 {
     return (v1 - v2).getLength();
 }
 
-Point
-PointNormalize(const Point& v)
+Vec2
+PointNormalize(const Vec2& v)
 {
     return v.normalize();
 }
 
-Point
+Vec2
 PointForAngle(const float a)
 {
-    return Point::forAngle(a);
+    return Vec2::forAngle(a);
 }
 
 float
-PointToAngle(const Point& v)
+PointToAngle(const Vec2& v)
 {
     return v.getAngle();
 }
 
-Point PointLerp(const Point& a, const Point& b, float alpha)
+Vec2 PointLerp(const Vec2& a, const Vec2& b, float alpha)
 {
     return a.lerp(b, alpha);
 }
@@ -75,43 +75,43 @@ float clampf(float value, float min_inclusive, float max_inclusive)
     return value < min_inclusive ? min_inclusive : value < max_inclusive? value : max_inclusive;
 }
 
-Point PointClamp(const Point& p, const Point& min_inclusive, const Point& max_inclusive)
+Vec2 PointClamp(const Vec2& p, const Vec2& min_inclusive, const Vec2& max_inclusive)
 {
-    return Point(clampf(p.x,min_inclusive.x,max_inclusive.x), clampf(p.y, min_inclusive.y, max_inclusive.y));
+    return Vec2(clampf(p.x,min_inclusive.x,max_inclusive.x), clampf(p.y, min_inclusive.y, max_inclusive.y));
 }
 
-Point PointFromSize(const Size& s)
+Vec2 PointFromSize(const Size& s)
 {
-    return Point(s);
+    return Vec2(s);
 }
 
-Point PointCompOp(const Point& p, float (*opFunc)(float))
+Vec2 PointCompOp(const Vec2& p, float (*opFunc)(float))
 {
-    return Point(opFunc(p.x), opFunc(p.y));
+    return Vec2(opFunc(p.x), opFunc(p.y));
 }
 
-bool PointFuzzyEqual(const Point& a, const Point& b, float var)
+bool PointFuzzyEqual(const Vec2& a, const Vec2& b, float var)
 {
 	return a.fuzzyEquals(b, var);
 }
 
-Point PointCompMult(const Point& a, const Point& b)
+Vec2 PointCompMult(const Vec2& a, const Vec2& b)
 {
-    return Point(a.x * b.x, a.y * b.y);
+    return Vec2(a.x * b.x, a.y * b.y);
 }
 
-float PointAngleSigned(const Point& a, const Point& b)
+float PointAngleSigned(const Vec2& a, const Vec2& b)
 {
 	return a.getAngle(b);
 }
 
-Point PointRotateByAngle(const Point& v, const Point& pivot, float angle)
+Vec2 PointRotateByAngle(const Vec2& v, const Vec2& pivot, float angle)
 {
 	return v.rotateByAngle(pivot, angle);
 }
 
 
-bool PointSegmentIntersect(const Point& A, const Point& B, const Point& C, const Point& D)
+bool PointSegmentIntersect(const Vec2& A, const Vec2& B, const Vec2& C, const Vec2& D)
 {
     float S, T;
 
@@ -122,24 +122,24 @@ bool PointSegmentIntersect(const Point& A, const Point& B, const Point& C, const
     return false;
 }
 
-Point PointIntersectPoint(const Point& A, const Point& B, const Point& C, const Point& D)
+Vec2 PointIntersectPoint(const Vec2& A, const Vec2& B, const Vec2& C, const Vec2& D)
 {
     float S, T;
 
     if( PointLineIntersect(A, B, C, D, &S, &T) )
     {
-        // Point of intersection
-        Point P;
+        // Vec2 of intersection
+        Vec2 P;
         P.x = A.x + S * (B.x - A.x);
         P.y = A.y + S * (B.y - A.y);
         return P;
     }
 
-    return Point::ZERO;
+    return Vec2::ZERO;
 }
 
-bool PointLineIntersect(const Point& A, const Point& B, 
-                      const Point& C, const Point& D,
+bool PointLineIntersect(const Vec2& A, const Vec2& B, 
+                      const Vec2& C, const Vec2& D,
                       float *S, float *T)
 {
     // FAIL: Line undefined
@@ -173,7 +173,7 @@ bool PointLineIntersect(const Point& A, const Point& B,
     *S = *S / denom;
     *T = *T / denom;
 
-    // Point of intersection
+    // Vec2 of intersection
     // CGPoint P;
     // P.x = A.x + *S * (B.x - A.x);
     // P.y = A.y + *S * (B.y - A.y);
@@ -181,7 +181,7 @@ bool PointLineIntersect(const Point& A, const Point& B,
     return true;
 }
 
-float PointAngle(const Point& a, const Point& b)
+float PointAngle(const Vec2& a, const Vec2& b)
 {
     float angle = acosf(PointDot(PointNormalize(a), PointNormalize(b)));
     if( fabs(angle) < kAXPointEpsilon ) return 0.f;

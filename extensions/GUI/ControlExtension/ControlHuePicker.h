@@ -57,18 +57,18 @@ class AX_EX_DLL CCControlHuePicker : public CCControl
     //not sure if these need to be there actually. I suppose someone might want to access the sprite?
     AX_SYNTHESIZE_RETAIN(Sprite*, m_background, Background);
     AX_SYNTHESIZE_RETAIN(Sprite*, m_slider, Slider);
-    AX_SYNTHESIZE_READONLY(Point, m_startPos, StartPos);
+    AX_SYNTHESIZE_READONLY(Vec2, m_startPos, StartPos);
 
 public:
     CCControlHuePicker();
     virtual ~CCControlHuePicker();
-    virtual bool initWithTargetAndPos(Node* target, Point pos);
+    virtual bool initWithTargetAndPos(Node* target, Vec2 pos);
 
-    static CCControlHuePicker* create(Node* target, Point pos);
+    static CCControlHuePicker* create(Node* target, Vec2 pos);
     virtual void setEnabled(bool enabled);
 protected:    
-    void updateSliderPosition(Point location);
-    bool checkSliderPosition(Point location);
+    void updateSliderPosition(Vec2 location);
+    bool checkSliderPosition(Vec2 location);
 
     virtual bool ccTouchBegan(Touch* touch);
     virtual void ccTouchMoved(Touch *pTouch);

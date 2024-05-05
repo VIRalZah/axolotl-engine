@@ -28,7 +28,7 @@ THE SOFTWARE.
 #include "support/PointExtension.h"
 #include "base/Touch.h"
 #include "StdC.h"
-#include "cocoa/Integer.h"
+#include "base/Integer.h"
 
 #include <vector>
 #include <stdarg.h>
@@ -129,10 +129,10 @@ bool Menu::initWithArray(Array* pArrayOfItems)
         Size s = Director::sharedDirector()->getWinSize();
 
         this->ignoreAnchorPointForPosition(true);
-        setAnchorPoint(Point(0.5f, 0.5f));
+        setAnchorPoint(Vec2(0.5f, 0.5f));
         this->setContentSize(s);
 
-        setPosition(Point(s.width/2, s.height/2));
+        setPosition(Vec2(s.width/2, s.height/2));
         
         if (pArrayOfItems != NULL)
         {
@@ -308,7 +308,7 @@ void Menu::alignItemsVerticallyWithPadding(float padding)
             Node* pChild = dynamic_cast<Node*>(pObject);
             if (pChild)
             {
-                pChild->setPosition(Point(0, y - pChild->getContentSize().height * pChild->getScaleY() / 2.0f));
+                pChild->setPosition(Vec2(0, y - pChild->getContentSize().height * pChild->getScaleY() / 2.0f));
                 y -= pChild->getContentSize().height * pChild->getScaleY() + padding;
             }
         }
@@ -346,7 +346,7 @@ void Menu::alignItemsHorizontallyWithPadding(float padding)
             Node* pChild = dynamic_cast<Node*>(pObject);
             if (pChild)
             {
-                pChild->setPosition(Point(x + pChild->getContentSize().width * pChild->getScaleX() / 2.0f, 0));
+                pChild->setPosition(Vec2(x + pChild->getContentSize().width * pChild->getScaleX() / 2.0f, 0));
                  x += pChild->getContentSize().width * pChild->getScaleX() + padding;
             }
         }
@@ -444,7 +444,7 @@ void Menu::alignItemsInColumnsWithArray(Array* rowsArray)
                 float tmp = pChild->getContentSize().height;
                 rowHeight = (unsigned int)((rowHeight >= tmp || isnan(tmp)) ? rowHeight : tmp);
 
-                pChild->setPosition(Point(x - winSize.width / 2,
+                pChild->setPosition(Vec2(x - winSize.width / 2,
                                        y - pChild->getContentSize().height / 2));
 
                 x += w;
@@ -565,7 +565,7 @@ void Menu::alignItemsInRowsWithArray(Array* columnArray)
                 float tmp = pChild->getContentSize().width;
                 columnWidth = (unsigned int)((columnWidth >= tmp || isnan(tmp)) ? columnWidth : tmp);
 
-                pChild->setPosition(Point(x + columnWidths[column] / 2,
+                pChild->setPosition(Vec2(x + columnWidths[column] / 2,
                                        y - winSize.height / 2));
 
                 y -= pChild->getContentSize().height + 10;
@@ -586,7 +586,7 @@ void Menu::alignItemsInRowsWithArray(Array* columnArray)
 
 MenuItem* Menu::itemForTouch(Touch *touch)
 {
-    Point touchLocation = touch->getLocation();
+    Vec2 touchLocation = touch->getLocation();
 
     if (m_pChildren && m_pChildren->count() > 0)
     {
@@ -596,9 +596,9 @@ MenuItem* Menu::itemForTouch(Touch *touch)
             MenuItem* pChild = dynamic_cast<MenuItem*>(pObject);
             if (pChild && pChild->isVisible() && pChild->isEnabled())
             {
-                Point local = pChild->convertToNodeSpace(touchLocation);
+                Vec2 local = pChild->convertToNodeSpace(touchLocation);
                 Rect r = pChild->rect();
-                r.origin = Point::ZERO;
+                r.origin = Vec2::ZERO;
 
                 if (r.containsPoint(local))
                 {

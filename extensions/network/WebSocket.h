@@ -32,7 +32,7 @@
 #include "platform/PlatformMacros.h"
 
 #include "ExtensionMacros.h"
-#include "cocos2d.h"
+#include "axolotl.h"
 #include "websockets/include/libwebsockets.h"
 #include <list>
 

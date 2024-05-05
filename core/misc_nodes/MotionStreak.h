@@ -27,10 +27,10 @@ THE SOFTWARE.
 
 #include "Protocols.h"
 #include "textures/Texture2D.h"
-#include "ccTypes.h"
-#include "base_nodes/Node.h"
+#include "base/Types.h"
+#include "base/Node.h"
 #ifdef EMSCRIPTEN
-#include "base_nodes/GLBufferedNode.h"
+#include "base/GLBufferedNode.h"
 #endif // EMSCRIPTEN
 
 NS_AX_BEGIN
@@ -76,7 +76,7 @@ public:
     void reset();
 
     /** Override super methods */
-    virtual void setPosition(const Point& position);
+    virtual void setPosition(const Vec2& position);
     virtual void draw();
     virtual void update(float delta);
 
@@ -112,7 +112,7 @@ private:
     /** texture used for the motion streak */
     Texture2D* m_pTexture;
     ccBlendFunc m_tBlendFunc;
-    Point m_tPositionR;
+    Vec2 m_tPositionR;
 
     float m_fStroke;
     float m_fFadeDelta;
@@ -123,7 +123,7 @@ private:
     unsigned int m_uPreviousNuPoints;
 
     /** Pointers */
-    Point* m_pPointVertexes;
+    Vec2* m_pPointVertexes;
     float* m_pPointState;
 
     // Opengl
