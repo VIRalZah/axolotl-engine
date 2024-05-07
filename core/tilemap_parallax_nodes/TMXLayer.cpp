@@ -72,7 +72,7 @@ bool TMXLayer::initWithTilesetInfo(TMXTilesetInfo *tilesetInfo, TMXLayerInfo *la
         m_uMaxGID = layerInfo->m_uMaxGID;
         m_cOpacity = layerInfo->m_cOpacity;
         setProperties(Dictionary::createWithDictionary(layerInfo->getProperties()));
-        m_fContentScaleFactor = Director::sharedDirector()->getContentScaleFactor(); 
+        _contentScaleFactor = Director::sharedDirector()->getContentScaleFactor(); 
 
         // tilesetInfo
         m_pTileSet = tilesetInfo;
@@ -421,7 +421,7 @@ Sprite * TMXLayer::insertTileForGID(unsigned int gid, const Vec2& pos)
 Sprite * TMXLayer::updateTileForGID(unsigned int gid, const Vec2& pos)    
 {
     Rect rect = m_pTileSet->rectForGID(gid);
-    rect = Rect(rect.origin.x / m_fContentScaleFactor, rect.origin.y / m_fContentScaleFactor, rect.size.width/ m_fContentScaleFactor, rect.size.height/ m_fContentScaleFactor);
+    rect = Rect(rect.origin.x / _contentScaleFactor, rect.origin.y / _contentScaleFactor, rect.size.width/ _contentScaleFactor, rect.size.height/ _contentScaleFactor);
     int z = (int)(pos.x + pos.y * m_tLayerSize.width);
 
     Sprite *tile = reusedTileWithRect(rect);

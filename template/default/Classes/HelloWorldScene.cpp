@@ -1,6 +1,12 @@
 ﻿#include "HelloWorldScene.h"
 
-USING_NS_AX;
+HelloWorld::HelloWorld()
+{
+}
+
+HelloWorld::~HelloWorld()
+{
+}
 
 Scene* HelloWorld::scene()
 {
@@ -17,51 +23,27 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+    setKeypadEnabled(true); // for keyBackClicked()
     
     auto director = Director::sharedDirector();
 
     Vec2 origin = director->getVisibleOrigin();
     Size visibleSize = director->getVisibleSize();
 
-    auto closeItem = MenuItemImage::create(
-        "CloseNormal.png",
-        "CloseSelected.png",
-        this,
-        menu_selector(HelloWorld::menuCloseCallback)
-    );
-    
-	closeItem->setPosition(
-        Vec2
-        (
-            origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
-            origin.y + closeItem->getContentSize().height / 2
-        )
-    );
+    auto axolotl = Sprite::create("Axolotl.png"); // create sprite
 
-    Menu* menu = Menu::create(closeItem, NULL);
-    menu->setPosition(Vec2::ZERO);
-    addChild(menu, 1);
+    axolotl->setPosition(
+        origin.x + visibleSize.width / 2,
+        origin.y + visibleSize.height / 2
+    ); // set position to center
 
-    auto helloWorld = Sprite::create("HelloWorld.png");
-
-    helloWorld->setPosition(
-        Vec2(
-            visibleSize.width / 2 + origin.x,
-            visibleSize.height / 2 + origin.y
-        )
-    );
-
-    addChild(helloWorld);
+    addChild(axolotl); // add sprite to layer
 
     return true;
 }
 
-void HelloWorld::menuCloseCallback(Object* pSender)
+void HelloWorld::keyBackClicked()
 {
-    Director::sharedDirector()->end();
-}
-
-void HelloWorld::draw()
-{
-    Layer::draw();
+    Director::sharedDirector()->end(); // close game in next frame
 }

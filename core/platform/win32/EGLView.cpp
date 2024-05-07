@@ -78,6 +78,11 @@ EGLView* EGLView::createWithFrameSize(const std::string& viewName, float width, 
     return nullptr;
 }
 
+EGLView* EGLView::createWithFrameSize(const std::string& viewName, Size size)
+{
+    return EGLView::createWithFrameSize(viewName, size.width, size.height);
+}
+
 bool EGLView::initWithFrameSize(const std::string& viewName, float width, float height)
 {
     bool ret = false;
@@ -181,6 +186,19 @@ void EGLView::setScissorInPoints(float x , float y , float w , float h)
               (GLint)(y * _scaleY + _viewPortRect.origin.y ),
               (GLsizei)(w * _scaleX),
               (GLsizei)(h * _scaleY));
+}
+
+void EGLView::setAspectRatio(int numer, int denom)
+{
+    if (_window)
+    {
+        glfwSetWindowAspectRatio(_window, numer, denom);
+    }
+}
+
+void EGLView::setAspectRatio(Size aspectRatio)
+{
+    setAspectRatio(MAX(aspectRatio.width, aspectRatio.height), MIN(aspectRatio.height, aspectRatio.width));
 }
 
 EGLView* EGLView::sharedEGLView()

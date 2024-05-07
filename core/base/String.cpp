@@ -114,6 +114,11 @@ bool String::boolValue() const
     return true;
 }
 
+const std::string& String::getString() const
+{
+    return m_sString;
+}
+
 const char* String::getCString() const
 {
     return m_sString.c_str();

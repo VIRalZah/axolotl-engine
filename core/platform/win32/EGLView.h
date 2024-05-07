@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include "platform/Common.h"
 
 #include "platform/EGLViewProtocol.h"
-#include "glfw/include/GLFW/glfw3.h"
+#include "GLFW/glfw3.h"
 
 NS_AX_BEGIN
 
@@ -40,6 +40,7 @@ public:
     virtual ~EGLView();
 
     static EGLView* createWithFrameSize(const std::string& viewName, float width, float height);
+    static EGLView* createWithFrameSize(const std::string& viewName, Size size);
 
     virtual bool initWithFrameSize(const std::string& viewName, float width, float height);
 
@@ -61,6 +62,9 @@ public:
     virtual void setViewPortInPoints(float x, float y, float w, float h);
     virtual void setScissorInPoints(float x, float y, float w, float h);
     
+    virtual void setAspectRatio(int numer, int denom);
+    virtual void setAspectRatio(Size aspectRatio);
+
     static EGLView* sharedEGLView();
 
     // callbacks

@@ -206,20 +206,6 @@ public:
     virtual const std::string& getString(void) = 0;
 };
 
-/** 
- * OpenGL projection protocol 
- * @js NA
- * @lua NA
- */
-class AX_DLL DirectorDelegate
-{
-public:
-    /** 
-     * Will be called by Director when the projection is updated, and "custom" projection is used
-     */
-    virtual void updateProjection(void) = 0;
-};
-
 NS_AX_END
 
 #endif // __AXPROTOCOLS_H__

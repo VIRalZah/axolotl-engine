@@ -244,8 +244,8 @@ It should work same as apples CFSwapInt32LittleToHost(..)
  Increments the GL Draws counts by one.
  The number of calls per frame are displayed on the screen when the Director's stats are enabled.
  */
-extern unsigned int AX_DLL g_uNumberOfDraws;
-#define AX_INCREMENT_GL_DRAWS(__n__) g_uNumberOfDraws += __n__
+extern unsigned int AX_DLL _numberOfDraws;
+#define AX_INCREMENT_GL_DRAWS(__n__) _numberOfDraws += __n__
 
 /*******************/
 /** Notifications **/

@@ -26,15 +26,9 @@
 #include "HttpClient.h"
 // #include "platform/Thread.h"
 
-#if (AX_TARGET_PLATFORM == AX_PLATFORM_WP8) ||  (AX_TARGET_PLATFORM == AX_PLATFORM_WINRT)
-#include "PThreadWinRT.h"
-typedef void THREAD_VOID;
-#define THREAD_RETURN
-#else
-#include <pthread.h>
-typedef void* THREAD_VOID;
-#define THREAD_RETURN 0
-#endif
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 #include <errno.h>
 #include <queue>
@@ -43,12 +37,12 @@ typedef void* THREAD_VOID;
 
 NS_AX_EXT_BEGIN
 
-static pthread_t        s_networkThread;
-static pthread_mutex_t  s_requestQueueMutex;
-static pthread_mutex_t  s_responseQueueMutex;
+static std::thread _networkThread;
+static std::mutex  _requestQueueMutex;
+static std::mutex  _responseQueueMutex;
 
-static pthread_mutex_t		s_SleepMutex;
-static pthread_cond_t		s_SleepCondition;
+static std::mutex _sleepMutex;
+static std::condition_variable _sleepCondition;
 
 static unsigned long    s_asyncRequestCount = 0;
 
@@ -100,11 +94,9 @@ static int processPutTask(CCHttpRequest *request, write_callback callback, void 
 static int processDeleteTask(CCHttpRequest *request, write_callback callback, void *stream, long *errorCode, write_callback headerCallback, void *headerStream);
 // int processDownloadTask(HttpRequest *task, write_callback callback, void *stream, int32_t *errorCode);
 
-
-// Worker thread
-static THREAD_VOID networkThread(THREAD_VOID)
+static void networkThread()
 {    
-    CCHttpRequest *request = NULL;
+    CCHttpRequest* request = NULL;
     
     while (true) 
     {
@@ -116,19 +108,19 @@ static THREAD_VOID networkThread(THREAD_VOID)
         // step 1: send http request if the requestQueue isn't empty
         request = NULL;
         
-        pthread_mutex_lock(&s_requestQueueMutex); //Get request task from queue
+        _requestQueueMutex.lock(); //Get request task from queue
         if (0 != s_requestQueue->count())
         {
             request = dynamic_cast<CCHttpRequest*>(s_requestQueue->objectAtIndex(0));
             s_requestQueue->removeObjectAtIndex(0);  
             // request's refcount = 1 here
         }
-        pthread_mutex_unlock(&s_requestQueueMutex);
+        _requestQueueMutex.unlock();
         
         if (NULL == request)
         {
         	// Wait for http request tasks from main thread
-        	pthread_cond_wait(&s_SleepCondition, &s_SleepMutex);
+            _sleepCondition.wait(std::unique_lock<std::mutex>(_sleepMutex));
             continue;
         }
         
@@ -203,38 +195,27 @@ static THREAD_VOID networkThread(THREAD_VOID)
 
         
         // add response packet into queue
-        pthread_mutex_lock(&s_responseQueueMutex);
+        _responseQueueMutex.lock();
         s_responseQueue->addObject(response);
-        pthread_mutex_unlock(&s_responseQueueMutex);
+        _responseQueueMutex.unlock();
         
         // resume dispatcher selector
         Director::sharedDirector()->getScheduler()->resumeTarget(CCHttpClient::getInstance());
     }
     
     // cleanup: if worker thread received quit signal, clean up un-completed request queue
-    pthread_mutex_lock(&s_requestQueueMutex);
+    _requestQueueMutex.lock();
     s_requestQueue->removeAllObjects();
-    pthread_mutex_unlock(&s_requestQueueMutex);
+    _requestQueueMutex.unlock();
     s_asyncRequestCount -= s_requestQueue->count();
     
-    if (s_requestQueue != NULL) {
-        
-        pthread_mutex_destroy(&s_requestQueueMutex);
-        pthread_mutex_destroy(&s_responseQueueMutex);
-        
-        pthread_mutex_destroy(&s_SleepMutex);
-        pthread_cond_destroy(&s_SleepCondition);
-
+    if (s_requestQueue != NULL)
+    {
         s_requestQueue->release();
         s_requestQueue = NULL;
         s_responseQueue->release();
         s_responseQueue = NULL;
     }
-
-    pthread_exit(NULL);
-    
-    return THREAD_RETURN;
-
 }
 
 //Configure curl's timeout property
@@ -419,7 +400,7 @@ CCHttpClient::~CCHttpClient()
     need_quit = true;
     
     if (s_requestQueue != NULL) {
-    	pthread_cond_signal(&s_SleepCondition);
+    	_sleepCondition.notify_one();
     }
     
     s_pHttpClient = NULL;
@@ -437,17 +418,10 @@ bool CCHttpClient::lazyInitThreadSemphore()
         
         s_responseQueue = new Array();
         s_responseQueue->init();
-        
-        pthread_mutex_init(&s_requestQueueMutex, NULL);
-        pthread_mutex_init(&s_responseQueueMutex, NULL);
-        
-        pthread_mutex_init(&s_SleepMutex, NULL);
-        pthread_cond_init(&s_SleepCondition, NULL);
 
         need_quit = false;
-        pthread_create(&s_networkThread, NULL, networkThread, NULL);
-        pthread_detach(s_networkThread);
-        
+        _networkThread = std::thread(&networkThread);
+        _networkThread.detach();
     }
     
     return true;
@@ -470,12 +444,12 @@ void CCHttpClient::send(CCHttpRequest* request)
     
     request->retain();
         
-    pthread_mutex_lock(&s_requestQueueMutex);
+    _requestQueueMutex.lock();
     s_requestQueue->addObject(request);
-    pthread_mutex_unlock(&s_requestQueueMutex);
+    _requestQueueMutex.unlock();
     
     // Notify thread start to work
-    pthread_cond_signal(&s_SleepCondition);
+    _sleepCondition.notify_one();
 }
 
 // Poll and notify main thread if responses exists in queue
@@ -485,13 +459,13 @@ void CCHttpClient::dispatchResponseCallbacks(float delta)
     
     CCHttpResponse* response = NULL;
     
-    pthread_mutex_lock(&s_responseQueueMutex);
+    _responseQueueMutex.lock();
     if (s_responseQueue->count())
     {
         response = dynamic_cast<CCHttpResponse*>(s_responseQueue->objectAtIndex(0));
         s_responseQueue->removeObjectAtIndex(0);
     }
-    pthread_mutex_unlock(&s_responseQueueMutex);
+    _responseQueueMutex.unlock();
     
     if (response)
     {

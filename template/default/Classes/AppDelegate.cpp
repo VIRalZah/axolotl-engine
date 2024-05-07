@@ -1,53 +1,45 @@
-#include "AppDelegate.h"
+﻿#include "AppDelegate.h"
 #include "HelloWorldScene.h"
 
-USING_NS_AX;
-
-AppDelegate::AppDelegate() {
-
+AppDelegate::AppDelegate()
+{
 }
 
 AppDelegate::~AppDelegate() 
 {
 }
 
-bool AppDelegate::applicationDidFinishLaunching() {
-    // initialize director
-    Director* pDirector = Director::sharedDirector();
-    EGLView* pEGLView = new EGLView();
-    pEGLView->initWithFrameSize("Hello Cpp", 480, 320);
+static Size _designResolutionSize = Size(960, 640);
+static Size _frameSize = Size(960, 640);
 
-    pDirector->setOpenGLView(pEGLView);
-	
-    pEGLView->setDesignResolutionSize(480, 320, kResolutionNoBorder);
+bool AppDelegate::applicationDidFinishLaunching()
+{
+    auto director = Director::sharedDirector();
+    if (!director->getOpenGLView())
+    {
+        auto eglView = EGLView::createWithFrameSize("Hello Cpp", _frameSize);
+        director->setOpenGLView(eglView);
 
-    // turn on display FPS
-    pDirector->setDisplayStats(true);
+        eglView->setAspectRatio(_frameSize);
 
-    // set FPS. the default value is 1.0/60 if you don't call this
-    pDirector->setAnimationInterval(1.0 / 60);
+        eglView->setDesignResolutionSize(_designResolutionSize.width, _designResolutionSize.height, kResolutionNoBorder);
+    }
 
-    // create a scene. it's an autorelease object
-    Scene *pScene = HelloWorld::scene();
+    director->setDisplayStats(true);
+    director->setAnimationInterval(1.0 / 60);
 
-    // run
-    pDirector->runWithScene(pScene);
+    auto scene = HelloWorld::scene();
+    director->runWithScene(scene);
 
     return true;
 }
 
-// This function will be called when the app is inactive. When comes a phone call,it's be invoked too
-void AppDelegate::applicationDidEnterBackground() {
+void AppDelegate::applicationDidEnterBackground()
+{
     Director::sharedDirector()->stopAnimation();
-
-    // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 }
 
-// this function will be called when the app is active again
-void AppDelegate::applicationWillEnterForeground() {
+void AppDelegate::applicationWillEnterForeground()
+{
     Director::sharedDirector()->startAnimation();
-
-    // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 }

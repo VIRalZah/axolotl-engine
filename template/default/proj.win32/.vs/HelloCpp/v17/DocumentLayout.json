@@ -1,7 +1,23 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\proj.win32\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\includes.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +25,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AppDelegate.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
+              "RelativeDocumentMoniker": "..\\Classes\\AppDelegate.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
+              "RelativeToolTip": "..\\Classes\\AppDelegate.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-07T13:55:17.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDelegate.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.h",
+              "RelativeDocumentMoniker": "..\\Classes\\AppDelegate.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.h",
+              "RelativeToolTip": "..\\Classes\\AppDelegate.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-07T13:53:53.659Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "includes.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\includes.h",
+              "RelativeDocumentMoniker": "..\\Classes\\includes.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\includes.h",
+              "RelativeToolTip": "..\\Classes\\includes.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvwkAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-07T13:45:11.88Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HelloWorldScene.h",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h",
+              "RelativeDocumentMoniker": "..\\Classes\\HelloWorldScene.h",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.h",
+              "RelativeToolTip": "..\\Classes\\HelloWorldScene.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-05-07T13:44:56.269Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HelloWorldScene.cpp",
+              "DocumentMoniker": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp",
+              "RelativeDocumentMoniker": "..\\Classes\\HelloWorldScene.cpp",
+              "ToolTip": "D:\\Documents\\GitHub\\axolotl-engine\\template\\default\\Classes\\HelloWorldScene.cpp",
+              "RelativeToolTip": "..\\Classes\\HelloWorldScene.cpp",
+              "ViewState": "AQIAACQAAAAAAAAAAAAAAA8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-05-07T12:48:41.139Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2010      Ricardo Quesada
 
@@ -37,125 +37,108 @@ using namespace std;
 
 NS_AX_BEGIN
 
-Configuration* Configuration::s_gSharedConfiguration = NULL;
-
 Configuration::Configuration(void)
-: m_nMaxTextureSize(0) 
-, m_nMaxModelviewStackDepth(0)
-, m_bSupportsPVRTC(false)
-, m_bSupportsNPOT(false)
-, m_bSupportsBGRA8888(false)
-, m_bSupportsDiscardFramebuffer(false)
-, m_bSupportsShareableVAO(false)
-, m_nMaxSamplesAllowed(0)
-, m_nMaxTextureUnits(0)
-, m_pGlExtensions(NULL)
-, m_pValueDict(NULL)
+	: m_nMaxTextureSize(0)
+	, m_nMaxModelviewStackDepth(0)
+	, m_bSupportsPVRTC(false)
+	, m_bSupportsNPOT(false)
+	, m_bSupportsBGRA8888(false)
+	, m_bSupportsDiscardFramebuffer(false)
+	, m_bSupportsShareableVAO(false)
+	, m_nMaxSamplesAllowed(0)
+	, m_nMaxTextureUnits(0)
+	, m_pGlExtensions(NULL)
+	, _valueDict(NULL)
 {
-}
-
-bool Configuration::init(void)
-{
-	m_pValueDict = Dictionary::create();
-	m_pValueDict->retain();
-
-	m_pValueDict->setObject(String::create(axolotlVersion().toString()), "axolotl.version");
-
-
-#if AX_ENABLE_PROFILERS
-	m_pValueDict->setObject( Bool::create(true), "axolotl.compiled_with_profiler");
-#else
-	m_pValueDict->setObject( Bool::create(false), "axolotl.compiled_with_profiler");
-#endif
-
-#if AX_ENABLE_GL_STATE_CACHE == 0
-	m_pValueDict->setObject( Bool::create(false), "axolotl.compiled_with_gl_state_cache");
-#else
-	m_pValueDict->setObject( Bool::create(true), "axolotl.compiled_with_gl_state_cache");
-#endif
-
-	return true;
 }
 
 Configuration::~Configuration(void)
 {
-	m_pValueDict->release();
+	AX_SAFE_RELEASE(_valueDict);
+}
+
+static Configuration* _sharedConfiguration = nullptr;
+
+Configuration* Configuration::sharedConfiguration()
+{
+	if (!_sharedConfiguration)
+	{
+		_sharedConfiguration = new Configuration();
+		_sharedConfiguration->init();
+	}
+	return _sharedConfiguration;
+}
+
+void Configuration::purgeConfiguration()
+{
+	AX_SAFE_DELETE(_sharedConfiguration);
+}
+
+bool Configuration::init()
+{
+	_valueDict = Dictionary::create();
+	AX_SAFE_RETAIN(_valueDict);
+
+	_valueDict->setObject(String::create(axolotlVersion().toString()), "axolotl.version");
+
+	_valueDict->setObject(Bool::create(AX_ENABLE_PROFILERS == 1), "axolotl.compiled_with_profiler");
+	_valueDict->setObject(Bool::create(AX_ENABLE_GL_STATE_CACHE == 1), "axolotl.compiled_with_profiler");
+
+	return true;
 }
 
 void Configuration::dumpInfo(void) const
 {
-	// Dump
 	PrettyPrinter visitor(0);
-	m_pValueDict->acceptVisitor(visitor);
+	_valueDict->acceptVisitor(visitor);
 
 	AXLOG("%s", visitor.getResult().c_str());
 
-
-	// And Dump some warnings as well
 #if AX_ENABLE_PROFILERS
-    AXLOG("cocos2d: **** WARNING **** AX_ENABLE_PROFILERS is defined. Disable it when you finish profiling (from ccConfig.h)");
-    printf("\n");
+    AXLOGWARN("**** WARNING **** AX_ENABLE_PROFILERS is defined. Disable it when you finish profiling (from ccConfig.h)");
 #endif
 
 #if AX_ENABLE_GL_STATE_CACHE == 0
-    AXLOG("");
-    AXLOG("cocos2d: **** WARNING **** AX_ENABLE_GL_STATE_CACHE is disabled. To improve performance, enable it (from ccConfig.h)");
-    printf("\n");
+    AXLOGWARN("**** WARNING **** AX_ENABLE_GL_STATE_CACHE is disabled. To improve performance, enable it (from ccConfig.h)");
 #endif
 
 }
 
 void Configuration::gatherGPUInfo()
 {
-	m_pValueDict->setObject( String::create( (const char*)glGetString(GL_VENDOR)), "gl.vendor");
-	m_pValueDict->setObject( String::create( (const char*)glGetString(GL_RENDERER)), "gl.renderer");
-	m_pValueDict->setObject( String::create( (const char*)glGetString(GL_VERSION)), "gl.version");
+	_valueDict->setObject( String::create( (const char*)glGetString(GL_VENDOR)), "gl.vendor");
+	_valueDict->setObject( String::create( (const char*)glGetString(GL_RENDERER)), "gl.renderer");
+	_valueDict->setObject( String::create( (const char*)glGetString(GL_VERSION)), "gl.version");
 
     m_pGlExtensions = (char *)glGetString(GL_EXTENSIONS);
 
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &m_nMaxTextureSize);
-	m_pValueDict->setObject( Integer::create((int)m_nMaxTextureSize), "gl.max_texture_size");
+	_valueDict->setObject( Integer::create((int)m_nMaxTextureSize), "gl.max_texture_size");
 
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &m_nMaxTextureUnits);
-	m_pValueDict->setObject( Integer::create((int)m_nMaxTextureUnits), "gl.max_texture_units");
+	_valueDict->setObject( Integer::create((int)m_nMaxTextureUnits), "gl.max_texture_units");
 
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_IOS)
     glGetIntegerv(GL_MAX_SAMPLES_APPLE, &m_nMaxSamplesAllowed);
-	m_pValueDict->setObject( Integer::create((int)m_nMaxSamplesAllowed), "gl.max_samples_allowed");
+	_valueDict->setObject( Integer::create((int)m_nMaxSamplesAllowed), "gl.max_samples_allowed");
 #endif
 
     m_bSupportsPVRTC = checkForGLExtension("GL_IMG_texture_compression_pvrtc");
-	m_pValueDict->setObject( Bool::create(m_bSupportsPVRTC), "gl.supports_PVRTC");
+	_valueDict->setObject( Bool::create(m_bSupportsPVRTC), "gl.supports_PVRTC");
 
     m_bSupportsNPOT = true;
-	m_pValueDict->setObject( Bool::create(m_bSupportsNPOT), "gl.supports_NPOT");
+	_valueDict->setObject( Bool::create(m_bSupportsNPOT), "gl.supports_NPOT");
 	
     m_bSupportsBGRA8888 = checkForGLExtension("GL_IMG_texture_format_BGRA888");
-	m_pValueDict->setObject( Bool::create(m_bSupportsBGRA8888), "gl.supports_BGRA8888");
+	_valueDict->setObject( Bool::create(m_bSupportsBGRA8888), "gl.supports_BGRA8888");
 
     m_bSupportsDiscardFramebuffer = checkForGLExtension("GL_EXT_discard_framebuffer");
-	m_pValueDict->setObject( Bool::create(m_bSupportsDiscardFramebuffer), "gl.supports_discard_framebuffer");
+	_valueDict->setObject( Bool::create(m_bSupportsDiscardFramebuffer), "gl.supports_discard_framebuffer");
 
     m_bSupportsShareableVAO = checkForGLExtension("vertex_array_object");
-	m_pValueDict->setObject( Bool::create(m_bSupportsShareableVAO), "gl.supports_vertex_array_object");
+	_valueDict->setObject( Bool::create(m_bSupportsShareableVAO), "gl.supports_vertex_array_object");
     
     CHECK_GL_ERROR_DEBUG();
-}
-
-Configuration* Configuration::sharedConfiguration(void)
-{
-    if (! s_gSharedConfiguration)
-    {
-        s_gSharedConfiguration = new Configuration();
-        s_gSharedConfiguration->init();
-    }
-    
-    return s_gSharedConfiguration;
-}
-
-void Configuration::purgeConfiguration(void)
-{
-    AX_SAFE_RELEASE_NULL(s_gSharedConfiguration);
 }
 
 bool Configuration::checkForGLExtension(const string &searchName) const
@@ -216,12 +199,26 @@ bool Configuration::supportsShareableVAO(void) const
 	return m_bSupportsShareableVAO;
 }
 
+const std::string& Configuration::getString(const char* key, const std::string& defaultValue)
+{
+	Object* ret = _valueDict->objectForKey(key);
+	if (ret)
+	{
+		if (String* str = dynamic_cast<String*>(ret))
+			return str->getString();
+
+		AXAssert(false, "Key found, but from different type");
+	}
+
+	return defaultValue;
+}
+
 //
 // generic getters for properties
 //
 const char *Configuration::getCString( const char *key, const char *default_value ) const
 {
-	Object *ret = m_pValueDict->objectForKey(key);
+	Object *ret = _valueDict->objectForKey(key);
 	if( ret ) {
 		if( String *str=dynamic_cast<String*>(ret) )
 			return str->getCString();
@@ -236,7 +233,7 @@ const char *Configuration::getCString( const char *key, const char *default_valu
 /** returns the value of a given key as a boolean */
 bool Configuration::getBool( const char *key, bool default_value ) const
 {
-	Object *ret = m_pValueDict->objectForKey(key);
+	Object *ret = _valueDict->objectForKey(key);
 	if( ret ) {
 		if( Bool *boolobj=dynamic_cast<Bool*>(ret) )
 			return boolobj->getValue();
@@ -252,7 +249,7 @@ bool Configuration::getBool( const char *key, bool default_value ) const
 /** returns the value of a given key as a double */
 double Configuration::getNumber( const char *key, double default_value ) const
 {
-	Object *ret = m_pValueDict->objectForKey(key);
+	Object *ret = _valueDict->objectForKey(key);
 	if( ret ) {
 		if( Double *obj=dynamic_cast<Double*>(ret) )
 			return obj->getValue();
@@ -272,12 +269,12 @@ double Configuration::getNumber( const char *key, double default_value ) const
 
 Object * Configuration::getObject( const char *key ) const
 {
-	return m_pValueDict->objectForKey(key);
+	return _valueDict->objectForKey(key);
 }
 
 void Configuration::setObject( const char *key, Object *value )
 {
-	m_pValueDict->setObject(value, key);
+	_valueDict->setObject(value, key);
 }
 
 
@@ -322,8 +319,8 @@ void Configuration::loadConfigFile( const char *filename )
     DictElement* element;
     CCDICT_FOREACH(data_dict, element)
     {
-		if( ! m_pValueDict->objectForKey( element->getStrKey() ) )
-			m_pValueDict->setObject(element->getObject(), element->getStrKey() );
+		if( ! _valueDict->objectForKey( element->getStrKey() ) )
+			_valueDict->setObject(element->getObject(), element->getStrKey() );
 		else
 			AXLOG("Key already present. Ignoring '%s'", element->getStrKey() );
     }

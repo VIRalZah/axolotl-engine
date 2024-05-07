@@ -70,7 +70,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\external\win32;$(ProjectDir)..\..\core;$(ProjectDir)..\..\core\include;$(ProjectDir)..\..\core\kazmath\include;$(ProjectDir)..\..\core\platform\win32;$(ProjectDir)..\..\core\platform\third_party\win32;$(ProjectDir)..\..\core\platform\third_party\win32\pthread;$(ProjectDir)..\..\core\platform\third_party\win32\OGLES;$(ProjectDir)..\..\core\platform\third_party\win32\zlib;$(ProjectDir)..\..\CocosDenshion\include;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\external\win32;$(ProjectDir)..\..\core;$(ProjectDir)..\..\core\include;$(ProjectDir)..\..\core\kazmath\include;$(ProjectDir)..\..\core\platform\win32;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32\zlib;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USREXDLL;AXOLOTL_DEBUG=1;_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -83,7 +83,7 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libcurl_imp.lib;ws2_32.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;libaxolotl.lib;websockets.lib;libmpg123.lib;libogg.lib;libvorbisfile.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libcurl_imp.lib;ws2_32.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;libaxolotl.lib;websockets.lib;libmpg123.lib;libogg.lib;libvorbisfile.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -96,7 +96,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\external\win32;$(ProjectDir)..\..\core;$(ProjectDir)..\..\core\include;$(ProjectDir)..\..\core\kazmath\include;$(ProjectDir)..\..\core\platform\win32;$(ProjectDir)..\..\core\platform\third_party\win32;$(ProjectDir)..\..\core\platform\third_party\win32\pthread;$(ProjectDir)..\..\core\platform\third_party\win32\OGLES;$(ProjectDir)..\..\core\platform\third_party\win32\zlib;$(ProjectDir)..\..\CocosDenshion\include;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..\..\external;$(ProjectDir)..\..\external\win32;$(ProjectDir)..\..\core;$(ProjectDir)..\..\core\include;$(ProjectDir)..\..\core\kazmath\include;$(ProjectDir)..\..\core\platform\win32;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32\zlib;..\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USREXDLL;_ENABLE_CHIPMUNK_INTEGRATION=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -108,7 +108,7 @@
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libcurl_imp.lib;ws2_32.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;pthreadVCE2.lib;libaxolotl.lib;websockets.lib;libmpg123.lib;libogg.lib;libvorbisfile.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32.lib;libzlib.lib;libpng.lib;libcurl_imp.lib;ws2_32.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;libaxolotl.lib;websockets.lib;libmpg123.lib;libogg.lib;libvorbisfile.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
     </Link>

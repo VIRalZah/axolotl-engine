@@ -1387,9 +1387,9 @@ protected:
     
     unsigned int m_uOrderOfArrival;     ///< used to preserve sequence while sorting children with the same zOrder
     
-    Scheduler *m_pScheduler;          ///< scheduler used to schedule timers and updates
+    Scheduler *_scheduler;          ///< scheduler used to schedule timers and updates
     
-    ActionManager *m_pActionManager;  ///< a pointer to ActionManager singleton, which is used to handle all the actions
+    ActionManager *_actionManager;  ///< a pointer to ActionManager singleton, which is used to handle all the actions
     
     bool m_bRunning;                    ///< is running
     

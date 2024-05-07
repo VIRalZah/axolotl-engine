@@ -33,6 +33,7 @@ THE SOFTWARE.
 #include "kazmath/mat4.h"
 #include "label_nodes/LabelAtlas.h"
 #include "ccTypeInfo.h"
+#include <chrono>
 
 NS_AX_BEGIN
 
@@ -40,15 +41,22 @@ enum Projection
 {
     ORTHOGRAPHIC,
     PERSPECTIVE,
-    CUSTOM,
     
-    DEFAULT = ORTHOGRAPHIC
+    DEFAULT_PROJECTION = ORTHOGRAPHIC
+};
+
+enum TextureQuality
+{
+    LOW = 1,
+    MEDIUM,
+    HIGH,
+
+    DEFAULT_TEXTURE_QUALITY = LOW
 };
 
 class LabelAtlas;
 class Scene;
 class EGLViewProtocol;
-class DirectorDelegate;
 class Node;
 class Scheduler;
 class ActionManager;
@@ -59,10 +67,12 @@ class EventDispatcher;
 class AX_DLL Director : public Object, public TypeInfo
 {
 public:
-    Director(void);
-    virtual ~Director(void);
+    Director();
+    virtual ~Director();
 
-    virtual bool init(void);
+    static Director* sharedDirector();
+
+    virtual bool init();
 
     virtual long getClassTypeInfo()
     {
@@ -73,7 +83,7 @@ public:
     inline Scene* getRunningScene() { return _runningScene; }
 
     inline double getAnimationInterval() const { return _animationInterval; }
-    virtual void setAnimationInterval(double value) = 0;
+    virtual void setAnimationInterval(double value);
 
     inline bool isDisplayStats() const { return _displayStats; }
     virtual void setDisplayStats(bool displayStats) { _displayStats = displayStats; }
@@ -97,313 +107,120 @@ public:
     
     void setViewport();
 
-    /** How many frames were called since the director started */
+    inline bool isSendCleanupToScene() const { return _sendCleanupToScene; }
+
+    inline Node* getNotificationNode();
+    virtual void setNotificationNode(Node* node);
+
+    inline Size getWinSize() const;
+    inline Size getWinSizeInPixels() const;
     
-    
-    /** Whether or not the replaced scene will receive the cleanup message.
-     If the new scene is pushed, then the old scene won't receive the "cleanup" message.
-     If the new scene replaces the old one, the it will receive the "cleanup" message.
-     @since v0.99.0
-     */
-    inline bool isSendCleanupToScene(void) { return m_bSendCleanupToScene; }
+    inline Size getVisibleSize() const;
+    inline Vec2 getVisibleOrigin() const;
 
-    /** This object will be visited after the main scene is visited.
-     This object MUST implement the "visit" selector.
-     Useful to hook a notification object, like CCNotifications (http://github.com/manucorporat/CCNotifications)
-     @since v0.99.5
-     */
-    Node* getNotificationNode();
-    void setNotificationNode(Node *node);
-    
-    /** Director delegate. It shall implemente the DirectorDelegate protocol
-     @since v0.99.5
-     */
-    DirectorDelegate* getDelegate() const;
-    void setDelegate(DirectorDelegate* pDelegate);
+    virtual Vec2 convertToGL(const Vec2& obPoint);
+    virtual Vec2 convertToUI(const Vec2& obPoint);
 
-    // window size
+    inline float getZEye() const;
 
-    /** returns the size of the OpenGL view in points.
-    */
-    Size getWinSize(void);
+    virtual void runWithScene(Scene* scene);
+    virtual void pushScene(Scene* scene);
 
-    /** returns the size of the OpenGL view in pixels.
-    */
-    Size getWinSizeInPixels(void);
-    
-    /** returns visible size of the OpenGL view in points.
-     *  the value is equal to getWinSize if don't invoke
-     *  EGLView::setDesignResolutionSize()
-     */
-    Size getVisibleSize();
-    
-    /** returns visible origin of the OpenGL view in points.
-     */
-    Vec2 getVisibleOrigin();
+    virtual void popScene(void);
+    virtual void popToRootScene(void);
+    virtual void popToSceneStackLevel(int level);
 
-    /** converts a UIKit coordinate to an OpenGL coordinate
-     Useful to convert (multi) touch coordinates to the current layout (portrait or landscape)
-     */
-    Vec2 convertToGL(const Vec2& obPoint);
+    virtual void replaceScene(Scene* scene);
 
-    /** converts an OpenGL coordinate to a UIKit coordinate
-     Useful to convert node points to window points for calls such as glScissor
-     */
-    Vec2 convertToUI(const Vec2& obPoint);
+    virtual void end();
 
-    inline float getZEye(void) const;
+    virtual void pause();
+    virtual void resume();
 
-    // Scene Management
+    virtual void stopAnimation();
+    virtual void startAnimation();
 
-    /** Enters the Director's main loop with the given Scene.
-     * Call it to run only your FIRST scene.
-     * Don't call it if there is already a running scene.
-     *
-     * It will call pushScene: and then it will call startAnimation
-     */
-    void runWithScene(Scene *pScene);
+    virtual void drawScene();
 
-    /** Suspends the execution of the running scene, pushing it on the stack of suspended scenes.
-     * The new scene will be executed.
-     * Try to avoid big stacks of pushed scenes to reduce memory allocation. 
-     * ONLY call it if there is a running scene.
-     */
-    void pushScene(Scene *pScene);
+    virtual void purgeCachedData();
 
-    /** Pops out a scene from the queue.
-     * This scene will replace the running one.
-     * The running scene will be deleted. If there are no more scenes in the stack the execution is terminated.
-     * ONLY call it if there is a running scene.
-     */
-    void popScene(void);
+    virtual void setDefaultValues();
 
-    /** Pops out all scenes from the queue until the root scene in the queue.
-     * This scene will replace the running one.
-     * Internally it will call `popToSceneStackLevel(1)`
-     */
-    void popToRootScene(void);
+    virtual void setGLDefaultValues();
 
-    /** Pops out all scenes from the queue until it reaches `level`.
-     If level is 0, it will end the director.
-     If level is 1, it will pop all scenes until it reaches to root scene.
-     If level is <= than the current stack level, it won't do anything.
-     */
- 	void popToSceneStackLevel(int level);
+    virtual void setAlphaBlending(bool on);
 
-    /** Replaces the running scene with a new one. The running scene is terminated.
-     * ONLY call it if there is a running scene.
-     */
-    void replaceScene(Scene *pScene);
-
-    /** Ends the execution, releases the running scene.
-     It doesn't remove the OpenGL view from its parent. You have to do it manually.
-     */
-    void end(void);
-
-    /** Pauses the running scene.
-     The running scene will be _drawed_ but all scheduled timers will be paused
-     While paused, the draw rate will be 4 FPS to reduce CPU consumption
-     */
-    void pause(void);
-
-    /** Resumes the paused scene
-     The scheduled timers will be activated again.
-     The "delta time" will be 0 (as if the game wasn't paused)
-     */
-    void resume(void);
-
-    /** Stops the animation. Nothing will be drawn. The main loop won't be triggered anymore.
-     If you don't want to pause your animation call [pause] instead.
-     */
-    virtual void stopAnimation(void) = 0;
-
-    /** The main loop is triggered again.
-     Call this function only if [stopAnimation] was called earlier
-     @warning Don't call this function to start the main loop. To run the main loop call runWithScene
-     */
-    virtual void startAnimation(void) = 0;
-
-    /** Draw the scene.
-    This method is called every frame. Don't call it manually.
-    */
-    void drawScene(void);
-
-    // Memory Helper
-
-    /** Removes cached all cocos2d cached data.
-     It will purge the TextureCache, SpriteFrameCache, LabelBMFont cache
-     @since v0.99.3
-     */
-    void purgeCachedData(void);
-
-	/** sets the default values based on the Configuration info */
-    void setDefaultValues(void);
-
-    // OpenGL Helper
-
-    /** sets the OpenGL default values */
-    void setGLDefaultValues(void);
-
-    /** enables/disables OpenGL alpha blending */
-    void setAlphaBlending(bool bOn);
-
-    /** enables/disables OpenGL depth test */
-    void setDepthTest(bool bOn);
-
-    virtual void mainLoop(void) = 0;
-
-    /** The size in pixels of the surface. It could be different than the screen size.
-    High-res devices might have a higher surface size than the screen size.
-    Only available when compiled using SDK >= 4.0.
-    @since v0.99.4
-    */
-    void setContentScaleFactor(float scaleFactor);
-    float getContentScaleFactor(void);
-
-public:
-    /** Scheduler associated with this director
-     @since v2.0
-     */
-    AX_PROPERTY(Scheduler*, m_pScheduler, Scheduler);
-
-    /** ActionManager associated with this director
-     @since v2.0
-     */
-    AX_PROPERTY(ActionManager*, m_pActionManager, ActionManager);
-
-    /** KeypadDispatcher associated with this director
-     @since v2.0
-     */
-    AX_PROPERTY(KeypadDispatcher*, m_pKeypadDispatcher, KeypadDispatcher);
-
-    /** Accelerometer associated with this director
-     @since v2.0
-     @js NA
-     @lua NA
-     */
-    AX_PROPERTY(Accelerometer*, m_pAccelerometer, Accelerometer);
-
-    AX_PROPERTY(EventDispatcher*, _eventDispatcher, EventDispatcher);
-
-    /* delta time since last tick to main loop */
-	AX_PROPERTY_READONLY(float, m_fDeltaTime, DeltaTime);
-	
-public:
-    /** returns a shared instance of the director 
-     *  @js sharedEGLView
-     */
-    static Director* sharedDirector(void);
-
-protected:
-
-    void purgeDirector();
-    bool m_bPurgeDirecotorInNextLoop; // this flag will be set to true in end()
-    
-    void setNextScene(void);
-    
-    void showStats();
-    void createStatsLabel();
-    void calculateMPF();
-    void getFPSImageData(unsigned char** datapointer, unsigned int* length);
-    
-    /** calculates delta time since last time it was called */    
-    void calculateDeltaTime();
-protected:
-    /* The EGLView, where everything is rendered */
-    EGLViewProtocol* _openGLView;
-
-    double _animationInterval;
-    double m_dOldAnimationInterval;
-
-    /* landscape mode ? */
-    bool m_bLandscape;
-    
-    bool _displayStats;
-    float m_fAccumDt;
-    float m_fFrameRate;
-    
-    LabelAtlas *m_pFPSLabel;
-    LabelAtlas *m_pSPFLabel;
-    LabelAtlas *m_pDrawsLabel;
-    
-    /** Whether or not the Director is paused */
-    bool _paused;
-
-    /* How many frames were called since the director started */
-    unsigned int _totalFrames;
-    unsigned int m_uFrames;
-    float m_fSecondsPerFrame;
-     
-    /* The running scene */
-    Scene *_runningScene;
-    
-    /* will be the next 'runningScene' in the next frame
-     nextScene is a weak reference. */
-    Scene *m_pNextScene;
-    
-    /* If YES, then "old" scene will receive the cleanup message */
-    bool    m_bSendCleanupToScene;
-
-    /* scheduled scenes */
-    Array* m_pobScenesStack;
-    
-    /* last time the main loop was updated */
-    struct AX_timeval *m_pLastUpdate;
-
-    /* whether or not the next delta time will be zero */
-    bool _nextDeltaTimeZero;
-    
-    /* projection used */
-    Projection _projection;
-
-    /* window size in points */
-    Size    m_obWinSizeInPoints;
-    
-    /* content scale factor */
-    float    m_fContentScaleFactor;
-
-    /* store the fps string */
-    char *m_pszFPS;
-
-    /* This object will be visited after the scene. Useful to hook a notification node */
-    Node *m_pNotificationNode;
-
-    /* Projection protocol delegate */
-    DirectorDelegate *m_pProjectionDelegate;
-    
-    // EGLViewProtocol will recreate stats labels to fit visible rect
-    friend class EGLViewProtocol;
-};
-
-/** 
- @brief DisplayLinkDirector is a Director that synchronizes timers with the refresh rate of the display.
- 
- Features and Limitations:
-  - Scheduled timers & drawing are synchronizes with the refresh rate of the display
-  - Only supports animation intervals of 1/60 1/30 & 1/15
- 
- @since v0.8.2
- @js NA
- @lua NA
- */
-class DisplayLinkDirector : public Director
-{
-public:
-    DisplayLinkDirector();
-    virtual ~DisplayLinkDirector();
+    virtual void setDepthTest(bool on);
 
     virtual void mainLoop();
 
-    virtual void setAnimationInterval(double value);
-
-    virtual void startAnimation(void);
-    virtual void stopAnimation();
+    inline float getContentScaleFactor() const;
+    virtual void setContentScaleFactor(float scaleFactor);
 protected:
-    bool _invalid;
-};
+    virtual void purgeDirector();
+    
+    virtual void setNextScene();
+    
+    virtual void showStats();
+    virtual void createStatsLabel();
 
-// end of base_node group
-/// @}
+    virtual void getFPSImageData(unsigned char** datapointer, unsigned int* length);
+    
+    virtual void updateTextureQuality();
+
+    virtual void calculateDeltaTime();
+
+    AX_PROPERTY(Scheduler*, _scheduler, Scheduler);
+    AX_PROPERTY(ActionManager*, _actionManager, ActionManager);
+    AX_PROPERTY(KeypadDispatcher*, _keypadDispatcher, KeypadDispatcher);
+    AX_PROPERTY(Accelerometer*, _accelerometer, Accelerometer);
+    AX_PROPERTY(EventDispatcher*, _eventDispatcher, EventDispatcher);
+
+    AX_PROPERTY_READONLY(float, _deltaTime, DeltaTime);
+
+    AX_PROPERTY_READONLY(TextureQuality, _textureQuality, TextureQuality);
+
+    bool _purgeDirectorInNextLoop;
+
+    EGLViewProtocol* _openGLView;
+
+    double _animationInterval;
+    double _oldAnimationInterval;
+
+    bool _displayStats;
+    float _accumDt;
+    float _frameRate;
+    
+    LabelAtlas* _fpsLabel;
+    LabelAtlas* _drawsLabel;
+    
+    bool _paused;
+
+    unsigned int _totalFrames;
+    unsigned int _frames;
+
+    Scene* _runningScene;
+    Scene* _nextScene;
+    Array* _scenesStack;
+
+    bool _sendCleanupToScene;
+
+    std::chrono::system_clock::time_point _lastUpdate;
+    
+    bool _nextDeltaTimeZero;
+    
+    Projection _projection;
+
+    Size _winSizeInPoints;
+    
+    float _contentScaleFactor;
+
+    Node* _notificationNode;
+
+    bool _invalid;
+
+    friend class EGLViewProtocol;
+};
 
 NS_AX_END
 

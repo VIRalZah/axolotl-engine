@@ -1,33 +1,18 @@
-#ifndef  _APP_DELEGATE_H_
-#define  _APP_DELEGATE_H_
+#ifndef __APP_DELEGATE_H__
+#define __APP_DELEGATE_H__
 
-#include "axolotl.h"
+#include "includes.h"
 
-class  AppDelegate : private axolotl::Application
+class AppDelegate : private Application
 {
 public:
-    AppDelegate();
-    virtual ~AppDelegate();
+    AppDelegate(); // constructor
+    virtual ~AppDelegate(); // virtual destructor
 
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
-    virtual bool applicationDidFinishLaunching();
+    virtual bool applicationDidFinishLaunching(); // init opengl stuff
 
-    /**
-    @brief  The function be called when the application enter background
-    @param  the pointer of the application
-    */
     virtual void applicationDidEnterBackground();
-
-    /**
-    @brief  The function be called when the application enter foreground
-    @param  the pointer of the application
-    */
     virtual void applicationWillEnterForeground();
 };
 
-#endif // _APP_DELEGATE_H_
-
+#endif // __APP_DELEGATE_H__

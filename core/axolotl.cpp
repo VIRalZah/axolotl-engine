@@ -28,7 +28,7 @@ NS_AX_BEGIN
 
 Version axolotlVersion()
 {
-    return Version(0, 1, 1);
+    return Version(0, 2, 0);
 }
 
 NS_AX_END

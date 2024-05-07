@@ -23,52 +23,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef __AXCONFIGURATION_H__
-#define __AXCONFIGURATION_H__
+#ifndef __AX_CONFIGURATION_H__
+#define __AX_CONFIGURATION_H__
 
 #include "Object.h"
 #include "GL.h"
 #include "String.h"
 #include <string>
 
-
-
 NS_AX_BEGIN
 
-typedef enum _ccConfigurationType {
-    ConfigurationError,
-    ConfigurationString,
-    ConfigurationInt,
-    ConfigurationDouble,
-    ConfigurationBoolean
-} ccConfigurationType;
-
-
-/**
- * @addtogroup global
- * @{
- */
-/**
- @brief Configuration contains some openGL variables
- @since v0.99.0
- */
 class AX_DLL Configuration : public Object
 {
+private:
+    static std::string _configfile;
+
+    Configuration(void);
 public:
-    /** returns a shared instance of Configuration */
-    static Configuration *sharedConfiguration(void);
+    virtual ~Configuration(void);
 
-    /** purge the shared instance of Configuration */
-    static void purgeConfiguration(void);
+    static Configuration* sharedConfiguration();
 
-public:
-    /**
-     *  @js NA
-     *  @lua NA
-     */
-	virtual ~Configuration(void);
+    static void purgeConfiguration();
 
-    /** OpenGL Max texture size. */
+    virtual bool init();
+
 	int getMaxTextureSize(void) const;
 
     /** OpenGL Max Modelview Stack Depth. */
@@ -107,10 +86,8 @@ public:
     /** returns whether or not an OpenGL is supported */
     bool checkForGLExtension(const std::string &searchName) const;
 
-    bool init(void);
+    const std::string& getString(const char* key, const std::string& defaultValue = std::string());
 
-	/** returns the value of a given key as a string.
-	 If the key is not found, it will return the default value */
 	const char* getCString( const char *key, const char *default_value=NULL ) const;
 
 	/** returns the value of a given key as a boolean.
@@ -135,11 +112,6 @@ public:
 
 	/** Loads a config file. If the keys are already present, then they are going to be replaced. Otherwise the new keys are added. */
 	void loadConfigFile( const char *filename );
-
-private:
-    Configuration(void);
-    static Configuration *s_gSharedConfiguration;
-	static std::string		s_sConfigfile;
     
 protected:
     GLint           m_nMaxTextureSize;
@@ -153,12 +125,9 @@ protected:
     GLint           m_nMaxTextureUnits;
     char *          m_pGlExtensions;
 	
-	Dictionary	*m_pValueDict;
+	Dictionary* _valueDict;
 };
-
-// end of global group
-/// @}
 
 NS_AX_END
 
-#endif // __AXCONFIGURATION_H__
+#endif // __AX_CONFIGURATION_H__

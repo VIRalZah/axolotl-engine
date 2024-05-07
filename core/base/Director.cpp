@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 Copyright (c) 2010-2012 cocos2d-x.org
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2011      Zynga Inc.
@@ -66,8 +66,6 @@ THE SOFTWARE.
 #include "base/Configuration.h"
 #include "base/EventDispatcher.h"
 
-
-
 /**
  Position of the FPS
  
@@ -79,144 +77,120 @@ THE SOFTWARE.
 
 using namespace std;
 
-unsigned int g_uNumberOfDraws = 0;
+unsigned int _numberOfDraws = 0;
 
 NS_AX_BEGIN
-// XXX it should be a Director ivar. Move it there once support for multiple directors is added
 
-// singleton stuff
-static DisplayLinkDirector *s_SharedDirector = NULL;
-
-#define kDefaultFPS        60  // 60 frames per second
-
-Director* Director::sharedDirector(void)
-{
-    if (!s_SharedDirector)
-    {
-        s_SharedDirector = new DisplayLinkDirector();
-        s_SharedDirector->init();
-    }
-
-    return s_SharedDirector;
-}
+static Director* _sharedDirector = NULL;
 
 Director::Director(void)
 {
+}
 
+Director::~Director(void)
+{
+    AXLOG("cocos2d: deallocing Director %p", this);
+
+    AX_SAFE_RELEASE(_fpsLabel);
+    AX_SAFE_RELEASE(_drawsLabel);
+
+    AX_SAFE_RELEASE(_runningScene);
+    AX_SAFE_RELEASE(_notificationNode);
+    AX_SAFE_RELEASE(_scenesStack);
+    AX_SAFE_RELEASE(_scheduler);
+    AX_SAFE_RELEASE(_actionManager);
+    AX_SAFE_RELEASE(_keypadDispatcher);
+    AX_SAFE_DELETE(_accelerometer);
+    AX_SAFE_RELEASE(_eventDispatcher);
+
+    PoolManager::sharedPoolManager()->pop();
+    PoolManager::purgePoolManager();
+
+    _sharedDirector = NULL;
+}
+
+Director* Director::sharedDirector(void)
+{
+    if (!_sharedDirector)
+    {
+        _sharedDirector = new Director();
+        _sharedDirector->init();
+    }
+    return _sharedDirector;
 }
 
 bool Director::init(void)
 {
 	setDefaultValues();
 
-    // scenes
-    _runningScene = NULL;
-    m_pNextScene = NULL;
+    _runningScene = nullptr;
+    _nextScene = nullptr;
 
-    m_pNotificationNode = NULL;
+    _notificationNode = nullptr;
 
-    m_pobScenesStack = new Array();
-    m_pobScenesStack->init();
+    _scenesStack = new Array();
+    _scenesStack->init();
 
-    // projection delegate if "Custom" projection is used
-    m_pProjectionDelegate = NULL;
+    _accumDt = 0.0f;
+    _frameRate = 0.0f;
+    _fpsLabel = nullptr;
+    _drawsLabel = nullptr;
+    _totalFrames = _frames = 0;
 
-    // FPS
-    m_fAccumDt = 0.0f;
-    m_fFrameRate = 0.0f;
-    m_pFPSLabel = NULL;
-    m_pSPFLabel = NULL;
-    m_pDrawsLabel = NULL;
-    _totalFrames = m_uFrames = 0;
-    m_pszFPS = new char[10];
-    m_pLastUpdate = new struct AX_timeval();
-    m_fSecondsPerFrame = 0.0f;
-
-    // paused ?
     _paused = false;
    
-    // purge ?
-    m_bPurgeDirecotorInNextLoop = false;
+    _purgeDirectorInNextLoop = false;
 
-    m_obWinSizeInPoints = Size::ZERO;    
+    _winSizeInPoints = Size::ZERO;    
 
     _openGLView = NULL;
 
-    m_fContentScaleFactor = 1.0f;
+    _contentScaleFactor = 1.0f;
 
-    // scheduler
-    m_pScheduler = new Scheduler();
-    // action manager
-    m_pActionManager = new ActionManager();
-    m_pScheduler->scheduleUpdateForTarget(m_pActionManager, kAXPrioritySystem, false);
+    _scheduler = new Scheduler();
 
-    // KeypadDispatcher
-    m_pKeypadDispatcher = new KeypadDispatcher();
+    _actionManager = new ActionManager();
+    _scheduler->scheduleUpdateForTarget(_actionManager, kAXPrioritySystem, false);
 
-    // Accelerometer
-    m_pAccelerometer = new Accelerometer();
+    _keypadDispatcher = new KeypadDispatcher();
+
+    _accelerometer = new Accelerometer();
 
     _eventDispatcher = new EventDispatcher();
 
-    // create autorelease pool
+    _invalid = false;
+
+    _textureQuality = TextureQuality::DEFAULT_TEXTURE_QUALITY;
+
     PoolManager::sharedPoolManager()->push();
 
     return true;
 }
-    
-Director::~Director(void)
-{
-    AXLOG("cocos2d: deallocing Director %p", this);
-
-    AX_SAFE_RELEASE(m_pFPSLabel);
-    AX_SAFE_RELEASE(m_pSPFLabel);
-    AX_SAFE_RELEASE(m_pDrawsLabel);
-    
-    AX_SAFE_RELEASE(_runningScene);
-    AX_SAFE_RELEASE(m_pNotificationNode);
-    AX_SAFE_RELEASE(m_pobScenesStack);
-    AX_SAFE_RELEASE(m_pScheduler);
-    AX_SAFE_RELEASE(m_pActionManager);
-    AX_SAFE_RELEASE(m_pKeypadDispatcher);
-    AX_SAFE_DELETE(m_pAccelerometer);
-    AX_SAFE_RELEASE(_eventDispatcher);
-
-    // pop the autorelease pool
-    PoolManager::sharedPoolManager()->pop();
-    PoolManager::purgePoolManager();
-
-    // delete m_pLastUpdate
-    AX_SAFE_DELETE(m_pLastUpdate);
-    // delete fps string
-    delete []m_pszFPS;
-
-    s_SharedDirector = NULL;
-}
 
 void Director::setDefaultValues(void)
 {
-	Configuration *conf = Configuration::sharedConfiguration();
+	auto config = Configuration::sharedConfiguration();
 
-	// default FPS
-	double fps = conf->getNumber("axolotl.fps", kDefaultFPS);
-	m_dOldAnimationInterval = _animationInterval = 1.0 / fps;
+	double fps = config->getNumber("axolotl.fps", 60.0);
+	_oldAnimationInterval = _animationInterval = 1.0 / fps;
 
-	// Display FPS
-	_displayStats = conf->getBool("axolotl.display_fps", false);
+	_displayStats = config->getBool("axolotl.display_stats", false);
 
-	// GL projection
-	const char *projection = conf->getCString("axolotl.gl.projection", "3d");
-	if( strcmp(projection, "3d") == 0 )
-		_projection = PERSPECTIVE;
-	else if (strcmp(projection, "2d") == 0)
-		_projection = ORTHOGRAPHIC;
-	else if (strcmp(projection, "custom") == 0)
-		_projection = CUSTOM;
-	else
-		AXAssert(false, "Invalid projection value");
+    auto& projection = config->getString("axolotl.gl.projection", "2d");
+    if (projection == "2d")
+    {
+        _projection = Projection::ORTHOGRAPHIC;
+    }
+    else if (projection == "3d")
+    {
+        _projection = Projection::PERSPECTIVE;
+    }
+    else
+    {
+        _projection = Projection::DEFAULT_PROJECTION;
+    }
 
-	// Default pixel format for PNG images with alpha
-	const char *pixel_format = conf->getCString("axolotl.texture.pixel_format_for_png", "rgba8888");
+	const char* pixel_format = config->getCString("axolotl.texture.pixel_format_for_png", "rgba8888");
 	if( strcmp(pixel_format, "rgba8888") == 0 )
 		Texture2D::setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA8888);
 	else if( strcmp(pixel_format, "rgba4444") == 0 )
@@ -224,24 +198,22 @@ void Director::setDefaultValues(void)
 	else if( strcmp(pixel_format, "rgba5551") == 0 )
 		Texture2D::setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGB5A1);
 
-	// PVR v2 has alpha premultiplied ?
-	bool pvr_alpha_premultipled = conf->getBool("axolotl.texture.pvrv2_has_alpha_premultiplied", false);
+	bool pvr_alpha_premultipled = config->getBool("axolotl.texture.pvrv2_has_alpha_premultiplied", false);
 	Texture2D::PVRImagesHavePremultipliedAlpha(pvr_alpha_premultipled);
 }
 
 void Director::setGLDefaultValues(void)
 {
-    // This method SHOULD be called only after openGLView_ was initialized
     AXAssert(_openGLView, "opengl view should not be null");
 
     setAlphaBlending(true);
-    // XXX: Fix me, should enable/disable depth test according the depth format as cocos2d-iphone did
-    // [self setDepthTest: view_.depthFormat];
-    setDepthTest(false);
-    setProjection(_projection);
 
-    // set other opengl default values
+    setDepthTest(false);
+    updateProjection();
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    updateTextureQuality();
 }
 
 // Draw the Scene
@@ -253,14 +225,14 @@ void Director::drawScene(void)
     //tick before glClear: issue #533
     if (! _paused)
     {
-        m_pScheduler->update(m_fDeltaTime);
+        _scheduler->update(_deltaTime);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* to avoid flickr, nextScene MUST be here: after tick and before draw.
      XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
-    if (m_pNextScene)
+    if (_nextScene)
     {
         setNextScene();
     }
@@ -274,9 +246,9 @@ void Director::drawScene(void)
     }
 
     // draw the notifications node
-    if (m_pNotificationNode)
+    if (_notificationNode)
     {
-        m_pNotificationNode->visit();
+        _notificationNode->visit();
     }
     
     if (_displayStats)
@@ -293,49 +265,31 @@ void Director::drawScene(void)
     {
         _openGLView->swapBuffers();
     }
-    
-    if (_displayStats)
-    {
-        calculateMPF();
-    }
 }
 
 void Director::calculateDeltaTime(void)
 {
-    struct AX_timeval now;
+    auto now = std::chrono::steady_clock::now();
 
-    if (Time::gettimeofdayCocos2d(&now, NULL) != 0)
-    {
-        AXLOG("error in gettimeofday");
-        m_fDeltaTime = 0;
-        return;
-    }
-
-    // new delta time. Re-fixed issue #1277
     if (_nextDeltaTimeZero)
     {
-        m_fDeltaTime = 0;
         _nextDeltaTimeZero = false;
+
+        _deltaTime = 0.0f;
     }
     else
     {
-        m_fDeltaTime = (now.tv_sec - m_pLastUpdate->tv_sec) + (now.tv_usec - m_pLastUpdate->tv_usec) / 1000000.0f;
-        m_fDeltaTime = MAX(0, m_fDeltaTime);
+        _deltaTime = MAX(
+            0, 
+            std::chrono::duration_cast<std::chrono::duration<float>>(now - _lastUpdate).count()
+        );
     }
 
-#ifdef DEBUG
-    // If we are debugging our code, prevent big delta time
-    if(m_fDeltaTime > 0.2f)
-    {
-        m_fDeltaTime = 1 / 60.0f;
-    }
-#endif
-
-    *m_pLastUpdate = now;
+    _lastUpdate = now;
 }
 float Director::getDeltaTime()
 {
-	return m_fDeltaTime;
+	return _deltaTime;
 }
 void Director::setOpenGLView(EGLViewProtocol* glView)
 {
@@ -353,7 +307,7 @@ void Director::setOpenGLView(EGLViewProtocol* glView)
 
         if (_openGLView)
         {
-            m_obWinSizeInPoints = _openGLView->getDesignResolutionSize();
+            _winSizeInPoints = _openGLView->getDesignResolutionSize();
             createStatsLabel();
             setGLDefaultValues();
         }
@@ -366,7 +320,7 @@ void Director::setViewport()
 {
     if (_openGLView)
     {
-        _openGLView->setViewPortInPoints(0, 0, m_obWinSizeInPoints.width, m_obWinSizeInPoints.height);
+        _openGLView->setViewPortInPoints(0, 0, _winSizeInPoints.width, _winSizeInPoints.height);
     }
 }
 
@@ -383,7 +337,7 @@ void Director::setProjection(Projection projection)
 
 void Director::updateProjection()
 {
-    Size size = m_obWinSizeInPoints;
+    Size size = _winSizeInPoints;
 
     setViewport();
 
@@ -403,7 +357,6 @@ void Director::updateProjection()
         kmGLLoadIdentity();
     }
     break;
-
     case PERSPECTIVE:
     {
         float zEye = getZEye();
@@ -430,13 +383,6 @@ void Director::updateProjection()
         kmGLMultMatrix(&matrixLookup);
     }
     break;
-
-    case CUSTOM:
-        if (m_pProjectionDelegate)
-        {
-            m_pProjectionDelegate->updateProjection();
-        }
-        break;
     default:
         AXLOG("axolotl: Director: unrecognized projection");
         break;
@@ -448,7 +394,7 @@ void Director::updateProjection()
 void Director::purgeCachedData(void)
 {
     LabelBMFont::purgeCachedData();
-    if (s_SharedDirector->getOpenGLView())
+    if (_sharedDirector->getOpenGLView())
     {
         SpriteFrameCache::sharedSpriteFrameCache()->purgeSharedSpriteFrameCache();
         TextureCache::sharedTextureCache()->removeUnusedTextures();
@@ -461,7 +407,7 @@ void Director::purgeCachedData(void)
 
 float Director::getZEye() const
 {
-    return (m_obWinSizeInPoints.height / 1.1566f);
+    return (_winSizeInPoints.height / 1.1566f);
 }
 
 void Director::setAlphaBlending(bool bOn)
@@ -483,8 +429,8 @@ void Director::reshapeProjection(const Size& newWindowSize)
 	AX_UNUSED_PARAM(newWindowSize);
 	if (_openGLView)
 	{
-		m_obWinSizeInPoints = Size(newWindowSize.width * m_fContentScaleFactor,
-			newWindowSize.height * m_fContentScaleFactor);
+		_winSizeInPoints = Size(newWindowSize.width * _contentScaleFactor,
+			newWindowSize.height * _contentScaleFactor);
 		
         updateProjection();
 	}
@@ -554,17 +500,17 @@ Vec2 Director::convertToUI(const Vec2& glPoint)
 	return Vec2(glSize.width*(clipCoord.x*0.5 + 0.5), glSize.height*(-clipCoord.y*0.5 + 0.5));
 }
 
-Size Director::getWinSize(void)
+Size Director::getWinSize(void) const
 {
-    return m_obWinSizeInPoints;
+    return _winSizeInPoints;
 }
 
-Size Director::getWinSizeInPixels()
+Size Director::getWinSizeInPixels() const
 {
-    return Size(m_obWinSizeInPoints.width * m_fContentScaleFactor, m_obWinSizeInPoints.height * m_fContentScaleFactor);
+    return Size(_winSizeInPoints.width * _contentScaleFactor, _winSizeInPoints.height * _contentScaleFactor);
 }
 
-Size Director::getVisibleSize()
+Size Director::getVisibleSize() const
 {
     if (_openGLView)
     {
@@ -576,7 +522,7 @@ Size Director::getVisibleSize()
     }
 }
 
-Vec2 Director::getVisibleOrigin()
+Vec2 Director::getVisibleOrigin() const
 {
     if (_openGLView)
     {
@@ -604,30 +550,30 @@ void Director::replaceScene(Scene *pScene)
     AXAssert(_runningScene, "Use runWithScene: instead to start the director");
     AXAssert(pScene != NULL, "the scene should not be null");
 
-    unsigned int index = m_pobScenesStack->count();
+    unsigned int index = _scenesStack->count();
 
-    m_bSendCleanupToScene = true;
-    m_pobScenesStack->replaceObjectAtIndex(index - 1, pScene);
+    _sendCleanupToScene = true;
+    _scenesStack->replaceObjectAtIndex(index - 1, pScene);
 
-    m_pNextScene = pScene;
+    _nextScene = pScene;
 }
 
 void Director::pushScene(Scene *pScene)
 {
     AXAssert(pScene, "the scene should not null");
 
-    m_bSendCleanupToScene = false;
+    _sendCleanupToScene = false;
 
-    m_pobScenesStack->addObject(pScene);
-    m_pNextScene = pScene;
+    _scenesStack->addObject(pScene);
+    _nextScene = pScene;
 }
 
 void Director::popScene(void)
 {
     AXAssert(_runningScene != NULL, "running scene should not null");
 
-    m_pobScenesStack->removeLastObject();
-    unsigned int c = m_pobScenesStack->count();
+    _scenesStack->removeLastObject();
+    unsigned int c = _scenesStack->count();
 
     if (c == 0)
     {
@@ -635,8 +581,8 @@ void Director::popScene(void)
     }
     else
     {
-        m_bSendCleanupToScene = true;
-        m_pNextScene = (Scene*)m_pobScenesStack->objectAtIndex(c - 1);
+        _sendCleanupToScene = true;
+        _nextScene = (Scene*)_scenesStack->objectAtIndex(c - 1);
     }
 }
 
@@ -648,7 +594,7 @@ void Director::popToRootScene(void)
 void Director::popToSceneStackLevel(int level)
 {
     AXAssert(_runningScene != NULL, "A running Scene is needed");
-    int c = (int)m_pobScenesStack->count();
+    int c = (int)_scenesStack->count();
 
     // level 0? -> end
     if (level == 0)
@@ -664,7 +610,7 @@ void Director::popToSceneStackLevel(int level)
 	// pop stack until reaching desired level
 	while (c > level)
     {
-		Scene *current = (Scene*)m_pobScenesStack->lastObject();
+		Scene *current = (Scene*)_scenesStack->lastObject();
 
 		if (current->isRunning())
         {
@@ -673,17 +619,17 @@ void Director::popToSceneStackLevel(int level)
 		}
 
         current->cleanup();
-        m_pobScenesStack->removeLastObject();
+        _scenesStack->removeLastObject();
 		c--;
 	}
 
-	m_pNextScene = (Scene*)m_pobScenesStack->lastObject();
-	m_bSendCleanupToScene = false;
+	_nextScene = (Scene*)_scenesStack->lastObject();
+	_sendCleanupToScene = false;
 }
 
 void Director::end()
 {
-    m_bPurgeDirecotorInNextLoop = true;
+    _purgeDirectorInNextLoop = true;
 }
 
 void Director::purgeDirector()
@@ -700,17 +646,16 @@ void Director::purgeDirector()
     }
     
     _runningScene = NULL;
-    m_pNextScene = NULL;
+    _nextScene = NULL;
 
     // remove all objects, but don't release it.
     // runWithScene might be executed after 'end'.
-    m_pobScenesStack->removeAllObjects();
+    _scenesStack->removeAllObjects();
 
     stopAnimation();
 
-    AX_SAFE_RELEASE_NULL(m_pFPSLabel);
-    AX_SAFE_RELEASE_NULL(m_pSPFLabel);
-    AX_SAFE_RELEASE_NULL(m_pDrawsLabel);
+    AX_SAFE_RELEASE_NULL(_fpsLabel);
+    AX_SAFE_RELEASE_NULL(_drawsLabel);
 
     // purge bitmap cache
     LabelBMFont::purgeCachedData();
@@ -743,7 +688,7 @@ void Director::purgeDirector()
 void Director::setNextScene(void)
 {
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != NULL;
-    bool newIsTransition = dynamic_cast<TransitionScene*>(m_pNextScene) != NULL;
+    bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != NULL;
 
     // If it is not a transition, call onExit/cleanup
      if (! newIsTransition)
@@ -756,7 +701,7 @@ void Director::setNextScene(void)
  
          // issue #709. the root node (scene) should receive the cleanup message too
          // otherwise it might be leaked.
-         if (m_bSendCleanupToScene && _runningScene)
+         if (_sendCleanupToScene && _runningScene)
          {
              _runningScene->cleanup();
          }
@@ -766,9 +711,9 @@ void Director::setNextScene(void)
     {
         _runningScene->release();
     }
-    _runningScene = m_pNextScene;
-    m_pNextScene->retain();
-    m_pNextScene = NULL;
+    _runningScene = _nextScene;
+    _nextScene->retain();
+    _nextScene = NULL;
 
     if ((! runningIsTransition) && _runningScene)
     {
@@ -784,7 +729,7 @@ void Director::pause(void)
         return;
     }
 
-    m_dOldAnimationInterval = _animationInterval;
+    _oldAnimationInterval = _animationInterval;
 
     // when paused, don't consume CPU
     setAnimationInterval(1 / 4.0);
@@ -798,67 +743,70 @@ void Director::resume(void)
         return;
     }
 
-    setAnimationInterval(m_dOldAnimationInterval);
+    setAnimationInterval(_oldAnimationInterval);
 
-    if (Time::gettimeofdayCocos2d(m_pLastUpdate, NULL) != 0)
-    {
-        AXLOG("cocos2d: Director: Error in gettimeofday");
-    }
+    _lastUpdate = std::chrono::steady_clock::now();
 
     _paused = false;
-    m_fDeltaTime = 0;
+    _deltaTime = 0;
 }
 
 // display the FPS using a LabelAtlas
 // updates the FPS every frame
 void Director::showStats(void)
 {
-    m_uFrames++;
-    m_fAccumDt += m_fDeltaTime;
+    _frames++;
+    _accumDt += _deltaTime;
     
     if (_displayStats)
     {
-        if (m_pFPSLabel && m_pSPFLabel && m_pDrawsLabel)
+        if (_fpsLabel && _drawsLabel)
         {
-            if (m_fAccumDt > AX_DIRECTOR_STATS_INTERVAL)
-            {
-                sprintf(m_pszFPS, "%.3f", m_fSecondsPerFrame);
-                m_pSPFLabel->setString(m_pszFPS);
+            if (_accumDt > AX_DIRECTOR_STATS_INTERVAL)
+            {   
+                _frameRate = _frames / _accumDt;
+                _frames = 0;
+                _accumDt = 0;
                 
-                m_fFrameRate = m_uFrames / m_fAccumDt;
-                m_uFrames = 0;
-                m_fAccumDt = 0;
+                char buffer[kMaxLogLen + 1] = { 0 };
+
+                sprintf(buffer, "%.1f", _frameRate);
+                _fpsLabel->setString(buffer);
                 
-                sprintf(m_pszFPS, "%.1f", m_fFrameRate);
-                m_pFPSLabel->setString(m_pszFPS);
-                
-                sprintf(m_pszFPS, "%4lu", (unsigned long)g_uNumberOfDraws);
-                m_pDrawsLabel->setString(m_pszFPS);
+                sprintf(buffer, "%4lu", (unsigned long)_numberOfDraws);
+                _drawsLabel->setString(buffer);
             }
             
-            m_pDrawsLabel->visit();
-            m_pFPSLabel->visit();
-            m_pSPFLabel->visit();
+            _drawsLabel->visit();
+            _fpsLabel->visit();
         }
     }    
     
-    g_uNumberOfDraws = 0;
+    _numberOfDraws = 0;
 }
 
-void Director::calculateMPF()
-{
-    struct AX_timeval now;
-    Time::gettimeofdayCocos2d(&now, NULL);
-    
-    m_fSecondsPerFrame = (now.tv_sec - m_pLastUpdate->tv_sec) + (now.tv_usec - m_pLastUpdate->tv_usec) / 1000000.0f;
-}
-
-// returns the FPS image data pointer and len
 void Director::getFPSImageData(unsigned char** datapointer, unsigned int* length)
 {
-    // XXX fixed me if it should be used 
     *datapointer = ax_fps_images_png;
 	*length = ax_fps_images_len();
+}
+
+void Director::updateTextureQuality()
+{
+    auto min = MIN(_winSizeInPoints.width, _winSizeInPoints.height);
+
+    if (min <= 320.0f)
+    {
+        _textureQuality = TextureQuality::LOW;
+    }
+    else if (min <= 640.0f)
+    {
+        _textureQuality = TextureQuality::MEDIUM;
+    }
+    else
+    {
+        _textureQuality = TextureQuality::HIGH;
+    }
 }
 
 void Director::createStatsLabel()
@@ -866,12 +814,11 @@ void Director::createStatsLabel()
     Texture2D *texture = NULL;
     TextureCache *textureCache = TextureCache::sharedTextureCache();
 
-    if( m_pFPSLabel && m_pSPFLabel )
+    if( _fpsLabel)
     {
-        AX_SAFE_RELEASE_NULL(m_pFPSLabel);
-        AX_SAFE_RELEASE_NULL(m_pSPFLabel);
-        AX_SAFE_RELEASE_NULL(m_pDrawsLabel);
-        textureCache->removeTextureForKey("AX_fps_images");
+        AX_SAFE_RELEASE_NULL(_fpsLabel);
+        AX_SAFE_RELEASE_NULL(_drawsLabel);
+        textureCache->removeTextureForKey("ax_fps_images");
         FileUtils::sharedFileUtils()->purgeCachedEntries();
     }
 
@@ -888,127 +835,108 @@ void Director::createStatsLabel()
         return;
     }
 
-    texture = textureCache->addUIImage(image, "AX_fps_images");
+    texture = textureCache->addUIImage(image, "ax_fps_images");
     AX_SAFE_RELEASE(image);
 
-    m_pFPSLabel = new LabelAtlas();
-    m_pFPSLabel->initWithString("00.0", texture, 12, 32 , '.');
+    _fpsLabel = new LabelAtlas();
+    _fpsLabel->initWithString("00.0", texture, 12, 32 , '.');
 
-    m_pSPFLabel = new LabelAtlas();
-    m_pSPFLabel->initWithString("0.000", texture, 12, 32, '.');
-
-    m_pDrawsLabel = new LabelAtlas();
-    m_pDrawsLabel->initWithString("000", texture, 12, 32, '.');
+    _drawsLabel = new LabelAtlas();
+    _drawsLabel->initWithString("000", texture, 12, 32, '.');
 
     Texture2D::setDefaultAlphaPixelFormat(currentFormat);
 
     auto pos = AX_DIRECTOR_STATS_POSITION;
 
-    m_pFPSLabel->setPosition(pos);
-    m_pDrawsLabel->setPosition(
+    _fpsLabel->setPosition(pos);
+    _drawsLabel->setPosition(
         Vec2(
-            m_pFPSLabel->getPositionX(),
-            m_pFPSLabel->getPositionY() + m_pDrawsLabel->getContentSize().height / 2
-        )
-    );
-    m_pSPFLabel->setPosition(
-        Vec2(
-            m_pDrawsLabel->getPositionX(),
-            m_pDrawsLabel->getPositionY() + m_pSPFLabel->getContentSize().height / 2
+            _fpsLabel->getPositionX(),
+            _fpsLabel->getPositionY() + _drawsLabel->getContentSize().height / 2
         )
     );
 }
 
-float Director::getContentScaleFactor(void)
+float Director::getContentScaleFactor() const
 {
-    return m_fContentScaleFactor;
+    return _contentScaleFactor;
 }
 
 void Director::setContentScaleFactor(float scaleFactor)
 {
-    if (scaleFactor != m_fContentScaleFactor)
+    if (scaleFactor != _contentScaleFactor)
     {
-        m_fContentScaleFactor = scaleFactor;
+        _contentScaleFactor = scaleFactor;
         createStatsLabel();
     }
 }
 
 Node* Director::getNotificationNode() 
 { 
-    return m_pNotificationNode; 
+    return _notificationNode; 
 }
 
 void Director::setNotificationNode(Node *node)
 {
-    AX_SAFE_RELEASE(m_pNotificationNode);
-    m_pNotificationNode = node;
-    AX_SAFE_RETAIN(m_pNotificationNode);
-}
-
-DirectorDelegate* Director::getDelegate() const
-{
-    return m_pProjectionDelegate;
-}
-
-void Director::setDelegate(DirectorDelegate* pDelegate)
-{
-    m_pProjectionDelegate = pDelegate;
+    AX_SAFE_RELEASE(_notificationNode);
+    _notificationNode = node;
+    AX_SAFE_RETAIN(_notificationNode);
 }
 
 void Director::setScheduler(Scheduler* pScheduler)
 {
-    if (m_pScheduler != pScheduler)
+    if (_scheduler != pScheduler)
     {
         AX_SAFE_RETAIN(pScheduler);
-        AX_SAFE_RELEASE(m_pScheduler);
-        m_pScheduler = pScheduler;
+        AX_SAFE_RELEASE(_scheduler);
+        _scheduler = pScheduler;
     }
 }
 
 Scheduler* Director::getScheduler()
 {
-    return m_pScheduler;
+    return _scheduler;
 }
 
 void Director::setActionManager(ActionManager* pActionManager)
 {
-    if (m_pActionManager != pActionManager)
+    if (_actionManager != pActionManager)
     {
         AX_SAFE_RETAIN(pActionManager);
-        AX_SAFE_RELEASE(m_pActionManager);
-        m_pActionManager = pActionManager;
+        AX_SAFE_RELEASE(_actionManager);
+        _actionManager = pActionManager;
     }    
 }
 
 ActionManager* Director::getActionManager()
 {
-    return m_pActionManager;
+    return _actionManager;
 }
 
 void Director::setKeypadDispatcher(KeypadDispatcher* pKeypadDispatcher)
 {
     AX_SAFE_RETAIN(pKeypadDispatcher);
-    AX_SAFE_RELEASE(m_pKeypadDispatcher);
-    m_pKeypadDispatcher = pKeypadDispatcher;
+    AX_SAFE_RELEASE(_keypadDispatcher);
+    _keypadDispatcher = pKeypadDispatcher;
 }
 
 KeypadDispatcher* Director::getKeypadDispatcher()
 {
-    return m_pKeypadDispatcher;
+    return _keypadDispatcher;
 }
 
 void Director::setAccelerometer(Accelerometer* pAccelerometer)
 {
-    if (m_pAccelerometer != pAccelerometer)
+    if (_accelerometer != pAccelerometer)
     {
-        AX_SAFE_DELETE(m_pAccelerometer);
-        m_pAccelerometer = pAccelerometer;
+        AX_SAFE_DELETE(_accelerometer);
+        _accelerometer = pAccelerometer;
     }
 }
 
 Accelerometer* Director::getAccelerometer()
 {
-    return m_pAccelerometer;
+    return _accelerometer;
 }
 
 void Director::setEventDispatcher(EventDispatcher* eventDispatcher)
@@ -1025,53 +953,40 @@ EventDispatcher* Director::getEventDispatcher()
     return _eventDispatcher;
 }
 
-/***************************************************
-* implementation of DisplayLinkDirector
-**************************************************/
-
-DisplayLinkDirector::DisplayLinkDirector()
-    : _invalid(false)
+TextureQuality Director::getTextureQuality()
 {
+    return _textureQuality;
 }
 
-DisplayLinkDirector::~DisplayLinkDirector()
+void Director::stopAnimation(void)
 {
+    _invalid = true;
 }
 
-void DisplayLinkDirector::startAnimation(void)
+void Director::startAnimation(void)
 {
-    if (Time::gettimeofdayCocos2d(m_pLastUpdate, NULL) != 0)
-    {
-        AXLOG("cocos2d: DisplayLinkDirector: Error on gettimeofday");
-    }
+    _lastUpdate = std::chrono::steady_clock::now();
 
     _invalid = false;
 
     Application::sharedApplication()->setAnimationInterval(_animationInterval);
 }
 
-void DisplayLinkDirector::mainLoop(void)
+void Director::mainLoop(void)
 {
-    if (m_bPurgeDirecotorInNextLoop)
+    if (_purgeDirectorInNextLoop)
     {
-        m_bPurgeDirecotorInNextLoop = false;
+        _purgeDirectorInNextLoop = false;
         purgeDirector();
     }
     else if (!_invalid)
-     {
-         drawScene();
-     
-         // release the objects
-         PoolManager::sharedPoolManager()->pop();        
-     }
+    {
+        drawScene();
+        PoolManager::sharedPoolManager()->pop();        
+    }
 }
 
-void DisplayLinkDirector::stopAnimation(void)
-{
-    _invalid = true;
-}
-
-void DisplayLinkDirector::setAnimationInterval(double value)
+void Director::setAnimationInterval(double value)
 {
     _animationInterval = value;
     if (!_invalid)

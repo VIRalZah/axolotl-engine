@@ -594,9 +594,14 @@ std::string FileUtils::getPathForFilename(const std::string& filename, const std
 }
 
 
-std::string FileUtils::fullPathForFilename(const char* pszFileName)
+std::string FileUtils::fullPathForFilename(const char* pszFileName, bool findForCurrentQuality/* = true*/)
 {
     AXAssert(pszFileName != NULL, "FileUtils: Invalid path");
+
+    if (findForCurrentQuality)
+    {
+        return fullPathForCurrentQuality(pszFileName);
+    }
     
     std::string strFileName = pszFileName;
     if (isAbsolutePath(pszFileName))
@@ -641,6 +646,60 @@ std::string FileUtils::fullPathForFilename(const char* pszFileName)
 
     // The file wasn't found, return the file name passed in.
     return pszFileName;
+}
+
+std::string FileUtils::fullPathForCurrentQuality(const char* fileName)
+{
+    std::string newFileName = fileName;
+
+    auto textureQuality = Director::sharedDirector()->getTextureQuality();
+
+    static std::map<TextureQuality, std::string> suffixes = {
+        { TextureQuality::LOW, "" },
+        { TextureQuality::MEDIUM, "-hd" },
+        { TextureQuality::HIGH, "-uhd" }
+    };
+
+    auto last = newFileName.find_last_of('.');
+    if (last != newFileName.npos)
+    {
+        std::string fileNameWithoutExt = newFileName.substr(0, last);
+        std::string extension = newFileName.substr(last, newFileName.size() - last);
+
+        std::string suffix = suffixes[textureQuality];
+
+        if (fileNameWithoutExt.size() >= suffix.size() &&
+            fileNameWithoutExt.compare(
+                fileNameWithoutExt.size() - suffix.size(),
+                suffix.size(),
+                suffix
+            ) == 0)
+        {
+            return fullPathForFilename(fileName, false);
+        }
+
+        for (
+            int quality = (int)textureQuality;
+            quality >= (int)TextureQuality::LOW;
+            quality--)
+        {
+            auto find = suffixes.find((TextureQuality)quality);
+            if (find != suffixes.end())
+            {
+                auto fullPath = fullPathForFilename(
+                    (fileNameWithoutExt + find->second + extension).c_str(),
+                    false
+                );
+
+                if (isFileExist(fullPath))
+                {
+                    return fullPath;
+                }
+            }
+        }
+    }
+
+    return newFileName;
 }
 
 const char* FileUtils::fullPathFromRelativeFile(const char *pszFilename, const char *pszRelativeFile)

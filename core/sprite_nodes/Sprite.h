@@ -283,6 +283,7 @@ public:
      * @lua NA
      */
     virtual void setPosition(const Vec2& pos);
+    virtual void setPosition(float x, float y);
     virtual void setRotation(float fRotation);
     virtual void setRotationX(float fRotationX);
     virtual void setRotationY(float fRotationY);

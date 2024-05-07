@@ -67,7 +67,7 @@ void EGLViewProtocol::setDesignResolutionSize(float width, float height, Resolut
 
     _resolutionPolicy = resolutionPolicy;
 
-    updateDesignResolution();
+    updateDesignResolutionSize();
 }
 
 const Size& EGLViewProtocol::getDesignResolutionSize() const 
@@ -218,11 +218,12 @@ void EGLViewProtocol::handleTouchesEnd(int num, int ids[], float xs[], float ys[
             TouchType::ENDED,
             id
             );
+
         Director::sharedDirector()->getEventDispatcher()->dispatchEvent(&event);
     }
 }
 
-void EGLViewProtocol::updateDesignResolution()
+void EGLViewProtocol::updateDesignResolutionSize()
 {
     _scaleX = (float)_screenSize.width / _designResolutionSize.width;
     _scaleY = (float)_screenSize.height / _designResolutionSize.height;
@@ -257,7 +258,7 @@ void EGLViewProtocol::updateDesignResolution()
     auto director = Director::sharedDirector();
     if (director->getOpenGLView() == this)
     {
-        director->m_obWinSizeInPoints = _designResolutionSize;
+        director->_winSizeInPoints = _designResolutionSize;
         director->createStatsLabel();
         director->setGLDefaultValues();
     }

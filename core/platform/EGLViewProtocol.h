@@ -125,6 +125,9 @@ public:
      */
     virtual void setScissorInPoints(float x , float y , float w , float h);
 
+    virtual void setAspectRatio(int numer, int denom) = 0;
+    virtual void setAspectRatio(Size aspectRatio) = 0;
+
     /**
      * Get whether GL_SCISSOR_TEST is enable
      * @lua NA
@@ -173,7 +176,7 @@ public:
      */
     float getScaleY() const;
 protected:
-    virtual void updateDesignResolution();
+    virtual void updateDesignResolutionSize();
 
     EGLTouchDelegate* _delegate;
 

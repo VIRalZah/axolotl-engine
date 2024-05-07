@@ -217,7 +217,7 @@ protected:
     axCArray            *m_pAtlasIndexArray;
     
     // used for retina display
-    float               m_fContentScaleFactor;            
+    float               _contentScaleFactor;            
 };
 
 // end of tilemap_parallax_nodes group

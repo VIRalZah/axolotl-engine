@@ -89,10 +89,10 @@ Node::Node(void)
 , m_pComponentContainer(NULL)
 {
     Director* director = Director::sharedDirector();
-    m_pActionManager = director->getActionManager();
-    m_pActionManager->retain();
-    m_pScheduler = director->getScheduler();
-    m_pScheduler->retain();
+    _actionManager = director->getActionManager();
+    _actionManager->retain();
+    _scheduler = director->getScheduler();
+    _scheduler->retain();
 
     m_pComponentContainer = new ComponentContainer(this);
 }
@@ -101,8 +101,8 @@ Node::~Node(void)
 {
     AXLOGINFO( "cocos2d: deallocing" );
 
-    AX_SAFE_RELEASE(m_pActionManager);
-    AX_SAFE_RELEASE(m_pScheduler);
+    AX_SAFE_RELEASE(_actionManager);
+    AX_SAFE_RELEASE(_scheduler);
     // attributes
     AX_SAFE_RELEASE(m_pCamera);
 
@@ -288,8 +288,7 @@ const Vec2& Node::getPosition()
 /// position setter
 void Node::setPosition(const Vec2& newPosition)
 {
-    m_obPosition = newPosition;
-    m_bTransformDirty = m_bInverseDirty = true;
+    setPosition(newPosition.x, newPosition.y);
 }
 
 void Node::getPosition(float* x, float* y)
@@ -300,7 +299,8 @@ void Node::getPosition(float* x, float* y)
 
 void Node::setPosition(float x, float y)
 {
-    setPosition(Vec2(x, y));
+    m_obPosition.setVec2(x, y);
+    m_bTransformDirty = m_bInverseDirty = true;
 }
 
 float Node::getPositionX(void)
@@ -935,68 +935,68 @@ void Node::onExit()
 
 void Node::setActionManager(ActionManager* actionManager)
 {
-    if( actionManager != m_pActionManager ) {
+    if( actionManager != _actionManager ) {
         this->stopAllActions();
         AX_SAFE_RETAIN(actionManager);
-        AX_SAFE_RELEASE(m_pActionManager);
-        m_pActionManager = actionManager;
+        AX_SAFE_RELEASE(_actionManager);
+        _actionManager = actionManager;
     }
 }
 
 ActionManager* Node::getActionManager()
 {
-    return m_pActionManager;
+    return _actionManager;
 }
 
 Action * Node::runAction(Action* action)
 {
     AXAssert( action != NULL, "Argument must be non-nil");
-    m_pActionManager->addAction(action, this, !m_bRunning);
+    _actionManager->addAction(action, this, !m_bRunning);
     return action;
 }
 
 void Node::stopAllActions()
 {
-    m_pActionManager->removeAllActionsFromTarget(this);
+    _actionManager->removeAllActionsFromTarget(this);
 }
 
 void Node::stopAction(Action* action)
 {
-    m_pActionManager->removeAction(action);
+    _actionManager->removeAction(action);
 }
 
 void Node::stopActionByTag(int tag)
 {
     AXAssert( tag != kCCActionTagInvalid, "Invalid tag");
-    m_pActionManager->removeActionByTag(tag, this);
+    _actionManager->removeActionByTag(tag, this);
 }
 
 Action * Node::getActionByTag(int tag)
 {
     AXAssert( tag != kCCActionTagInvalid, "Invalid tag");
-    return m_pActionManager->getActionByTag(tag, this);
+    return _actionManager->getActionByTag(tag, this);
 }
 
 unsigned int Node::numberOfRunningActions()
 {
-    return m_pActionManager->numberOfRunningActionsInTarget(this);
+    return _actionManager->numberOfRunningActionsInTarget(this);
 }
 
 // Node - Callbacks
 
 void Node::setScheduler(Scheduler* scheduler)
 {
-    if( scheduler != m_pScheduler ) {
+    if( scheduler != _scheduler ) {
         this->unscheduleAllSelectors();
         AX_SAFE_RETAIN(scheduler);
-        AX_SAFE_RELEASE(m_pScheduler);
-        m_pScheduler = scheduler;
+        AX_SAFE_RELEASE(_scheduler);
+        _scheduler = scheduler;
     }
 }
 
 Scheduler* Node::getScheduler()
 {
-    return m_pScheduler;
+    return _scheduler;
 }
 
 void Node::scheduleUpdate()
@@ -1006,12 +1006,12 @@ void Node::scheduleUpdate()
 
 void Node::scheduleUpdateWithPriority(int priority)
 {
-    m_pScheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
+    _scheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
 }
 
 void Node::unscheduleUpdate()
 {
-    m_pScheduler->unscheduleUpdateForTarget(this);
+    _scheduler->unscheduleUpdateForTarget(this);
 }
 
 void Node::schedule(SEL_SCHEDULE selector)
@@ -1029,7 +1029,7 @@ void Node::schedule(SEL_SCHEDULE selector, float interval, unsigned int repeat, 
     AXAssert( selector, "Argument must be non-nil");
     AXAssert( interval >=0, "Argument must be positive");
 
-    m_pScheduler->scheduleSelector(selector, this, interval , repeat, delay, !m_bRunning);
+    _scheduler->scheduleSelector(selector, this, interval , repeat, delay, !m_bRunning);
 }
 
 void Node::scheduleOnce(SEL_SCHEDULE selector, float delay)
@@ -1043,24 +1043,24 @@ void Node::unschedule(SEL_SCHEDULE selector)
     if (selector == 0)
         return;
 
-    m_pScheduler->unscheduleSelector(selector, this);
+    _scheduler->unscheduleSelector(selector, this);
 }
 
 void Node::unscheduleAllSelectors()
 {
-    m_pScheduler->unscheduleAllForTarget(this);
+    _scheduler->unscheduleAllForTarget(this);
 }
 
 void Node::resumeSchedulerAndActions()
 {
-    m_pScheduler->resumeTarget(this);
-    m_pActionManager->resumeTarget(this);
+    _scheduler->resumeTarget(this);
+    _actionManager->resumeTarget(this);
 }
 
 void Node::pauseSchedulerAndActions()
 {
-    m_pScheduler->pauseTarget(this);
-    m_pActionManager->pauseTarget(this);
+    _scheduler->pauseTarget(this);
+    _actionManager->pauseTarget(this);
 }
 
 // override me
