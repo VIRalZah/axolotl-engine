@@ -75,7 +75,7 @@ def checkParams(context):
     if ("cpp" == context["language"]):
         context["src_project_name"] = "HelloCpp"
         context["src_package_name"] = "org.cocos2dx.hellocpp"
-        context["src_project_path"] = os.getcwd() + "/../../template/multi-platform-cpp"
+        context["src_project_path"] = os.getcwd() + "/../../template/default"
         platforms_list = ["ios",
                           "android",
                           "win32",

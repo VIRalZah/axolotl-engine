@@ -67,17 +67,17 @@ Vec2 PointLerp(const Vec2& a, const Vec2& b, float alpha)
     return a.lerp(b, alpha);
 }
 
-float clampf(float value, float min_inclusive, float max_inclusive)
+float clampf(float value, float min_inclusive, float MAX_inclusive)
 {
-    if (min_inclusive > max_inclusive) {
-        AX_SWAP(min_inclusive, max_inclusive, float);
+    if (min_inclusive > MAX_inclusive) {
+        AX_SWAP(min_inclusive, MAX_inclusive, float);
     }
-    return value < min_inclusive ? min_inclusive : value < max_inclusive? value : max_inclusive;
+    return value < min_inclusive ? min_inclusive : value < MAX_inclusive? value : MAX_inclusive;
 }
 
-Vec2 PointClamp(const Vec2& p, const Vec2& min_inclusive, const Vec2& max_inclusive)
+Vec2 PointClamp(const Vec2& p, const Vec2& min_inclusive, const Vec2& MAX_inclusive)
 {
-    return Vec2(clampf(p.x,min_inclusive.x,max_inclusive.x), clampf(p.y, min_inclusive.y, max_inclusive.y));
+    return Vec2(clampf(p.x,min_inclusive.x,MAX_inclusive.x), clampf(p.y, min_inclusive.y, MAX_inclusive.y));
 }
 
 Vec2 PointFromSize(const Size& s)

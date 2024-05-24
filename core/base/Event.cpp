@@ -51,7 +51,7 @@ Event::~Event()
 EventTouch::EventTouch(Vec2 position, TouchType eventType, int id)
 {
 	_position = position;
-	_eventType = eventType;
+	_type = eventType;
 	_id = id;
 }
 
@@ -59,7 +59,7 @@ EventTouch::EventTouch(Vec2 position, TouchType eventType, int id)
 
 EventKeyboard::EventKeyboard(KeyboardEventType eventType, KeyCode keyCode)
 {
-	_eventType = eventType;
+	_type = eventType;
 	_keyCode = keyCode;
 }
 

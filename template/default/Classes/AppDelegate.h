@@ -7,12 +7,16 @@ class AppDelegate : private Application
 {
 public:
     AppDelegate(); // constructor
-    virtual ~AppDelegate(); // virtual destructor
+    ~AppDelegate(); // virtual destructor
 
-    virtual bool applicationDidFinishLaunching(); // init opengl stuff
+    bool applicationDidFinishLaunching() override; // init opengl stuff
+    void applicationWillTerminate() override;
 
-    virtual void applicationDidEnterBackground();
-    virtual void applicationWillEnterForeground();
+    void applicationWillResignActive() override;
+    void applicationDidBecomeActive() override;
+
+    void applicationDidEnterBackground() override;
+    void applicationWillEnterForeground() override;
 };
 
 #endif // __APP_DELEGATE_H__

@@ -1,6 +1,6 @@
 #include "main.h"
 #include "AppDelegate.h"
-#include "EGLView.h"
+#include "GLViewImpl.h"
 
 USING_NS_AX;
 

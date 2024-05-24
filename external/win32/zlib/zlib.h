@@ -666,16 +666,16 @@ ZEXTERN int ZEXPORT deflateParams OF((z_streamp strm,
 
 ZEXTERN int ZEXPORT deflateTune OF((z_streamp strm,
                                     int good_length,
-                                    int max_lazy,
+                                    int MAX_lazy,
                                     int nice_length,
-                                    int max_chain));
+                                    int MAX_chain));
 /*
      Fine tune deflate's internal compression parameters.  This should only be
    used by someone who understands the algorithm used by zlib's deflate for
    searching for the best matching string, and even then only by the most
    fanatic optimizer trying to squeeze out the last compressed bit for their
    specific input data.  Read the deflate.c source code for the meaning of the
-   max_lazy, good_length, nice_length, and max_chain parameters.
+   MAX_lazy, good_length, nice_length, and MAX_chain parameters.
 
      deflateTune() can be called after deflateInit() or deflateInit2(), and
    returns Z_OK on success, or Z_STREAM_ERROR for an invalid deflate stream.

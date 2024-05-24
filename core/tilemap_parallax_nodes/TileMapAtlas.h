@@ -35,7 +35,7 @@ struct sImageTGA;
 class Dictionary;
 
 /**
- * @addtogroup tilemap_parallax_nodes
+ * @addtogroup tilemap_parallAX_nodes
  * @{
  */
 
@@ -102,7 +102,7 @@ protected:
     int m_nItemsToRender;
 };
 
-// end of tilemap_parallax_nodes group
+// end of tilemap_parallAX_nodes group
 /// @}
 
 NS_AX_END

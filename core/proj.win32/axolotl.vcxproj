@@ -26,7 +26,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v110_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -36,7 +36,7 @@
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v110_xp</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
     <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0' and exists('$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A')">v120_xp</PlatformToolset>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -76,7 +76,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\..\external\win32\iconv;$(ProjectDir)..\..\external\win32\zlib;$(ProjectDir)..\..\external\win32\libpng;$(ProjectDir)..\..\external\win32\libjpeg;$(ProjectDir)..\..\external\win32\libtiff;$(ProjectDir)..\..\external\win32\libwebp;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\..\external\win32\iconv;$(ProjectDir)..\..\external\win32\zlib;$(ProjectDir)..\..\external\win32\libpng;$(ProjectDir)..\..\external\win32\libjpeg;$(ProjectDir)..\..\external\win32\libtiff;$(ProjectDir)..\..\external\win32\libwebp;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;COCOS2DXWIN32_EXPORTS;GL_GLEXT_PROTOTYPES;AXOLOTL_DEBUG=1;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -87,17 +87,18 @@
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PreLinkEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
 xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;shell32.lib;advapi32.lib;gdi32.lib;opengl32.lib;glew32.lib;glfw3.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;legacy_stdio_definitions.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries> ;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <ImportLibrary>$(TargetDir)$(TargetName).lib</ImportLibrary>
@@ -114,7 +115,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
       </Command>
     </PreBuildEvent>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.1A\include;$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\..\external\win32\iconv;$(ProjectDir)..\..\external\win32\zlib;$(ProjectDir)..\..\external\win32\libpng;$(ProjectDir)..\..\external\win32\libjpeg;$(ProjectDir)..\..\external\win32\libtiff;$(ProjectDir)..\..\external\win32\libwebp;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..;$(ProjectDir)..\platform\win32;$(ProjectDir)..\..\external\win32\iconv;$(ProjectDir)..\..\external\win32\zlib;$(ProjectDir)..\..\external\win32\libpng;$(ProjectDir)..\..\external\win32\libjpeg;$(ProjectDir)..\..\external\win32\libtiff;$(ProjectDir)..\..\external\win32\libwebp;$(ProjectDir)..\..\external\win32\pthread;$(ProjectDir)..\..\external\win32\OGLES;$(ProjectDir)..\..\external\win32;..\include;$(ProjectDir)..\kazmath\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;COCOS2DXWIN32_EXPORTS;GL_GLEXT_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -123,16 +124,17 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <ForcedIncludeFiles>pch.h</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <PreLinkEvent>
       <Command>if not exist "$(OutDir)" mkdir "$(OutDir)"
 xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glew32.lib;glfw3.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;shell32.lib;advapi32.lib;gdi32.lib;opengl32.lib;glew32.lib;glfw3.lib;libzlib.lib;libpng.lib;libjpeg.lib;libtiff.lib;libwebp.lib;libiconv.lib;legacy_stdio_definitions.lib</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries> ;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -147,19 +149,13 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\axFPSImages.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ForcedIncludeFiles>
-      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </ForcedIncludeFiles>
-    </ClCompile>
+    <ClCompile Include="..\audio\desktop\AudioEngine-desktop.cpp" />
     <ClCompile Include="..\axolotl.cpp" />
     <ClCompile Include="..\base\AffineTransform.cpp" />
     <ClCompile Include="..\base\Array.cpp" />
     <ClCompile Include="..\base\AtlasNode.cpp" />
     <ClCompile Include="..\base\AutoreleasePool.cpp" />
+    <ClCompile Include="..\base\BMFontCache.cpp" />
     <ClCompile Include="..\base\Camera.cpp" />
     <ClCompile Include="..\base\Configuration.cpp" />
     <ClCompile Include="..\base\DataVisitor.cpp" />
@@ -176,6 +172,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\base\String.cpp" />
     <ClCompile Include="..\base\Touch.cpp" />
     <ClCompile Include="..\base\Types.cpp" />
+    <ClCompile Include="..\base\Value.cpp" />
     <ClCompile Include="..\base\Zone.cpp" />
     <ClCompile Include="..\draw_nodes\DrawingPrimitives.cpp" />
     <ClCompile Include="..\draw_nodes\DrawNode.cpp" />
@@ -208,11 +205,12 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\misc_nodes\MotionStreak.cpp" />
     <ClCompile Include="..\misc_nodes\ProgressTimer.cpp" />
     <ClCompile Include="..\misc_nodes\RenderTexture.cpp" />
+    <ClCompile Include="..\network\HttpClient.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleBatchNode.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleExamples.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleSystem.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleSystemQuad.cpp" />
-    <ClCompile Include="..\platform\EGLViewProtocol.cpp" />
+    <ClCompile Include="..\platform\GLView.cpp" />
     <ClCompile Include="..\platform\FileUtils.cpp" />
     <ClCompile Include="..\platform\ImageCommonWebp.cpp" />
     <ClCompile Include="..\platform\SAXParser.cpp" />
@@ -222,7 +220,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\platform\win32\Application.cpp" />
     <ClCompile Include="..\platform\win32\Common.cpp" />
     <ClCompile Include="..\platform\win32\Device.cpp" />
-    <ClCompile Include="..\platform\win32\EGLView.cpp" />
+    <ClCompile Include="..\platform\win32\GLViewImpl.cpp" />
     <ClCompile Include="..\platform\win32\FileUtilsWin32.cpp" />
     <ClCompile Include="..\platform\win32\Image.cpp" />
     <ClCompile Include="..\platform\win32\StdC.cpp" />
@@ -242,6 +240,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\support\Profiling.cpp" />
     <ClCompile Include="..\support\ccUTF8.cpp" />
     <ClCompile Include="..\support\ccUtils.cpp" />
+    <ClCompile Include="..\support\RandomUtils.cpp" />
     <ClCompile Include="..\support\StringUtils.cpp" />
     <ClCompile Include="..\support\Vertex.cpp" />
     <ClCompile Include="..\support\component\Component.cpp" />
@@ -379,15 +378,13 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\axFPSImages.h">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClInclude>
+    <ClInclude Include="..\audio\AudioEngine.h" />
     <ClInclude Include="..\axolotl.h" />
     <ClInclude Include="..\base\AffineTransform.h" />
     <ClInclude Include="..\base\Array.h" />
     <ClInclude Include="..\base\AtlasNode.h" />
     <ClInclude Include="..\base\AutoreleasePool.h" />
+    <ClInclude Include="..\base\BMFontCache.h" />
     <ClInclude Include="..\base\Bool.h" />
     <ClInclude Include="..\base\Camera.h" />
     <ClInclude Include="..\base\Configuration.h" />
@@ -408,6 +405,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\base\String.h" />
     <ClInclude Include="..\base\Touch.h" />
     <ClInclude Include="..\base\Types.h" />
+    <ClInclude Include="..\base\Value.h" />
     <ClInclude Include="..\base\Zone.h" />
     <ClInclude Include="..\draw_nodes\DrawingPrimitives.h" />
     <ClInclude Include="..\draw_nodes\DrawNode.h" />
@@ -444,6 +442,9 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\misc_nodes\MotionStreak.h" />
     <ClInclude Include="..\misc_nodes\ProgressTimer.h" />
     <ClInclude Include="..\misc_nodes\RenderTexture.h" />
+    <ClInclude Include="..\network\HttpClient.h" />
+    <ClInclude Include="..\network\HttpRequest.h" />
+    <ClInclude Include="..\network\HttpResponse.h" />
     <ClInclude Include="..\particle_nodes\ParticleBatchNode.h" />
     <ClInclude Include="..\particle_nodes\ParticleExamples.h" />
     <ClInclude Include="..\particle_nodes\ParticleSystem.h" />
@@ -451,7 +452,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\platform\AccelerometerDelegate.h" />
     <ClInclude Include="..\platform\ApplicationProtocol.h" />
     <ClInclude Include="..\platform\Common.h" />
-    <ClInclude Include="..\platform\EGLViewProtocol.h" />
+    <ClInclude Include="..\platform\GLView.h" />
     <ClInclude Include="..\platform\FileUtils.h" />
     <ClInclude Include="..\platform\Image.h" />
     <ClInclude Include="..\platform\ImageCommon_cpp.h" />
@@ -462,7 +463,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\platform\platform.h" />
     <ClInclude Include="..\platform\win32\Accelerometer.h" />
     <ClInclude Include="..\platform\win32\Application.h" />
-    <ClInclude Include="..\platform\win32\EGLView.h" />
+    <ClInclude Include="..\platform\win32\GLViewImpl.h" />
     <ClInclude Include="..\platform\win32\FileUtilsWin32.h" />
     <ClInclude Include="..\platform\win32\GL.h" />
     <ClInclude Include="..\platform\win32\PlatformDefine.h" />
@@ -499,6 +500,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\support\Profiling.h" />
     <ClInclude Include="..\support\ccUTF8.h" />
     <ClInclude Include="..\support\ccUtils.h" />
+    <ClInclude Include="..\support\RandomUtils.h" />
     <ClInclude Include="..\support\StringUtils.h" />
     <ClInclude Include="..\support\Vertex.h" />
     <ClInclude Include="..\support\component\Component.h" />

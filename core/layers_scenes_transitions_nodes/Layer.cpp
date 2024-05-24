@@ -44,6 +44,7 @@ NS_AX_BEGIN
 // Layer
 Layer::Layer()
 : _touchEnabled(false)
+, _keyboardEnabled(false)
 , m_bAccelerometerEnabled(false)
 , m_bKeypadEnabled(false)
 , _touchPriority(0)
@@ -172,7 +173,6 @@ void Layer::setKeyboardEnabled(bool enabled)
                     _keyboardHandler = new KeyboardHandler();
 
                     _keyboardHandler->onKeyDown = std::bind(&Layer::keyDown, this, std::placeholders::_1);
-                    _keyboardHandler->onKeyRepeat = std::bind(&Layer::keyRepeat, this, std::placeholders::_1);
                     _keyboardHandler->onKeyUp = std::bind(&Layer::keyUp, this, std::placeholders::_1);
 
                     _keyboardHandler->priority = _keyboardPriority;
@@ -368,10 +368,6 @@ void Layer::ccTouchEnded(Touch *pTouch)
 }
 
 void Layer::keyDown(KeyCode keyCode)
-{
-}
-
-void Layer::keyRepeat(KeyCode keyCode)
 {
 }
 

@@ -230,7 +230,7 @@ float AX_DLL PointToAngle(const Vec2& v);
 /** Clamp a value between from and to.
  @since v0.99.1
  */
-float AX_DLL clampf(float value, float min_inclusive, float max_inclusive);
+float AX_DLL clampf(float value, float min_inclusive, float MAX_inclusive);
 
 /** Clamp a point between from and to.
  @since v0.99.1

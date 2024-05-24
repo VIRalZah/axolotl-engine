@@ -94,6 +94,15 @@
     <Filter Include="base">
       <UniqueIdentifier>{eeec18bb-9bea-41ac-ae39-8a329487bc50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="audio">
+      <UniqueIdentifier>{523db324-33d3-46c1-82be-e29a75420e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="audio\desktop">
+      <UniqueIdentifier>{ed07e2b0-9da0-4ec0-89e2-b7c0f50af162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="network">
+      <UniqueIdentifier>{5827a89e-8287-4d11-9351-9ff0278fcf73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\effects\Grabber.cpp">
@@ -192,7 +201,7 @@
     <ClCompile Include="..\particle_nodes\ParticleSystemQuad.cpp">
       <Filter>particle_nodes</Filter>
     </ClCompile>
-    <ClCompile Include="..\platform\EGLViewProtocol.cpp">
+    <ClCompile Include="..\platform\GLView.cpp">
       <Filter>platform</Filter>
     </ClCompile>
     <ClCompile Include="..\platform\SAXParser.cpp">
@@ -213,7 +222,7 @@
     <ClCompile Include="..\platform\win32\Common.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
-    <ClCompile Include="..\platform\win32\EGLView.cpp">
+    <ClCompile Include="..\platform\win32\GLViewImpl.cpp">
       <Filter>platform\win32</Filter>
     </ClCompile>
     <ClCompile Include="..\platform\win32\Image.cpp">
@@ -476,7 +485,21 @@
     <ClCompile Include="..\base\AtlasNode.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\axFPSImages.c" />
+    <ClCompile Include="..\support\RandomUtils.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\BMFontCache.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\base\Value.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\audio\desktop\AudioEngine-desktop.cpp">
+      <Filter>audio\desktop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\network\HttpClient.cpp">
+      <Filter>network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\effects\Grabber.h">
@@ -596,7 +619,7 @@
     <ClInclude Include="..\platform\Common.h">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\platform\EGLViewProtocol.h">
+    <ClInclude Include="..\platform\GLView.h">
       <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="..\platform\FileUtils.h">
@@ -629,7 +652,7 @@
     <ClInclude Include="..\platform\win32\Application.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
-    <ClInclude Include="..\platform\win32\EGLView.h">
+    <ClInclude Include="..\platform\win32\GLViewImpl.h">
       <Filter>platform\win32</Filter>
     </ClInclude>
     <ClInclude Include="..\platform\win32\GL.h">
@@ -958,6 +981,26 @@
     <ClInclude Include="..\base\AtlasNode.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\axFPSImages.h" />
+    <ClInclude Include="..\support\RandomUtils.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\BMFontCache.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Value.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\audio\AudioEngine.h">
+      <Filter>audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpClient.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpRequest.h">
+      <Filter>network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\network\HttpResponse.h">
+      <Filter>network</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

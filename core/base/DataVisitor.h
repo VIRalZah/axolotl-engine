@@ -39,6 +39,7 @@ class String;
 class Array;
 class Dictionary;
 class Set;
+class Value;
 
 /**
  * @addtogroup data_structures
@@ -77,6 +78,7 @@ public:
     virtual void visit(const Array *p);
     virtual void visit(const Dictionary *p);
     virtual void visit(const Set *p);
+    virtual void visit(const Value* p);
 };
 
 /**
@@ -100,6 +102,7 @@ public:
     virtual void visit(const Array *p);
     virtual void visit(const Dictionary *p);
     virtual void visit(const Set *p);
+    virtual void visit(const Value* p);
 private:
     void setIndentLevel(int indentLevel);
     int _indentLevel;

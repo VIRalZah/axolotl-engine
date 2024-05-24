@@ -1,8 +1,10 @@
 /****************************************************************************
 Copyright (c) 2010-2013 cocos2d-x.org
 Copyright (c) Microsoft Open Technologies, Inc.
+Copyright (c) 2024 zahann.ru
 
 http://www.cocos2d-x.org
+http://www.zahann.ru
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,80 +24,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
+
 #ifndef __AX_APPLICATION_PROTOCOL_H__
 #define __AX_APPLICATION_PROTOCOL_H__
+
+#include "platform/PlatformMacros.h"
 
 NS_AX_BEGIN
 
 enum TargetPlatform
 {
-    kTargetWindows,
-    kTargetLinux,
-    kTargetMacOS,
-    kTargetAndroid,
-    kTargetIphone,
-    kTargetIpad,
-    kTargetBlackBerry,
-    kTargetNaCl,
-    kTargetEmscripten,
-    kTargetTizen,
-    kTargetWinRT,
-    kTargetWP8
+    WINDOWS,
+    ANDROID,
 };
-
-/**
- * @addtogroup platform
- * @{
- * @js NA
- * @lua NA
- */
 
 class AX_DLL ApplicationProtocol
 {
 public:
-
     virtual ~ApplicationProtocol() {}
 
-    /**
-    @brief    Implement Director and Scene init code here.
-    @return true    Initialize success, app continue.
-    @return false   Initialize failed, app terminate.
-    */
     virtual bool applicationDidFinishLaunching() = 0;
+    virtual void applicationWillTerminate() = 0;
 
-    /**
-    @brief  The function be called when the application enter background
-    @param  the pointer of the application
-    */
+    virtual void applicationWillResignActive() = 0;
+    virtual void applicationDidBecomeActive() = 0;
+
     virtual void applicationDidEnterBackground() = 0;
-
-    /**
-    @brief  The function be called when the application enter foreground
-    @param  the pointer of the application
-    */
     virtual void applicationWillEnterForeground() = 0;
 
-    /**
-    @brief    Callback by Director for limit FPS.
-    @interval       The time, expressed in seconds, between current frame and next. 
-    */
     virtual void setAnimationInterval(double interval) = 0;
 
-    /**
-    @brief Get current language config
-    @return Current language config
-    */
-    virtual ccLanguageType getCurrentLanguage() = 0;
-    
-    /**
-     @brief Get target platform
-     */
     virtual TargetPlatform getTargetPlatform() = 0;
 };
 
-// end of platform group
-/// @}
-
 NS_AX_END
 
-#endif    // __AX_APPLICATION_PROTOCOL_H__
+#endif // __AX_APPLICATION_PROTOCOL_H__

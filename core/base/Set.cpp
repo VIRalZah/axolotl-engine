@@ -38,7 +38,7 @@ Set::Set(const Set &rSetObject)
     m_pSet = new set<Object *>(*rSetObject.m_pSet);
 
     // call retain of members
-    CCSetIterator iter;
+    SetIterator iter;
     for (iter = m_pSet->begin(); iter != m_pSet->end(); ++iter)
     {
         if (! (*iter))
@@ -104,7 +104,7 @@ void Set::removeObject(Object *pObject)
 
 void Set::removeAllObjects()
 {
-    CCSetIterator it;
+    SetIterator it;
     for (it = m_pSet->begin(); it != m_pSet->end(); ++it)
     {
         if (! (*it))
@@ -121,12 +121,12 @@ bool Set::containsObject(Object *pObject)
     return m_pSet->find(pObject) != m_pSet->end();
 }
 
-CCSetIterator Set::begin(void)
+SetIterator Set::begin(void)
 {
     return m_pSet->begin();
 }
 
-CCSetIterator Set::end(void)
+SetIterator Set::end(void)
 {
     return m_pSet->end();
 }
@@ -138,7 +138,7 @@ Object* Set::anyObject()
         return 0;
     }
     
-    CCSetIterator it;
+    SetIterator it;
 
     for( it = m_pSet->begin(); it != m_pSet->end(); ++it)
     {

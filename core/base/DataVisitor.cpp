@@ -31,6 +31,8 @@
 #include "Array.h"
 #include "Dictionary.h"
 #include "Set.h"
+#include "Value.h"
+#include "support/StringUtils.h"
 
 NS_AX_BEGIN
 
@@ -70,6 +72,11 @@ void DataVisitor::visit(const Dictionary *value)
 }
 
 void DataVisitor::visit(const Set *value)
+{
+    visitObject(value);
+}
+
+void DataVisitor::visit(const Value* value)
 {
     visitObject(value);
 }
@@ -145,8 +152,7 @@ void PrettyPrinter::visit(const Array *p)
         if (i > 0) {
             _result += "\n";
         }
-        sprintf(buf, "%s%02d: ", _indentStr.c_str(), i);
-        _result += buf;
+        _result += StringUtils::format("%s%d: ", _indentStr.c_str(), i);
         PrettyPrinter v(_indentLevel);
         obj->acceptVisitor(v);
         _result += v.getResult();
@@ -198,7 +204,7 @@ void PrettyPrinter::visit(const Set *p)
 
     int i = 0;
     Set* tmp = const_cast<Set*>(p);
-    CCSetIterator it = tmp->begin();
+    SetIterator it = tmp->begin();
 
     for (; it != tmp->end(); ++it, ++i) {
         if (i > 0) {
@@ -214,6 +220,11 @@ void PrettyPrinter::visit(const Set *p)
     _result += "\n";
     _result += _indentStr;
     _result += "</set>\n";
+}
+
+void PrettyPrinter::visit(const Value* value)
+{
+    _result += value->stringValue();
 }
 
 void PrettyPrinter::setIndentLevel(int indentLevel)

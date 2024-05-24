@@ -54,9 +54,9 @@ enum TextureQuality
     DEFAULT_TEXTURE_QUALITY = LOW
 };
 
-class LabelAtlas;
+class LabelTTF;
 class Scene;
-class EGLViewProtocol;
+class GLView;
 class Node;
 class Scheduler;
 class ActionManager;
@@ -85,11 +85,11 @@ public:
     inline double getAnimationInterval() const { return _animationInterval; }
     virtual void setAnimationInterval(double value);
 
-    inline bool isDisplayStats() const { return _displayStats; }
-    virtual void setDisplayStats(bool displayStats) { _displayStats = displayStats; }
+    inline bool isDisplayDebugInfo() const { return _displayDebugInfo; }
+    virtual void setDisplayDebugInfo(bool displayStats) { _displayDebugInfo = displayStats; }
     
-    inline EGLViewProtocol* getOpenGLView() const { return _openGLView; }
-    virtual void setOpenGLView(EGLViewProtocol* glView);
+    inline GLView* getOpenGLView() const { return _openGLView; }
+    virtual void setOpenGLView(GLView* glView);
 
     inline bool isNextDeltaTimeZero() const { return _nextDeltaTimeZero; }
     virtual void setNextDeltaTimeZero(bool bNextDeltaTimeZero);
@@ -126,8 +126,8 @@ public:
     virtual void runWithScene(Scene* scene);
     virtual void pushScene(Scene* scene);
 
-    virtual void popScene(void);
-    virtual void popToRootScene(void);
+    virtual void popScene();
+    virtual void popToRootScene();
     virtual void popToSceneStackLevel(int level);
 
     virtual void replaceScene(Scene* scene);
@@ -156,15 +156,16 @@ public:
 
     inline float getContentScaleFactor() const;
     virtual void setContentScaleFactor(float scaleFactor);
+
+    inline const std::string& getDefaultLabelFont() const { return _defaultLabelFont; }
+    virtual void setDefaultLabelFont(const std::string& defaultLabelFont);
 protected:
-    virtual void purgeDirector();
+    virtual void purgeApplication();
     
     virtual void setNextScene();
     
-    virtual void showStats();
-    virtual void createStatsLabel();
-
-    virtual void getFPSImageData(unsigned char** datapointer, unsigned int* length);
+    virtual void showDebugInfo();
+    virtual void createDebugInfoLabel();
     
     virtual void updateTextureQuality();
 
@@ -180,19 +181,19 @@ protected:
 
     AX_PROPERTY_READONLY(TextureQuality, _textureQuality, TextureQuality);
 
-    bool _purgeDirectorInNextLoop;
+    bool _purgeApplicationInNextLoop;
 
-    EGLViewProtocol* _openGLView;
+    GLView* _openGLView;
 
     double _animationInterval;
     double _oldAnimationInterval;
 
-    bool _displayStats;
+    bool _displayDebugInfo;
     float _accumDt;
     float _frameRate;
     
-    LabelAtlas* _fpsLabel;
-    LabelAtlas* _drawsLabel;
+    std::string _defaultLabelFont;
+    LabelTTF* _infoLabel;
     
     bool _paused;
 
@@ -205,7 +206,7 @@ protected:
 
     bool _sendCleanupToScene;
 
-    std::chrono::system_clock::time_point _lastUpdate;
+    std::chrono::steady_clock::time_point _lastUpdate;
     
     bool _nextDeltaTimeZero;
     
@@ -219,7 +220,7 @@ protected:
 
     bool _invalid;
 
-    friend class EGLViewProtocol;
+    friend class GLView;
 };
 
 NS_AX_END

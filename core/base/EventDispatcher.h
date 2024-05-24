@@ -45,10 +45,14 @@ public:
 	virtual void setDispatchEvents(bool enabled) { _dispatchEvents = enabled; }
 	virtual bool isDispatchEvents() const { return _dispatchEvents; };
 protected:
+	int getIndex(Handler* handler) const;
+
 	bool _dispatchEvents;
 	bool _locked;
 	
 	Array* _handlers;
+	axArray* _handlersToAdd;
+	axArray* _handlersToRemove;
 };
 
 NS_AX_END

@@ -431,6 +431,7 @@ public:
      * @return The untransformed size of the node.
      */
     virtual const Size& getContentSize() const;
+    virtual const Size& getScaledContentSize() const;
 
     
     /**

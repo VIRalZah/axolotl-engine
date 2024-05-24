@@ -47,379 +47,15 @@ using namespace std;
 
 NS_AX_BEGIN
 
-// The return value needs to be deleted by AX_SAFE_DELETE_ARRAY.
 static unsigned short* copyUTF16StringN(unsigned short* str)
 {
     int length = str ? AX_wcslen(str) : 0;
-    unsigned short* ret = new unsigned short[length+1];
+    unsigned short* ret = new unsigned short[length + 1];
     for (int i = 0; i < length; ++i) {
         ret[i] = str[i];
     }
     ret[length] = 0;
     return ret;
-}
-
-//
-//FNTConfig Cache - free functions
-//
-static Dictionary* s_pConfigurations = NULL;
-
-BMFontConfiguration* FNTConfigLoadFile( const char *fntFile)
-{
-    std::string fullpathStr = FileUtils::sharedFileUtils()->fullPathForFilename(fntFile);
-
-    BMFontConfiguration* pRet = NULL;
-
-    if( s_pConfigurations == NULL )
-    {
-        s_pConfigurations = new Dictionary();
-    }
-
-    pRet = (BMFontConfiguration*)s_pConfigurations->objectForKey(fullpathStr.c_str());
-    if( pRet == NULL )
-    {
-        pRet = BMFontConfiguration::create(fullpathStr.c_str());
-        if (pRet)
-        {
-            s_pConfigurations->setObject(pRet, fullpathStr.c_str());
-        }        
-    }
-
-    return pRet;
-}
-
-void FNTConfigRemoveCache( void )
-{
-    if (s_pConfigurations)
-    {
-        s_pConfigurations->removeAllObjects();
-        AX_SAFE_RELEASE_NULL(s_pConfigurations);
-    }
-}
-
-//
-//BitmapFontConfiguration
-//
-
-BMFontConfiguration * BMFontConfiguration::create(const char *FNTfile)
-{
-    BMFontConfiguration * pRet = new BMFontConfiguration();
-    if (pRet->initWithFNTfile(FNTfile))
-    {
-        pRet->autorelease();
-        return pRet;
-    }
-    AX_SAFE_DELETE(pRet);
-    return NULL;
-}
-
-bool BMFontConfiguration::initWithFNTfile(const char *FNTfile)
-{
-    m_pKerningDictionary = NULL;
-    m_pFontDefDictionary = NULL;
-    
-    m_pCharacterSet = this->parseConfigFile(FNTfile);
-    
-    if (! m_pCharacterSet)
-    {
-        return false;
-    }
-
-    return true;
-}
-
-std::set<unsigned int>* BMFontConfiguration::getCharacterSet() const
-{
-    return m_pCharacterSet;
-}
-
-BMFontConfiguration::BMFontConfiguration()
-: m_pFontDefDictionary(NULL)
-, m_nCommonHeight(0)
-, m_pKerningDictionary(NULL)
-, m_pCharacterSet(NULL)
-{
-
-}
-
-BMFontConfiguration::~BMFontConfiguration()
-{
-    AXLOGINFO( "cocos2d: deallocing BMFontConfiguration" );
-    this->purgeFontDefDictionary();
-    this->purgeKerningDictionary();
-    m_sAtlasName.clear();
-    AX_SAFE_DELETE(m_pCharacterSet);
-}
-
-const char* BMFontConfiguration::description(void)
-{
-    return String::createWithFormat(
-        "<BMFontConfiguration = " AX_FORMAT_PRINTF_SIZE_T " | Glphys:%d Kernings:%d | Image = %s>",
-        (size_t)this,
-        HASH_COUNT(m_pFontDefDictionary),
-        HASH_COUNT(m_pKerningDictionary),
-        m_sAtlasName.c_str()
-    )->getCString();
-}
-
-void BMFontConfiguration::purgeKerningDictionary()
-{
-    tCCKerningHashElement *current;
-    while(m_pKerningDictionary) 
-    {
-        current = m_pKerningDictionary; 
-        HASH_DEL(m_pKerningDictionary,current);
-        free(current);
-    }
-}
-
-void BMFontConfiguration::purgeFontDefDictionary()
-{    
-    tCCFontDefHashElement *current, *tmp;
-
-    HASH_ITER(hh, m_pFontDefDictionary, current, tmp) {
-        HASH_DEL(m_pFontDefDictionary, current);
-        free(current);
-    }
-}
-
-std::set<unsigned int>* BMFontConfiguration::parseConfigFile(const char *controlFile)
-{    
-    std::string fullpath = FileUtils::sharedFileUtils()->fullPathForFilename(controlFile);
-    String *contents = String::createWithContentsOfFile(fullpath.c_str());
-
-    AXAssert(contents, "BMFontConfiguration::parseConfigFile | Open file error.");
-    
-    set<unsigned int> *validCharsString = new set<unsigned int>();
-
-    if (!contents)
-    {
-        AXLOG("cocos2d: Error parsing FNTfile %s", controlFile);
-        return NULL;
-    }
-
-    // parse spacing / padding
-    std::string line;
-    std::string strLeft = contents->getCString();
-    while (strLeft.length() > 0)
-    {
-        int pos = strLeft.find('\n');
-
-        if (pos != (int)std::string::npos)
-        {
-            // the data is more than a line.get one line
-            line = strLeft.substr(0, pos);
-            strLeft = strLeft.substr(pos + 1);
-        }
-        else
-        {
-            // get the left data
-            line = strLeft;
-            strLeft.erase();
-        }
-
-        if(line.substr(0,strlen("info face")) == "info face") 
-        {
-            // XXX: info parsing is incomplete
-            // Not needed for the Hiero editors, but needed for the AngelCode editor
-            //            [self parseInfoArguments:line];
-            this->parseInfoArguments(line);
-        }
-        // Check to see if the start of the line is something we are interested in
-        else if(line.substr(0,strlen("common lineHeight")) == "common lineHeight")
-        {
-            this->parseCommonArguments(line);
-        }
-        else if(line.substr(0,strlen("page id")) == "page id")
-        {
-            this->parseImageFileName(line, controlFile);
-        }
-        else if(line.substr(0,strlen("chars c")) == "chars c")
-        {
-            // Ignore this line
-        }
-        else if(line.substr(0,strlen("char")) == "char")
-        {
-            // Parse the current line and create a new CharDef
-            tCCFontDefHashElement* element = (tCCFontDefHashElement*)malloc( sizeof(*element) );
-            this->parseCharacterDefinition(line, &element->fontDef);
-
-            element->key = element->fontDef.charID;
-            HASH_ADD_INT(m_pFontDefDictionary, key, element);
-            
-            validCharsString->insert(element->fontDef.charID);
-        }
-//        else if(line.substr(0,strlen("kernings count")) == "kernings count")
-//        {
-//            this->parseKerningCapacity(line);
-//        }
-        else if(line.substr(0,strlen("kerning first")) == "kerning first")
-        {
-            this->parseKerningEntry(line);
-        }
-    }
-    
-    return validCharsString;
-}
-
-void BMFontConfiguration::parseImageFileName(std::string line, const char *fntFile)
-{
-    //////////////////////////////////////////////////////////////////////////
-    // line to parse:
-    // page id=0 file="bitmapFontTest.png"
-    //////////////////////////////////////////////////////////////////////////
-
-    // page ID. Sanity check
-    int index = line.find('=')+1;
-    int index2 = line.find(' ', index);
-    std::string value = line.substr(index, index2-index);
-    AXAssert(atoi(value.c_str()) == 0, "LabelBMFont file could not be found");
-    // file 
-    index = line.find('"')+1;
-    index2 = line.find('"', index);
-    value = line.substr(index, index2-index);
-
-    m_sAtlasName = FileUtils::sharedFileUtils()->fullPathFromRelativeFile(value.c_str(), fntFile);
-}
-
-void BMFontConfiguration::parseInfoArguments(std::string line)
-{
-    //////////////////////////////////////////////////////////////////////////
-    // possible lines to parse:
-    // info face="Script" size=32 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=1,4,3,2 spacing=0,0 outline=0
-    // info face="Cracked" size=36 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1
-    //////////////////////////////////////////////////////////////////////////
-
-    // padding
-    int index = line.find("padding=");
-    int index2 = line.find(' ', index);
-    std::string value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "padding=%d,%d,%d,%d", &m_tPadding.top, &m_tPadding.right, &m_tPadding.bottom, &m_tPadding.left);
-    AXLOG("cocos2d: padding: %d,%d,%d,%d", m_tPadding.left, m_tPadding.top, m_tPadding.right, m_tPadding.bottom);
-}
-
-void BMFontConfiguration::parseCommonArguments(std::string line)
-{
-    //////////////////////////////////////////////////////////////////////////
-    // line to parse:
-    // common lineHeight=104 base=26 scaleW=1024 scaleH=512 pages=1 packed=0
-    //////////////////////////////////////////////////////////////////////////
-
-    // Height
-    int index = line.find("lineHeight=");
-    int index2 = line.find(' ', index);
-    std::string value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "lineHeight=%d", &m_nCommonHeight);
-    // scaleW. sanity check
-    index = line.find("scaleW=") + strlen("scaleW=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    AXAssert(atoi(value.c_str()) <= Configuration::sharedConfiguration()->getMaxTextureSize(), "LabelBMFont: page can't be larger than supported");
-    // scaleH. sanity check
-    index = line.find("scaleH=") + strlen("scaleH=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    AXAssert(atoi(value.c_str()) <= Configuration::sharedConfiguration()->getMaxTextureSize(), "LabelBMFont: page can't be larger than supported");
-    // pages. sanity check
-    index = line.find("pages=") + strlen("pages=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    AXAssert(atoi(value.c_str()) == 1, "CCBitfontAtlas: only supports 1 page");
-
-    // packed (ignore) What does this mean ??
-}
-
-void BMFontConfiguration::parseCharacterDefinition(std::string line, ccBMFontDef *characterDefinition)
-{    
-    //////////////////////////////////////////////////////////////////////////
-    // line to parse:
-    // char id=32   x=0     y=0     width=0     height=0     xoffset=0     yoffset=44    xadvance=14     page=0  chnl=0 
-    //////////////////////////////////////////////////////////////////////////
-
-    // Character ID
-    int index = line.find("id=");
-    int index2 = line.find(' ', index);
-    std::string value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "id=%u", &characterDefinition->charID);
-
-    // Character x
-    index = line.find("x=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "x=%f", &characterDefinition->rect.origin.x);
-    // Character y
-    index = line.find("y=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "y=%f", &characterDefinition->rect.origin.y);
-    // Character width
-    index = line.find("width=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "width=%f", &characterDefinition->rect.size.width);
-    // Character height
-    index = line.find("height=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "height=%f", &characterDefinition->rect.size.height);
-    // Character xoffset
-    index = line.find("xoffset=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "xoffset=%hd", &characterDefinition->xOffset);
-    // Character yoffset
-    index = line.find("yoffset=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "yoffset=%hd", &characterDefinition->yOffset);
-    // Character xadvance
-    index = line.find("xadvance=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "xadvance=%hd", &characterDefinition->xAdvance);
-}
-
-void BMFontConfiguration::parseKerningEntry(std::string line)
-{        
-    //////////////////////////////////////////////////////////////////////////
-    // line to parse:
-    // kerning first=121  second=44  amount=-7
-    //////////////////////////////////////////////////////////////////////////
-
-    // first
-    int first;
-    int index = line.find("first=");
-    int index2 = line.find(' ', index);
-    std::string value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "first=%d", &first);
-
-    // second
-    int second;
-    index = line.find("second=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "second=%d", &second);
-
-    // amount
-    int amount;
-    index = line.find("amount=");
-    index2 = line.find(' ', index);
-    value = line.substr(index, index2-index);
-    sscanf(value.c_str(), "amount=%d", &amount);
-
-    tCCKerningHashElement *element = (tCCKerningHashElement *)calloc( sizeof( *element ), 1 );
-    element->amount = amount;
-    element->key = (first<<16) | (second&0xffff);
-    HASH_ADD_INT(m_pKerningDictionary,key, element);
-}
-//
-//LabelBMFont
-//
-
-//LabelBMFont - Purge Cache
-void LabelBMFont::purgeCachedData()
-{
-    FNTConfigRemoveCache();
 }
 
 LabelBMFont * LabelBMFont::create()
@@ -476,7 +112,7 @@ bool LabelBMFont::initWithString(const char *theString, const char *fntFile, flo
     
     if (fntFile)
     {
-        BMFontConfiguration *newConf = FNTConfigLoadFile(fntFile);
+        BMFontConfiguration *newConf = BMFontCache::sharedBMFontCache()->addConfigurationWithFile(fntFile);
         if (!newConf)
         {
             AXLOG("cocos2d: WARNING. LabelBMFont: Impossible to create font. Please check file: '%s'", fntFile);
@@ -490,7 +126,7 @@ bool LabelBMFont::initWithString(const char *theString, const char *fntFile, flo
         
         m_sFntFile = fntFile;
         
-        texture = TextureCache::sharedTextureCache()->addImage(m_pConfiguration->getAtlasName());
+        texture = TextureCache::sharedTextureCache()->addImage(m_pConfiguration->_atlasName.c_str());
     }
     else 
     {
@@ -565,9 +201,9 @@ int LabelBMFont::kerningAmountForFirst(unsigned short first, unsigned short seco
     int ret = 0;
     unsigned int key = (first<<16) | (second & 0xffff);
 
-    if( m_pConfiguration->m_pKerningDictionary ) {
-        tCCKerningHashElement *element = NULL;
-        HASH_FIND_INT(m_pConfiguration->m_pKerningDictionary, &key, element);        
+    if( m_pConfiguration->_kerningDictionary ) {
+        axKerningHashElement *element = NULL;
+        HASH_FIND_INT(m_pConfiguration->_kerningDictionary, &key, element);        
         if(element)
             ret = element->amount;
     }
@@ -594,7 +230,7 @@ void LabelBMFont::createFontChars()
         return;
     }
 
-    set<unsigned int> *charSet = m_pConfiguration->getCharacterSet();
+    auto& charSet = m_pConfiguration->_characterSet;
 
     for (unsigned int i = 0; i < stringLen - 1; ++i)
     {
@@ -605,11 +241,11 @@ void LabelBMFont::createFontChars()
         }
     }
 
-    totalHeight = m_pConfiguration->m_nCommonHeight * quantityOfLines;
-    nextFontPositionY = 0-(m_pConfiguration->m_nCommonHeight - m_pConfiguration->m_nCommonHeight * quantityOfLines);
+    totalHeight = m_pConfiguration->_commonHeight * quantityOfLines;
+    nextFontPositionY = 0-(m_pConfiguration->_commonHeight - m_pConfiguration->_commonHeight * quantityOfLines);
     
     Rect rect;
-    ccBMFontDef fontDef;
+    axBMFontDef fontDef;
 
     for (unsigned int i= 0; i < stringLen; i++)
     {
@@ -618,11 +254,11 @@ void LabelBMFont::createFontChars()
         if (c == '\n')
         {
             nextFontPositionX = 0;
-            nextFontPositionY -= m_pConfiguration->m_nCommonHeight;
+            nextFontPositionY -= m_pConfiguration->_commonHeight;
             continue;
         }
         
-        if (charSet->find(c) == charSet->end())
+        if (charSet.find(c) == charSet.end())
         {
             if (c != ' ')
             {
@@ -633,11 +269,11 @@ void LabelBMFont::createFontChars()
 
         kerningAmount = this->kerningAmountForFirst(prev, c);
         
-        tCCFontDefHashElement *element = NULL;
+        axFontDefHashElement *element = NULL;
 
         // unichar is a short, and an int is needed on HASH_FIND_INT
         unsigned int key = c;
-        HASH_FIND_INT(m_pConfiguration->m_pFontDefDictionary, &key, element);
+        HASH_FIND_INT(m_pConfiguration->_fontDefDictionary, &key, element);
         if (! element)
         {
             if (c != ' ')
@@ -697,7 +333,7 @@ void LabelBMFont::createFontChars()
         fontChar->setTextureRect(rect, false, rect.size);
 
         // See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
-        int yOffset = m_pConfiguration->m_nCommonHeight - fontDef.yOffset;
+        int yOffset = m_pConfiguration->_commonHeight - fontDef.yOffset;
         Vec2 fontPos = Vec2( (float)nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width*0.5f + kerningAmount,
             (float)nextFontPositionY + yOffset - rect.size.height*0.5f * AX_CONTENT_SCALE_FACTOR() );
         fontChar->setPosition(AX_POINT_PIXELS_TO_POINTS(fontPos));
@@ -1207,6 +843,20 @@ void LabelBMFont::setScaleY(float scaleY)
     updateLabel();
 }
 
+void LabelBMFont::limitLabelWidth(float maxContentSize, float minScale)
+{
+    auto width = getScaledContentSize().width;
+    if (width > maxContentSize)
+    {
+        float scale = maxContentSize / width;
+        if (scale < minScale)
+        {
+            scale = minScale;
+        }
+        setScale(scale);
+    }
+}
+
 float LabelBMFont::getLetterPosXLeft( Sprite* sp )
 {
     return sp->getPosition().x * _scaleX - (sp->getContentSize().width * _scaleX * sp->getAnchorPoint().x);
@@ -1222,7 +872,7 @@ void LabelBMFont::setFntFile(const char* fntFile)
 {
     if (fntFile != NULL && strcmp(fntFile, m_sFntFile.c_str()) != 0 )
     {
-        BMFontConfiguration *newConf = FNTConfigLoadFile(fntFile);
+        BMFontConfiguration *newConf = BMFontCache::sharedBMFontCache()->addConfigurationWithFile(fntFile);
 
         AXAssert( newConf, "LabelBMFont: Impossible to create font. Please check file");
 
@@ -1232,7 +882,7 @@ void LabelBMFont::setFntFile(const char* fntFile)
         AX_SAFE_RELEASE(m_pConfiguration);
         m_pConfiguration = newConf;
 
-        this->setTexture(TextureCache::sharedTextureCache()->addImage(m_pConfiguration->getAtlasName()));
+        this->setTexture(TextureCache::sharedTextureCache()->addImage(m_pConfiguration->_atlasName.c_str()));
         this->createFontChars();
     }
 }

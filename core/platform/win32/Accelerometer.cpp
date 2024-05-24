@@ -22,7 +22,7 @@
  ****************************************************************************/
 
 #include "Accelerometer.h"
-#include "EGLView.h"
+#include "platform/GLView.h"
 #include "base/Director.h"
 #include "ccMacros.h"
 
@@ -50,92 +50,6 @@ namespace
         return result;
     }
 
-    bool handleKeyDown( WPARAM wParam )
-    {
-        bool    sendUpdate=false;
-        switch( wParam )
-        {
-        case VK_LEFT:
-            sendUpdate=true;
-            g_accelX=CLAMP( g_accelX-g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        case VK_RIGHT:
-            sendUpdate=true;
-            g_accelX=CLAMP( g_accelX+g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        case VK_UP:
-            sendUpdate=true;
-            g_accelY=CLAMP( g_accelY+g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        case VK_DOWN:
-            sendUpdate=true;
-            g_accelY=CLAMP( g_accelY-g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        case VK_OEM_COMMA:
-            sendUpdate=true;
-            g_accelZ=CLAMP( g_accelZ+g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        case VK_OEM_PERIOD:
-            sendUpdate=true;
-            g_accelZ=CLAMP( g_accelZ-g_accelerationStep,g_minAcceleration,g_maxAcceleration );
-            break;
-        }
-        return sendUpdate;
-    }
-
-    bool handleKeyUp( WPARAM wParam )
-    {
-        bool    sendUpdate=false;
-        switch( wParam )
-        {
-        case VK_LEFT:
-        case VK_RIGHT:
-            sendUpdate=true;
-            g_accelX=0.0;
-            break;
-        case VK_UP:
-        case VK_DOWN:
-            sendUpdate=true;
-            g_accelY=0.0;
-            break;
-        case VK_OEM_COMMA:
-        case VK_OEM_PERIOD:
-            sendUpdate=true;
-            g_accelZ=0.0;
-            break;
-        }
-        return sendUpdate;
-    }
-
-    void myAccelerometerKeyHook( UINT message,WPARAM wParam,LPARAM lParam )
-    {
-        axolotl::Accelerometer    *pAccelerometer = axolotl::Director::sharedDirector()->getAccelerometer();
-        bool                        sendUpdate=false;
-        switch( message )
-        {
-        case WM_KEYDOWN:
-            sendUpdate=handleKeyDown( wParam );
-            break;
-        case WM_KEYUP:
-            sendUpdate=handleKeyUp( wParam );
-            break;
-        case WM_CHAR:
-            // Deliberately empty - all handled through key up and down events
-            break;
-        default:
-            // Not expected to get here!!
-            AX_ASSERT( false );
-            break;
-        }
-
-        if ( sendUpdate )
-        {
-            const time_t    theTime=time(NULL);
-            const double    timestamp=(double)theTime / 100.0;
-            pAccelerometer->update( g_accelX,g_accelY,g_accelZ,timestamp );
-        }
-    }
-
     void resetAccelerometer()
     {
         g_accelX=0.0;
@@ -161,21 +75,6 @@ Accelerometer::~Accelerometer()
 void Accelerometer::setDelegate(AccelerometerDelegate* pDelegate) 
 {
     m_pAccelDelegate = pDelegate;
-
-    // Enable/disable the accelerometer.
-    // Well, there isn't one on Win32 so we don't do anything other than register
-    // and deregister ourselves from the Windows Key handler.
-    if (pDelegate)
-    {
-        // Register our handler
-        EGLView::sharedEGLView()->setAccelerometerKeyHook( &myAccelerometerKeyHook );
-    }
-    else
-    {
-        // De-register our handler
-        EGLView::sharedEGLView()->setAccelerometerKeyHook( NULL );
-        resetAccelerometer();
-    }
 }
 
 void Accelerometer::setAccelerometerInterval(float interval)

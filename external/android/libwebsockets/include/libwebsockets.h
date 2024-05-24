@@ -1291,9 +1291,9 @@ extern int lws_extension_callback_pm_deflate(
  *		implementation for the one provided by provided_ssl_ctx.
  *		Libwebsockets no longer is responsible for freeing the context
  *		if this option is selected.
- * @max_http_header_data: The max amount of header payload that can be handled
+ * @MAX_http_header_data: The max amount of header payload that can be handled
  *		in an http request (unrecognized header payload is dropped)
- * @max_http_header_pool: The max number of connections with http headers that
+ * @MAX_http_header_pool: The max number of connections with http headers that
  *		can be processed simultaneously (the corresponding memory is
  *		allocated for the lifetime of the context).  If the pool is
  *		busy new incoming connections must wait for accept until one
@@ -1326,8 +1326,8 @@ struct lws_context_creation_info {
 	void *provided_client_ssl_ctx;
 #endif
 
-	short max_http_header_data;
-	short max_http_header_pool;
+	short MAX_http_header_data;
+	short MAX_http_header_pool;
 
 	/* Add new things just above here ---^
 	 * This is part of the ABI, don't needlessly break compatibility

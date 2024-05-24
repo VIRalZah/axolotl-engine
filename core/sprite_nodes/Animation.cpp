@@ -114,7 +114,7 @@ bool Animation::init()
 
 bool Animation::initWithSpriteFrames(Array *pFrames, float delay/* = 0.0f*/)
 {
-    axArray_VERIFY_TYPE(pFrames, SpriteFrame*);
+    AXARRAY_VERIFY_TYPE(pFrames, SpriteFrame*);
 
     m_uLoops = 1;
     m_fDelayPerUnit = delay;
@@ -141,7 +141,7 @@ bool Animation::initWithSpriteFrames(Array *pFrames, float delay/* = 0.0f*/)
 
 bool Animation::initWithAnimationFrames(Array* arrayOfAnimationFrames, float delayPerUnit, unsigned int loops)
 {
-    axArray_VERIFY_TYPE(arrayOfAnimationFrames, AnimationFrame*);
+    AXARRAY_VERIFY_TYPE(arrayOfAnimationFrames, AnimationFrame*);
 
     m_fDelayPerUnit = delayPerUnit;
     m_uLoops = loops;

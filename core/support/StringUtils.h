@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2010 zahann.ru
+Copyright (c) 2024 zahann.ru
 
 http://www.zahann.ru
 
@@ -30,11 +30,12 @@ THE SOFTWARE.
 
 NS_AX_BEGIN
 
-class AX_DLL StringUtils
+namespace StringUtils
 {
-public:
-	static std::string format(const char* format, ...);
-	static std::string codePointToUTF8(unsigned int codepoint);
+    AX_DLL std::string format(const char* format, ...);
+
+    AX_DLL std::string boolToString(bool v);
+    AX_DLL bool stringToBool(const std::string& str);
 };
 
 NS_AX_END

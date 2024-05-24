@@ -72,6 +72,7 @@ THE SOFTWARE.
 #include "base/String.h"
 #include "base/Touch.h"
 #include "base/Zone.h"
+#include "base/Value.h"
 
 // draw nodes
 #include "draw_nodes/DrawingPrimitives.h"
@@ -138,7 +139,7 @@ THE SOFTWARE.
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_IOS)
     #include "platform/ios/Accelerometer.h"
     #include "platform/ios/Application.h"
-    #include "platform/ios/EGLView.h"
+    #include "platform/ios/GLViewImpl.h"
     #include "platform/ios/GL.h"
     #include "platform/ios/StdC.h"
 #endif // AX_TARGET_PLATFORM == AX_PLATFORM_IOS
@@ -146,7 +147,7 @@ THE SOFTWARE.
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_ANDROID)
     #include "platform/android/Accelerometer.h"
     #include "platform/android/Application.h"
-    #include "platform/android/EGLView.h"
+    #include "platform/android/GLViewImpl.h"
     #include "platform/android/GL.h"
     #include "platform/android/StdC.h"
 #endif // AX_TARGET_PLATFORM == AX_PLATFORM_ANDROID
@@ -154,7 +155,7 @@ THE SOFTWARE.
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_WIN32)
 	#include "platform/win32/Accelerometer.h"
 	#include "platform/win32/Application.h"
-	#include "platform/win32/EGLView.h"
+	#include "platform/win32/GLViewImpl.h"
 	#include "platform/win32/GL.h"
 	#include "platform/win32/StdC.h"
 #endif // AX_TARGET_PLATFORM == AX_PLATFORM_WIN32
@@ -178,6 +179,7 @@ THE SOFTWARE.
 #include "support/NotificationCenter.h"
 #include "support/PointExtension.h"
 #include "support/Profiling.h"
+#include "support/RandomUtils.h"
 #include "support/StringUtils.h"
 #include "support/user_default/UserDefault.h"
 #include "support/Vertex.h"

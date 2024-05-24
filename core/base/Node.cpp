@@ -400,6 +400,11 @@ const Size& Node::getContentSize() const
     return m_obContentSize;
 }
 
+const Size& Node::getScaledContentSize() const
+{
+    return Size(m_obContentSize.width * _scaleX, m_obContentSize.height * _scaleY);
+}
+
 void Node::setContentSize(const Size & size)
 {
     if ( ! size.equals(m_obContentSize))

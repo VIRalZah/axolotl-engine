@@ -159,7 +159,7 @@ Set* ActionManager::pauseAllRunningActions()
 
 void ActionManager::resumeTargets(axolotl::Set *targetsToResume)
 {    
-    CCSetIterator iter;
+    SetIterator iter;
     for (iter = targetsToResume->begin(); iter != targetsToResume->end(); ++iter)
     {
         resumeTarget(*iter);

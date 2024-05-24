@@ -40,7 +40,7 @@ THE SOFTWARE.
 #include "effects/Grid.h"
 // extern
 #include "kazmath/GL/matrix.h"
-#include "EGLView.h"
+#include "GLViewImpl.h"
 
 NS_AX_BEGIN
 

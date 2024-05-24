@@ -231,7 +231,7 @@ bool Sprite::initWithFile(const char *pszFilename)
 
     // don't release here.
     // when load texture failed, it's better to get a "transparent" sprite than a crashed program
-    // this->release(); 
+    // this->release();
     return false;
 }
 

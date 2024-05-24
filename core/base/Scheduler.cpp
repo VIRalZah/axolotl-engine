@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include "support/data_support/utlist.h"
 #include "support/data_support/axCArray.h"
 #include "Array.h"
+#include "Set.h"
 
 using namespace std;
 
@@ -705,7 +706,7 @@ Set* Scheduler::pauseAllTargetsWithMinPriority(int nMinPriority)
 
 void Scheduler::resumeTargets(Set* pTargetsToResume)
 {
-    CCSetIterator iter;
+    SetIterator iter;
     for (iter = pTargetsToResume->begin(); iter != pTargetsToResume->end(); ++iter)
     {
         resumeTarget(*iter);

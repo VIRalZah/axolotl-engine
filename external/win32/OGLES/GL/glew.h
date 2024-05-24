@@ -2457,17 +2457,17 @@ typedef void (GLAPIENTRY * PFNGLTBUFFERMASK3DFXPROC) (GLuint mask);
 
 #endif /* GL_3DFX_texture_compression_FXT1 */
 
-/* ----------------------- GL_AMD_blend_minmax_factor ---------------------- */
+/* ----------------------- GL_AMD_blend_minMAX_factor ---------------------- */
 
-#ifndef GL_AMD_blend_minmax_factor
-#define GL_AMD_blend_minmax_factor 1
+#ifndef GL_AMD_blend_minMAX_factor
+#define GL_AMD_blend_minMAX_factor 1
 
 #define GL_FACTOR_MIN_AMD 0x901C
 #define GL_FACTOR_MAX_AMD 0x901D
 
-#define GLEW_AMD_blend_minmax_factor GLEW_GET_VAR(__GLEW_AMD_blend_minmax_factor)
+#define GLEW_AMD_blend_minMAX_factor GLEW_GET_VAR(__GLEW_AMD_blend_minMAX_factor)
 
-#endif /* GL_AMD_blend_minmax_factor */
+#endif /* GL_AMD_blend_minMAX_factor */
 
 /* ----------------------- GL_AMD_conservative_depth ----------------------- */
 
@@ -10700,17 +10700,17 @@ typedef void (GLAPIENTRY * PFNGLVERTEXWEIGHTHVNVPROC) (const GLhalf* weight);
 
 #endif /* GL_NV_half_float */
 
-/* ------------------------ GL_NV_light_max_exponent ----------------------- */
+/* ------------------------ GL_NV_light_MAX_exponent ----------------------- */
 
-#ifndef GL_NV_light_max_exponent
-#define GL_NV_light_max_exponent 1
+#ifndef GL_NV_light_MAX_exponent
+#define GL_NV_light_MAX_exponent 1
 
 #define GL_MAX_SHININESS_NV 0x8504
 #define GL_MAX_SPOT_EXPONENT_NV 0x8505
 
-#define GLEW_NV_light_max_exponent GLEW_GET_VAR(__GLEW_NV_light_max_exponent)
+#define GLEW_NV_light_MAX_exponent GLEW_GET_VAR(__GLEW_NV_light_MAX_exponent)
 
-#endif /* GL_NV_light_max_exponent */
+#endif /* GL_NV_light_MAX_exponent */
 
 /* ----------------------- GL_NV_multisample_coverage ---------------------- */
 
@@ -15630,7 +15630,7 @@ GLEW_VAR_EXPORT GLboolean __GLEW_VERSION_4_2;
 GLEW_VAR_EXPORT GLboolean __GLEW_3DFX_multisample;
 GLEW_VAR_EXPORT GLboolean __GLEW_3DFX_tbuffer;
 GLEW_VAR_EXPORT GLboolean __GLEW_3DFX_texture_compression_FXT1;
-GLEW_VAR_EXPORT GLboolean __GLEW_AMD_blend_minmax_factor;
+GLEW_VAR_EXPORT GLboolean __GLEW_AMD_blend_minMAX_factor;
 GLEW_VAR_EXPORT GLboolean __GLEW_AMD_conservative_depth;
 GLEW_VAR_EXPORT GLboolean __GLEW_AMD_debug_output;
 GLEW_VAR_EXPORT GLboolean __GLEW_AMD_depth_clamp_separate;
@@ -15933,7 +15933,7 @@ GLEW_VAR_EXPORT GLboolean __GLEW_NV_gpu_program5;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_gpu_program_fp64;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_gpu_shader5;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_half_float;
-GLEW_VAR_EXPORT GLboolean __GLEW_NV_light_max_exponent;
+GLEW_VAR_EXPORT GLboolean __GLEW_NV_light_MAX_exponent;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_multisample_coverage;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_multisample_filter_hint;
 GLEW_VAR_EXPORT GLboolean __GLEW_NV_occlusion_query;

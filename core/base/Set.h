@@ -35,7 +35,7 @@ NS_AX_BEGIN
  * @{
  */
 
-typedef std::set<Object *>::iterator CCSetIterator;
+typedef std::set<Object *>::iterator SetIterator;
 
 class AX_DLL Set : public Object
 {
@@ -95,13 +95,13 @@ public:
     *@js NA
     *@lua NA
     */
-    CCSetIterator begin();
+    SetIterator begin();
     /**
     *@brief Return the iterator that points to the position after the last element.
     *@js NA
     *@lua NA
     */
-    CCSetIterator end();
+    SetIterator end();
     /**
     *@brief Return the first element if it contains elements, or null if it doesn't contain any element.
     */

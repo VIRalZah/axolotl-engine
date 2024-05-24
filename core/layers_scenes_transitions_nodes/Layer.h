@@ -95,7 +95,6 @@ public:
     virtual void ccTouchEnded(Touch *pTouch);
 
     virtual void keyDown(KeyCode keyCode);
-    virtual void keyRepeat(KeyCode keyCode);
     virtual void keyUp(KeyCode keyCode);
     /**
      * @js NA

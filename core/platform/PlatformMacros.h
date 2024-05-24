@@ -264,10 +264,8 @@ private: \
  */
 #if defined(__GNUC__) && (__GNUC__ >= 4)
 #define AX_FORMAT_PRINTF(formatPos, argPos) __attribute__((__format__(printf, formatPos, argPos)))
-#elif defined(__has_attribute)
-  #if __has_attribute(format)
+#elif defined(__has_attribute) && __has_attribute(format)
   #define AX_FORMAT_PRINTF(formatPos, argPos) __attribute__((__format__(printf, formatPos, argPos)))
-  #endif // __has_attribute(format)
 #else
 #define AX_FORMAT_PRINTF(formatPos, argPos)
 #endif

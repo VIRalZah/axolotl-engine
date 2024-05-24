@@ -26,15 +26,15 @@ THE SOFTWARE.
 #define __AX_EGLVIEW_ANDROID_H__
 
 
-#include "platform/EGLViewProtocol.h"
+#include "platform/GLView.h"
 
 NS_AX_BEGIN
 
-class AX_DLL EGLView : public EGLViewProtocol
+class AX_DLL GLViewImpl : public GLView
 {
 public:
-    EGLView();
-    virtual ~EGLView();
+    GLViewImpl();
+    virtual ~GLViewImpl();
 
     bool    isOpenGLReady();
 
@@ -47,7 +47,7 @@ public:
     /**
     @brief    get the shared main open gl window
     */
-    static EGLView* sharedEGLView();
+    static GLViewImpl* sharedEGLView();
 };
 
 NS_AX_END

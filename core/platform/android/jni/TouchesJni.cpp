@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "base/Director.h"
 #include "keypad_dispatcher/KeypadDispatcher.h"
 #include "base/Touch.h"
-#include "../EGLView.h"
+#include "../GLViewImpl.h"
 
 
 #include <android/log.h>

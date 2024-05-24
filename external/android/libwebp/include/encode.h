@@ -193,9 +193,9 @@ typedef int (*WebPWriterFunction)(const uint8_t* data, size_t data_size,
 // WebPMemoryWrite: a special WebPWriterFunction that writes to memory using
 // the following WebPMemoryWriter object (to be set as a custom_ptr).
 typedef struct {
-  uint8_t* mem;       // final buffer (of size 'max_size', larger than 'size').
+  uint8_t* mem;       // final buffer (of size 'MAX_size', larger than 'size').
   size_t   size;      // final size
-  size_t   max_size;  // total capacity
+  size_t   MAX_size;  // total capacity
   uint32_t pad[1];    // padding for later use
 } WebPMemoryWriter;
 

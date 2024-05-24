@@ -17,21 +17,32 @@ bool AppDelegate::applicationDidFinishLaunching()
     auto director = Director::sharedDirector();
     if (!director->getOpenGLView())
     {
-        auto eglView = EGLView::createWithFrameSize("Hello Cpp", _frameSize);
+        auto eglView = GLViewImpl::createWithFrameSize("Hello Axolotl", _frameSize);
         director->setOpenGLView(eglView);
-
-        eglView->setAspectRatio(_frameSize);
 
         eglView->setDesignResolutionSize(_designResolutionSize.width, _designResolutionSize.height, kResolutionNoBorder);
     }
 
-    director->setDisplayStats(true);
+    director->setDisplayDebugInfo(true);
     director->setAnimationInterval(1.0 / 60);
 
     auto scene = HelloWorld::scene();
     director->runWithScene(scene);
 
     return true;
+}
+
+void AppDelegate::applicationWillTerminate()
+{
+    AXLOG(":)");
+}
+
+void AppDelegate::applicationWillResignActive()
+{
+}
+
+void AppDelegate::applicationDidBecomeActive()
+{
 }
 
 void AppDelegate::applicationDidEnterBackground()

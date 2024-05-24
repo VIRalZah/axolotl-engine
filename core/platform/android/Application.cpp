@@ -2,7 +2,7 @@
 #include "jni/Java_org_cocos2dx_lib_Cocos2dxHelper.h"
 #include "Application.h"
 #include "base/Director.h"
-#include "EGLView.h"
+#include "GLViewImpl.h"
 #include <android/log.h>
 #include <jni.h>
 #include <cstring>

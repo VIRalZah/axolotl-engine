@@ -38,14 +38,14 @@ extern "C"
  * struct should be initialized by using vorbis_info_init() from the libvorbis
  * API.  After encoding, vorbis_info_clear() should be called.
  *
- * The max_bitrate, nominal_bitrate, and min_bitrate settings are used to set
+ * The MAX_bitrate, nominal_bitrate, and min_bitrate settings are used to set
  * constraints for the encoded file.  This function uses these settings to
  * select the appropriate encoding mode and set it up.
  *
  * \param vi               Pointer to an initialized \ref vorbis_info struct.
  * \param channels         The number of channels to be encoded.
  * \param rate             The sampling rate of the source audio.
- * \param max_bitrate      Desired maximum bitrate (limit). -1 indicates unset.
+ * \param MAX_bitrate      Desired maximum bitrate (limit). -1 indicates unset.
  * \param nominal_bitrate  Desired average, or central, bitrate. -1 indicates unset.
  * \param min_bitrate      Desired minimum bitrate. -1 indicates unset.
  *
@@ -60,7 +60,7 @@ extern int vorbis_encode_init(vorbis_info *vi,
                               long channels,
                               long rate,
 
-                              long max_bitrate,
+                              long MAX_bitrate,
                               long nominal_bitrate,
                               long min_bitrate);
 
@@ -75,14 +75,14 @@ extern int vorbis_encode_init(vorbis_info *vi,
  * initialized by using vorbis_info_init() from the libvorbis API.  After
  * encoding, vorbis_info_clear() should be called.
  *
- * The max_bitrate, nominal_bitrate, and min_bitrate settings are used to set
+ * The MAX_bitrate, nominal_bitrate, and min_bitrate settings are used to set
  * constraints for the encoded file.  This function uses these settings to
  * select the appropriate encoding mode and set it up.
  *
  * \param vi                Pointer to an initialized vorbis_info struct.
  * \param channels          The number of channels to be encoded.
  * \param rate              The sampling rate of the source audio.
- * \param max_bitrate       Desired maximum bitrate (limit). -1 indicates unset.
+ * \param MAX_bitrate       Desired maximum bitrate (limit). -1 indicates unset.
  * \param nominal_bitrate   Desired average, or central, bitrate. -1 indicates unset.
  * \param min_bitrate       Desired minimum bitrate. -1 indicates unset.
  *
@@ -97,7 +97,7 @@ extern int vorbis_encode_setup_managed(vorbis_info *vi,
                                        long channels,
                                        long rate,
 
-                                       long max_bitrate,
+                                       long MAX_bitrate,
                                        long nominal_bitrate,
                                        long min_bitrate);
 
@@ -271,7 +271,7 @@ struct ovectl_ratemanage2_arg {
 /** Lower allowed bitrate limit in kilobits per second */
   long   bitrate_limit_min_kbps;
 /** Upper allowed bitrate limit in kilobits per second */
-  long   bitrate_limit_max_kbps;
+  long   bitrate_limit_MAX_kbps;
   long   bitrate_limit_reservoir_bits; /**<Size of the bitrate reservoir in bits */
 /** Regulates the bitrate reservoir's preferred fill level in a range from 0.0
  * to 1.0; 0.0 tries to bank bits to buffer against future bitrate spikes, 1.0

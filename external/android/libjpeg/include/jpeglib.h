@@ -385,8 +385,8 @@ struct jpeg_compress_struct {
    * These fields are computed during compression startup
    */
   boolean progressive_mode;	/* TRUE if scan script uses progressive mode */
-  int max_h_samp_factor;	/* largest h_samp_factor */
-  int max_v_samp_factor;	/* largest v_samp_factor */
+  int MAX_h_samp_factor;	/* largest h_samp_factor */
+  int MAX_v_samp_factor;	/* largest v_samp_factor */
 
   int min_DCT_h_scaled_size;	/* smallest DCT_h_scaled_size of any component */
   int min_DCT_v_scaled_size;	/* smallest DCT_v_scaled_size of any component */
@@ -604,8 +604,8 @@ struct jpeg_decompress_struct {
   /*
    * These fields are computed during decompression startup
    */
-  int max_h_samp_factor;	/* largest h_samp_factor */
-  int max_v_samp_factor;	/* largest v_samp_factor */
+  int MAX_h_samp_factor;	/* largest h_samp_factor */
+  int MAX_v_samp_factor;	/* largest v_samp_factor */
 
   int min_DCT_h_scaled_size;	/* smallest DCT_h_scaled_size of any component */
   int min_DCT_v_scaled_size;	/* smallest DCT_v_scaled_size of any component */
@@ -835,10 +835,10 @@ struct jpeg_memory_mgr {
    * used for virtual-array buffers.)  May be changed by outer application
    * after creating the JPEG object.
    */
-  long max_memory_to_use;
+  long MAX_memory_to_use;
 
   /* Maximum allocation request accepted by alloc_large. */
-  long max_alloc_chunk;
+  long MAX_alloc_chunk;
 };
 
 
@@ -1032,13 +1032,13 @@ EXTERN(int) jpeg_read_header JPP((j_decompress_ptr cinfo,
 EXTERN(boolean) jpeg_start_decompress JPP((j_decompress_ptr cinfo));
 EXTERN(JDIMENSION) jpeg_read_scanlines JPP((j_decompress_ptr cinfo,
 					    JSAMPARRAY scanlines,
-					    JDIMENSION max_lines));
+					    JDIMENSION MAX_lines));
 EXTERN(boolean) jpeg_finish_decompress JPP((j_decompress_ptr cinfo));
 
 /* Replaces jpeg_read_scanlines when reading raw downsampled data. */
 EXTERN(JDIMENSION) jpeg_read_raw_data JPP((j_decompress_ptr cinfo,
 					   JSAMPIMAGE data,
-					   JDIMENSION max_lines));
+					   JDIMENSION MAX_lines));
 
 /* Additional entry points for buffered-image mode. */
 EXTERN(boolean) jpeg_has_multiple_scans JPP((j_decompress_ptr cinfo));

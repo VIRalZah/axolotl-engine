@@ -35,7 +35,7 @@ THE SOFTWARE.
 NS_AX_BEGIN
 
 /**
- * @addtogroup tilemap_parallax_nodes
+ * @addtogroup tilemap_parallAX_nodes
  * @{
  */
 
@@ -76,7 +76,7 @@ protected:
     std::string m_sGroupName;
 };
 
-// end of tilemap_parallax_nodes group
+// end of tilemap_parallAX_nodes group
 /// @}
 
 NS_AX_END

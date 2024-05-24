@@ -440,7 +440,7 @@ extern "C" {
 #define GLFW_KEY_LEFT_BRACKET       91  /* [ */
 #define GLFW_KEY_BACKSLASH          92  /* \ */
 #define GLFW_KEY_RIGHT_BRACKET      93  /* ] */
-#define GLFW_KEY_GRAVE_AAXENT       96  /* ` */
+#define GLFW_KEY_GRAVE_ACCENT       96  /* ` */
 #define GLFW_KEY_WORLD_1            161 /* non-US #1 */
 #define GLFW_KEY_WORLD_2            162 /* non-US #2 */
 
@@ -1370,7 +1370,7 @@ typedef void (*GLFWglproc)(void);
  *  without forcing a cast from a regular pointer.
  *
  *  @sa @ref vulkan_proc
- *  @sa @ref glfwGetInstanceProcAddress
+ *  @sa @ref glfwgetProcAddress
  *
  *  @since Added in version 3.2.
  *
@@ -1436,7 +1436,7 @@ typedef struct GLFWcursor GLFWcursor;
  *  Any memory allocated via this function must be suitably aligned for any object type.
  *  If you are using C99 or earlier, this alignment is platform-dependent but will be the
  *  same as what `malloc` provides.  If you are using C11 or later, this is the value of
- *  `alignof(max_align_t)`.
+ *  `alignof(MAX_align_t)`.
  *
  *  The size will always be greater than zero.  Allocations of size zero are filtered out
  *  before reaching the custom allocator.
@@ -1489,7 +1489,7 @@ typedef void* (* GLFWallocatefun)(size_t size, void* user);
  *  Any memory allocated via this function must be suitably aligned for any object type.
  *  If you are using C99 or earlier, this alignment is platform-dependent but will be the
  *  same as what `realloc` provides.  If you are using C11 or later, this is the value of
- *  `alignof(max_align_t)`.
+ *  `alignof(MAX_align_t)`.
  *
  *  The block address will never be `NULL` and the size will always be greater than zero.
  *  Reallocations of a block to size zero are converted into deallocations before reaching
@@ -2318,9 +2318,9 @@ GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator);
 
 #if defined(VK_VERSION_1_0)
 
-/*! @brief Sets the desired Vulkan `vkGetInstanceProcAddr` function.
+/*! @brief Sets the desired Vulkan `vkgetProcAddr` function.
  *
- *  This function sets the `vkGetInstanceProcAddr` function that GLFW will use for all
+ *  This function sets the `vkgetProcAddr` function that GLFW will use for all
  *  Vulkan related entry point queries.
  *
  *  This feature is mostly useful on macOS, if your copy of the Vulkan loader is in
@@ -2342,7 +2342,7 @@ GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator);
  *
  *  @par Loader function signature
  *  @code
- *  PFN_vkVoidFunction vkGetInstanceProcAddr(VkInstance instance, const char* name)
+ *  PFN_vkVoidFunction vkgetProcAddr(VkInstance instance, const char* name)
  *  @endcode
  *  For more information about this function, see the
  *  [Vulkan Registry](https://www.khronos.org/registry/vulkan/).
@@ -2360,7 +2360,7 @@ GLFWAPI void glfwInitAllocator(const GLFWallocator* allocator);
  *
  *  @ingroup init
  */
-GLFWAPI void glfwInitVulkanLoader(PFN_vkGetInstanceProcAddr loader);
+GLFWAPI void glfwInitVulkanLoader(PFN_vkgetProcAddr loader);
 
 #endif /*VK_VERSION_1_0*/
 
@@ -6258,7 +6258,7 @@ GLFWAPI int glfwExtensionSupported(const char* extension);
  *  without a current context will cause a @ref GLFW_NO_CURRENT_CONTEXT error.
  *
  *  This function does not apply to Vulkan.  If you are rendering with Vulkan,
- *  see @ref glfwGetInstanceProcAddress, `vkGetInstanceProcAddr` and
+ *  see @ref glfwgetProcAddress, `vkgetProcAddr` and
  *  `vkGetDeviceProcAddr` instead.
  *
  *  @param[in] procname The ASCII encoded name of the function.
@@ -6371,13 +6371,13 @@ GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
  *  - `vkEnumerateInstanceExtensionProperties`
  *  - `vkEnumerateInstanceLayerProperties`
  *  - `vkCreateInstance`
- *  - `vkGetInstanceProcAddr`
+ *  - `vkgetProcAddr`
  *
  *  If Vulkan is not available on the machine, this function returns `NULL` and
  *  generates a @ref GLFW_API_UNAVAILABLE error.  Call @ref glfwVulkanSupported
  *  to check whether Vulkan is at least minimally available.
  *
- *  This function is equivalent to calling `vkGetInstanceProcAddr` with
+ *  This function is equivalent to calling `vkgetProcAddr` with
  *  a platform-specific query of the Vulkan loader as a fallback.
  *
  *  @param[in] instance The Vulkan instance to query, or `NULL` to retrieve
@@ -6400,7 +6400,7 @@ GLFWAPI const char** glfwGetRequiredInstanceExtensions(uint32_t* count);
  *
  *  @ingroup vulkan
  */
-GLFWAPI GLFWvkproc glfwGetInstanceProcAddress(VkInstance instance, const char* procname);
+GLFWAPI GLFWvkproc glfwgetProcAddress(VkInstance instance, const char* procname);
 
 /*! @brief Returns whether the specified queue family can present images.
  *

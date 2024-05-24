@@ -177,9 +177,7 @@ void ClippingNode::visit()
         static bool once = true;
         if (once)
         {
-            char warning[200] = {0};
-            snprintf(warning, sizeof(warning), "Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
-            AXLOG("%s", warning);
+            AXLOG("Nesting more than %d stencils is not supported. Everything will be drawn without stencil for this node and its childs.", g_sStencilBits);
             
             once = false;
         }

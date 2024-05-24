@@ -63,4 +63,6 @@ DerivedData/
 
 # Ignore vim swaps
 *.swp
-/template/default/proj.win32/.vs
+
+.vs/
+/projects

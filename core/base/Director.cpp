@@ -26,10 +26,8 @@ THE SOFTWARE.
 
 // standard includes
 #include <string>
-
 // axolotl includes
 #include "Director.h"
-#include "axFPSImages.h"
 #include "draw_nodes/DrawingPrimitives.h"
 #include "Configuration.h"
 #include "NS.h"
@@ -47,8 +45,8 @@ THE SOFTWARE.
 #include "platform/platform.h"
 #include "platform/FileUtils.h"
 #include "Application.h"
-#include "label_nodes/LabelBMFont.h"
-#include "label_nodes/LabelAtlas.h"
+#include "BMFontCache.h"
+#include "label_nodes/LabelTTF.h"
 #include "actions/ActionManager.h"
 #include "base/Configuration.h"
 #include "keypad_dispatcher/KeypadDispatcher.h"
@@ -62,18 +60,10 @@ THE SOFTWARE.
 #include "kazmath/GL/matrix.h"
 #include "support/Profiling.h"
 #include "platform/Image.h"
-#include "platform/EGLViewProtocol.h"
+#include "platform/GLView.h"
 #include "base/Configuration.h"
 #include "base/EventDispatcher.h"
-
-/**
- Position of the FPS
- 
- Default: 0,0 (bottom-left corner)
- */
-#ifndef AX_DIRECTOR_STATS_POSITION
-#define AX_DIRECTOR_STATS_POSITION Director::sharedDirector()->getVisibleOrigin()
-#endif
+#include "support/StringUtils.h"
 
 using namespace std;
 
@@ -89,10 +79,9 @@ Director::Director(void)
 
 Director::~Director(void)
 {
-    AXLOG("cocos2d: deallocing Director %p", this);
+    AXLOG("axolotl: deallocing Director %p", this);
 
-    AX_SAFE_RELEASE(_fpsLabel);
-    AX_SAFE_RELEASE(_drawsLabel);
+    AX_SAFE_RELEASE(_infoLabel);
 
     AX_SAFE_RELEASE(_runningScene);
     AX_SAFE_RELEASE(_notificationNode);
@@ -119,7 +108,7 @@ Director* Director::sharedDirector(void)
     return _sharedDirector;
 }
 
-bool Director::init(void)
+bool Director::init()
 {
 	setDefaultValues();
 
@@ -133,17 +122,17 @@ bool Director::init(void)
 
     _accumDt = 0.0f;
     _frameRate = 0.0f;
-    _fpsLabel = nullptr;
-    _drawsLabel = nullptr;
+    _defaultLabelFont = "Times New Roman";
+    _infoLabel = nullptr;
     _totalFrames = _frames = 0;
 
     _paused = false;
    
-    _purgeDirectorInNextLoop = false;
+    _purgeApplicationInNextLoop = false;
 
     _winSizeInPoints = Size::ZERO;    
 
-    _openGLView = NULL;
+    _openGLView = nullptr;
 
     _contentScaleFactor = 1.0f;
 
@@ -174,7 +163,7 @@ void Director::setDefaultValues(void)
 	double fps = config->getNumber("axolotl.fps", 60.0);
 	_oldAnimationInterval = _animationInterval = 1.0 / fps;
 
-	_displayStats = config->getBool("axolotl.display_stats", false);
+	_displayDebugInfo = config->getBool("axolotl.display_stats", false);
 
     auto& projection = config->getString("axolotl.gl.projection", "2d");
     if (projection == "2d")
@@ -216,22 +205,17 @@ void Director::setGLDefaultValues(void)
     updateTextureQuality();
 }
 
-// Draw the Scene
 void Director::drawScene(void)
 {
-    // calculate "global" dt
     calculateDeltaTime();
 
-    //tick before glClear: issue #533
-    if (! _paused)
+    if (!_paused)
     {
         _scheduler->update(_deltaTime);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    /* to avoid flickr, nextScene MUST be here: after tick and before draw.
-     XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
     if (_nextScene)
     {
         setNextScene();
@@ -239,28 +223,25 @@ void Director::drawScene(void)
 
     kmGLPushMatrix();
 
-    // draw the scene
     if (_runningScene)
     {
         _runningScene->visit();
     }
 
-    // draw the notifications node
     if (_notificationNode)
     {
         _notificationNode->visit();
     }
     
-    if (_displayStats)
+    if (_displayDebugInfo)
     {
-        showStats();
+        showDebugInfo();
     }
-    
+
     kmGLPopMatrix();
 
     _totalFrames++;
 
-    // swap buffers
     if (_openGLView)
     {
         _openGLView->swapBuffers();
@@ -274,33 +255,33 @@ void Director::calculateDeltaTime(void)
     if (_nextDeltaTimeZero)
     {
         _nextDeltaTimeZero = false;
-
         _deltaTime = 0.0f;
     }
     else
     {
         _deltaTime = MAX(
-            0, 
+            0.0f, 
             std::chrono::duration_cast<std::chrono::duration<float>>(now - _lastUpdate).count()
         );
     }
 
     _lastUpdate = now;
 }
+
 float Director::getDeltaTime()
 {
 	return _deltaTime;
 }
-void Director::setOpenGLView(EGLViewProtocol* glView)
+
+void Director::setOpenGLView(GLView* glView)
 {
     AXAssert(glView, "opengl view should not be null");
 
     if (_openGLView != glView)
     {
-		// Configuration. Gather GPU info
-		Configuration *conf = Configuration::sharedConfiguration();
-		conf->gatherGPUInfo();
-		conf->dumpInfo();
+		Configuration* config = Configuration::sharedConfiguration();
+		config->gatherGPUInfo();
+		config->dumpInfo();
 
         AX_SAFE_RELEASE(_openGLView);
         _openGLView = glView;
@@ -308,7 +289,7 @@ void Director::setOpenGLView(EGLViewProtocol* glView)
         if (_openGLView)
         {
             _winSizeInPoints = _openGLView->getDesignResolutionSize();
-            createStatsLabel();
+            createDebugInfoLabel();
             setGLDefaultValues();
         }
         
@@ -393,7 +374,7 @@ void Director::updateProjection()
 
 void Director::purgeCachedData(void)
 {
-    LabelBMFont::purgeCachedData();
+    BMFontCache::sharedBMFontCache()->removeAllConfigurations();
     if (_sharedDirector->getOpenGLView())
     {
         SpriteFrameCache::sharedSpriteFrameCache()->purgeSharedSpriteFrameCache();
@@ -568,7 +549,7 @@ void Director::pushScene(Scene *pScene)
     _nextScene = pScene;
 }
 
-void Director::popScene(void)
+void Director::popScene()
 {
     AXAssert(_runningScene != NULL, "running scene should not null");
 
@@ -596,21 +577,18 @@ void Director::popToSceneStackLevel(int level)
     AXAssert(_runningScene != NULL, "A running Scene is needed");
     int c = (int)_scenesStack->count();
 
-    // level 0? -> end
     if (level == 0)
     {
         end();
         return;
     }
 
-    // current level or lower -> nothing
     if (level >= c)
         return;
 
-	// pop stack until reaching desired level
 	while (c > level)
     {
-		Scene *current = (Scene*)_scenesStack->lastObject();
+		Scene* current = (Scene*)_scenesStack->lastObject();
 
 		if (current->isRunning())
         {
@@ -629,12 +607,19 @@ void Director::popToSceneStackLevel(int level)
 
 void Director::end()
 {
-    _purgeDirectorInNextLoop = true;
+    _purgeApplicationInNextLoop = true;
 }
 
-void Director::purgeDirector()
+void Director::setDefaultLabelFont(const std::string& defaultLabelFont)
 {
-    // cleanup scheduler
+    _defaultLabelFont = defaultLabelFont;
+    createDebugInfoLabel();
+}
+
+void Director::purgeApplication()
+{
+    Application::sharedApplication()->applicationWillTerminate();
+
     getScheduler()->unscheduleAll();
 
     if (_runningScene)
@@ -648,19 +633,14 @@ void Director::purgeDirector()
     _runningScene = NULL;
     _nextScene = NULL;
 
-    // remove all objects, but don't release it.
-    // runWithScene might be executed after 'end'.
     _scenesStack->removeAllObjects();
 
     stopAnimation();
 
-    AX_SAFE_RELEASE_NULL(_fpsLabel);
-    AX_SAFE_RELEASE_NULL(_drawsLabel);
+    AX_SAFE_RELEASE_NULL(_infoLabel);
 
-    // purge bitmap cache
-    LabelBMFont::purgeCachedData();
+    BMFontCache::purgeBMFontCache();
 
-    // purge all managed caches
     ccDrawFree();
     AnimationCache::purgeSharedAnimationCache();
     SpriteFrameCache::purgeSharedSpriteFrameCache();
@@ -669,7 +649,6 @@ void Director::purgeDirector()
     FileUtils::purgeFileUtils();
     Configuration::purgeConfiguration();
 
-    // cocos2d-x specific data structures
     UserDefault::purgeSharedUserDefault();
     NotificationCenter::purgeNotificationCenter();
 
@@ -677,11 +656,9 @@ void Director::purgeDirector()
     
     CHECK_GL_ERROR_DEBUG();
     
-    // OpenGL view
     _openGLView->end();
     _openGLView = nullptr;
 
-    // delete Director
     release();
 }
 
@@ -751,55 +728,45 @@ void Director::resume(void)
     _deltaTime = 0;
 }
 
-// display the FPS using a LabelAtlas
-// updates the FPS every frame
-void Director::showStats(void)
+void Director::showDebugInfo()
 {
     _frames++;
     _accumDt += _deltaTime;
     
-    if (_displayStats)
+    if (_displayDebugInfo)
     {
-        if (_fpsLabel && _drawsLabel)
+        if (_infoLabel)
         {
-            if (_accumDt > AX_DIRECTOR_STATS_INTERVAL)
+            if (_accumDt >= AX_DIRECTOR_STATS_INTERVAL)
             {   
                 _frameRate = _frames / _accumDt;
                 _frames = 0;
                 _accumDt = 0;
-                
-                char buffer[kMaxLogLen + 1] = { 0 };
 
-                sprintf(buffer, "%.1f", _frameRate);
-                _fpsLabel->setString(buffer);
-                
-                sprintf(buffer, "%4lu", (unsigned long)_numberOfDraws);
-                _drawsLabel->setString(buffer);
+                _infoLabel->setString(StringUtils::format(
+                    "%u\n%.1f",
+                    _numberOfDraws, // open gl draws
+                    _frameRate // frame rate
+                ));
+                _infoLabel->setPosition(getVisibleOrigin() + _infoLabel->getContentSize() / 2);
             }
-            
-            _drawsLabel->visit();
-            _fpsLabel->visit();
+
+            _infoLabel->visit();
         }
     }    
     
     _numberOfDraws = 0;
 }
 
-void Director::getFPSImageData(unsigned char** datapointer, unsigned int* length)
-{
-    *datapointer = ax_fps_images_png;
-	*length = ax_fps_images_len();
-}
-
 void Director::updateTextureQuality()
 {
     auto min = MIN(_winSizeInPoints.width, _winSizeInPoints.height);
 
-    if (min <= 320.0f)
+    if (min <= 480.0f)
     {
         _textureQuality = TextureQuality::LOW;
     }
-    else if (min <= 640.0f)
+    else if (min <= 960.0f)
     {
         _textureQuality = TextureQuality::MEDIUM;
     }
@@ -809,52 +776,16 @@ void Director::updateTextureQuality()
     }
 }
 
-void Director::createStatsLabel()
+void Director::createDebugInfoLabel()
 {
-    Texture2D *texture = NULL;
-    TextureCache *textureCache = TextureCache::sharedTextureCache();
-
-    if( _fpsLabel)
+    if (_infoLabel)
     {
-        AX_SAFE_RELEASE_NULL(_fpsLabel);
-        AX_SAFE_RELEASE_NULL(_drawsLabel);
-        textureCache->removeTextureForKey("ax_fps_images");
-        FileUtils::sharedFileUtils()->purgeCachedEntries();
+        AX_SAFE_RELEASE_NULL(_infoLabel);
     }
 
-    CCTexture2DPixelFormat currentFormat = Texture2D::defaultAlphaPixelFormat();
-    Texture2D::setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA4444);
-    unsigned char *data = NULL;
-    unsigned int data_len = 0;
-    getFPSImageData(&data, &data_len);
-
-    Image* image = new Image();
-    bool isOK = image->initWithImageData(data, data_len);
-    if (!isOK) {
-        AXLOGERROR("%s", "Fails: init fps_images");
-        return;
-    }
-
-    texture = textureCache->addUIImage(image, "ax_fps_images");
-    AX_SAFE_RELEASE(image);
-
-    _fpsLabel = new LabelAtlas();
-    _fpsLabel->initWithString("00.0", texture, 12, 32 , '.');
-
-    _drawsLabel = new LabelAtlas();
-    _drawsLabel->initWithString("000", texture, 12, 32, '.');
-
-    Texture2D::setDefaultAlphaPixelFormat(currentFormat);
-
-    auto pos = AX_DIRECTOR_STATS_POSITION;
-
-    _fpsLabel->setPosition(pos);
-    _drawsLabel->setPosition(
-        Vec2(
-            _fpsLabel->getPositionX(),
-            _fpsLabel->getPositionY() + _drawsLabel->getContentSize().height / 2
-        )
-    );
+    _infoLabel = new LabelTTF();
+    _infoLabel->initWithString("0\n0.0", _defaultLabelFont.c_str(), 24);
+    _infoLabel->setPosition(getVisibleOrigin() + _infoLabel->getContentSize() / 2);
 }
 
 float Director::getContentScaleFactor() const
@@ -867,7 +798,7 @@ void Director::setContentScaleFactor(float scaleFactor)
     if (scaleFactor != _contentScaleFactor)
     {
         _contentScaleFactor = scaleFactor;
-        createStatsLabel();
+        createDebugInfoLabel();
     }
 }
 
@@ -958,12 +889,12 @@ TextureQuality Director::getTextureQuality()
     return _textureQuality;
 }
 
-void Director::stopAnimation(void)
+void Director::stopAnimation()
 {
     _invalid = true;
 }
 
-void Director::startAnimation(void)
+void Director::startAnimation()
 {
     _lastUpdate = std::chrono::steady_clock::now();
 
@@ -972,12 +903,12 @@ void Director::startAnimation(void)
     Application::sharedApplication()->setAnimationInterval(_animationInterval);
 }
 
-void Director::mainLoop(void)
+void Director::mainLoop()
 {
-    if (_purgeDirectorInNextLoop)
+    if (_purgeApplicationInNextLoop)
     {
-        _purgeDirectorInNextLoop = false;
-        purgeDirector();
+        _purgeApplicationInNextLoop = false;
+        purgeApplication();
     }
     else if (!_invalid)
     {

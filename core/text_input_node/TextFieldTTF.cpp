@@ -25,7 +25,7 @@ THE SOFTWARE.
 #include "TextFieldTTF.h"
 
 #include "base/Director.h"
-#include "EGLView.h"
+#include "GLViewImpl.h"
 
 NS_AX_BEGIN
 

@@ -25,6 +25,8 @@ THE SOFTWARE.
 #ifndef __AX_EVENT_H__
 #define __AX_EVENT_H__
 
+#include "Types.h"
+#include "Object.h"
 #include <vector>
 #include <functional>
 
@@ -78,25 +80,24 @@ public:
 	EventTouch(Vec2 position, TouchType eventType, int id);
 
 	const Vec2& getPosition() const { return _position; }
-	const TouchType& getTouchType() const { return _eventType; }
-	int getID() { return _id; }
+	const TouchType& getTouchType() const { return _type; }
+	int getID() const { return _id; }
 protected:
 	Vec2 _position;
-	TouchType _eventType;
+	TouchType _type;
 	int _id;
 };
 
 enum KeyboardEventType
 {
-	KEY_DOWN = 1,
-	KEY_REPEAT,
-	KEY_UP,
+	KEY_UP = 0,
+	KEY_DOWN,
 };
 
 enum KeyCode
 {
-	KEY_NONE = 0,
-	KEY_ESCAPE
+	NONE = 0,
+	ESCAPE
 };
 
 typedef std::function<void(KeyCode)> axKeyCallback;
@@ -105,7 +106,6 @@ class AX_DLL KeyboardHandler : public Handler
 {
 public:
 	axKeyCallback onKeyDown;
-	axKeyCallback onKeyRepeat;
 	axKeyCallback onKeyUp;
 };
 
@@ -114,10 +114,10 @@ class AX_DLL EventKeyboard : public Event
 public:
 	EventKeyboard(KeyboardEventType eventType, KeyCode keyCode);
 
-	const KeyboardEventType& getType() const { return _eventType; }
+	const KeyboardEventType& getType() const { return _type; }
 	const KeyCode& getKeyCode() const { return _keyCode; }
 protected:
-	KeyboardEventType _eventType;
+	KeyboardEventType _type;
 	KeyCode _keyCode;
 };
 

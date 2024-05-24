@@ -1,4 +1,5 @@
-﻿#include "HelloWorldScene.h"
+#include "HelloWorldScene.h"
+#include "base/Value.h"
 
 HelloWorld::HelloWorld()
 {
@@ -28,8 +29,8 @@ bool HelloWorld::init()
     
     auto director = Director::sharedDirector();
 
-    Vec2 origin = director->getVisibleOrigin();
-    Size visibleSize = director->getVisibleSize();
+    auto origin = director->getVisibleOrigin();
+    auto visibleSize = director->getVisibleSize();
 
     auto axolotl = Sprite::create("Axolotl.png"); // create sprite
 

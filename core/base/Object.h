@@ -26,6 +26,7 @@ THE SOFTWARE.
 #define __AXOBJECT_H__
 
 #include "DataVisitor.h"
+#include <functional>
 
 #ifdef EMSCRIPTEN
 #include <GLES2/gl2.h>
@@ -96,16 +97,20 @@ typedef void (Object::*SEL_CallFunc)();
 typedef void (Object::*SEL_CallFuncN)(Node*);
 typedef void (Object::*SEL_CallFuncND)(Node*, void*);
 typedef void (Object::*SEL_CallFuncO)(Object*);
-typedef void (Object::*SEL_MenuHandler)(Object*);
 typedef void (Object::*SEL_EventHandler)(Event*);
 typedef int (Object::*SEL_Compare)(Object*);
+
+typedef std::function<void(Object*)> axMenuCallback;
+
+#define selector(_SELECTOR, _TARGET, ...) std::bind(&_SELECTOR, _TARGET, ##__VA_ARGS__)
+
+#define menu_selector(_SELECTOR, _TARGET) selector(_SELECTOR, _TARGET, std::placeholders::_1)
 
 #define schedule_selector(_SELECTOR) (SEL_SCHEDULE)(&_SELECTOR)
 #define callfunc_selector(_SELECTOR) (SEL_CallFunc)(&_SELECTOR)
 #define callfuncN_selector(_SELECTOR) (SEL_CallFuncN)(&_SELECTOR)
 #define callfuncND_selector(_SELECTOR) (SEL_CallFuncND)(&_SELECTOR)
 #define callfuncO_selector(_SELECTOR) (SEL_CallFuncO)(&_SELECTOR)
-#define menu_selector(_SELECTOR) (SEL_MenuHandler)(&_SELECTOR)
 #define event_selector(_SELECTOR) (SEL_EventHandler)(&_SELECTOR)
 #define compare_selector(_SELECTOR) (SEL_Compare)(&_SELECTOR)
 

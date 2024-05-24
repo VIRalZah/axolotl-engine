@@ -2313,7 +2313,7 @@ bool Animate::initWithAnimation(Animation *pAnimation)
         float newUnitOfTimeValue = singleDuration / pAnimation->getTotalDelayUnits();
 
         Array* pFrames = pAnimation->getFrames();
-        axArray_VERIFY_TYPE(pFrames, AnimationFrame*);
+        AXARRAY_VERIFY_TYPE(pFrames, AnimationFrame*);
 
         Object* pObj = NULL;
         AXARRAY_FOREACH(pFrames, pObj)
@@ -2442,7 +2442,7 @@ ActionInterval* Animate::reverse(void)
     Array* pOldArray = m_pAnimation->getFrames();
     Array* pNewArray = Array::createWithCapacity(pOldArray->count());
    
-    axArray_VERIFY_TYPE(pOldArray, AnimationFrame*);
+    AXARRAY_VERIFY_TYPE(pOldArray, AnimationFrame*);
 
     if (pOldArray->count() > 0)
     {

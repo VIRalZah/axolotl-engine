@@ -61,7 +61,7 @@ I found that it's not work in C++. So it keep what it's look like in version 1.0
     __arr__--)
 
 #if defined(AXOLOTL_DEBUG) && (AXOLOTL_DEBUG > 0)
-#define axArray_VERIFY_TYPE(__array__, __type__)                                                                 \
+#define AXARRAY_VERIFY_TYPE(__array__, __type__)                                                                 \
     do {                                                                                                         \
         if ((__array__) && (__array__)->data->num > 0)                                                           \
             for(Object** __arr__ = (__array__)->data->arr,                                                     \
@@ -69,7 +69,7 @@ I found that it's not work in C++. So it keep what it's look like in version 1.0
                 AXAssert(dynamic_cast<__type__>(*__arr__), "element type is wrong!");                            \
     } while(false)
 #else
-#define axArray_VERIFY_TYPE(__array__, __type__) void(0)
+#define AXARRAY_VERIFY_TYPE(__array__, __type__)
 #endif
 
 #define arrayMakeObjectsPerformSelector(pArray, func, elementType)    \

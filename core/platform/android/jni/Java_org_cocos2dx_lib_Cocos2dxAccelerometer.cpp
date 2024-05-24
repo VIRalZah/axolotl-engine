@@ -1,6 +1,6 @@
 
 #include "platform/android/Accelerometer.h"
-#include "../EGLView.h"
+#include "../GLViewImpl.h"
 #include "JniHelper.h"
 #include <jni.h>
 #include "base/Director.h"

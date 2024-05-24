@@ -38,146 +38,177 @@ EventDispatcher::EventDispatcher()
 	, _locked(false)
 {
 	_handlers = new Array();
+	_handlersToAdd = axArrayNew(4);
+	_handlersToRemove = axArrayNew(4);
 }
 
 EventDispatcher::~EventDispatcher()
 {
 	AX_SAFE_RELEASE(_handlers);
+	axArrayFree(_handlersToAdd);
+	axArrayFree(_handlersToRemove);
 }
 
 void EventDispatcher::dispatchEvent(Event* event)
 {
-	if (!_dispatchEvents) return;
-
-	_locked = true;
-
-	if (auto touchEvent = dynamic_cast<EventTouch*>(event))
+	if (_dispatchEvents)
 	{
-		auto position = touchEvent->getPosition();
-		auto type = touchEvent->getTouchType();
-		auto id = touchEvent->getID();
+		_locked = true;
 
-		Touch* touch;
-
-		auto find = _touches.find(id);
-		if (find == _touches.end())
+		if (auto touchEvent = dynamic_cast<EventTouch*>(event))
 		{
-			touch = new Touch();
-			_touches.emplace(TouchPair(id, touch));
-		}
-		else
-		{
-			touch = find->second;
-		}
+			auto& position = touchEvent->getPosition();
+			auto type = touchEvent->getTouchType();
+			auto id = touchEvent->getID();
 
-		touch->setTouchInfo(id, position.x, position.y);
+			Touch* touch;
 
-		Object* obj;
-		AXARRAY_FOREACH(_handlers, obj)
-		{
-			if (auto handler = dynamic_cast<TouchHandler*>(obj))
+			auto find = _touches.find(id);
+			if (find == _touches.end())
 			{
-				bool claimed = false;
+				touch = new Touch();
+				_touches.emplace(TouchPair(id, touch));
+			}
+			else
+			{
+				touch = find->second;
+			}
 
-				TouchVector::iterator claimedTouchIt;
+			touch->setTouchInfo(id, position.x, position.y);
 
-				if (type == TouchType::BEGAN)
+			Object* obj;
+			AXARRAY_FOREACH(_handlers, obj)
+			{
+				if (auto handler = dynamic_cast<TouchHandler*>(obj))
 				{
-					if (handler->onTouchBegan && (claimed = handler->onTouchBegan(touch)))
+					bool claimed = false;
+
+					TouchVector::iterator claimedTouchIt;
+
+					if (type == TouchType::BEGAN)
 					{
-						handler->_claimedTouches.push_back(touch);
-					}
-				}
-				else if (!handler->_claimedTouches.empty() &&
-					(claimedTouchIt = std::find(
-						handler->_claimedTouches.begin(),
-						handler->_claimedTouches.end(),
-						touch
-					)) != handler->_claimedTouches.end())
-				{
-					if (type == TouchType::MOVED)
-					{
-						if (handler->onTouchMoved)
+						if (handler->onTouchBegan && (claimed = handler->onTouchBegan(touch)))
 						{
-							handler->onTouchMoved(touch);
+							handler->_claimedTouches.push_back(touch);
 						}
 					}
-					else if (type == TouchType::ENDED)
+					else if (!handler->_claimedTouches.empty() &&
+						(claimedTouchIt = std::find(
+							handler->_claimedTouches.begin(),
+							handler->_claimedTouches.end(),
+							touch
+						)) != handler->_claimedTouches.end())
 					{
-						if (handler->onTouchEnded)
+						if (type == TouchType::MOVED)
 						{
-							handler->onTouchEnded(touch);
+							if (handler->onTouchMoved)
+							{
+								handler->onTouchMoved(touch);
+							}
 						}
+						else if (type == TouchType::ENDED)
+						{
+							if (handler->onTouchEnded)
+							{
+								handler->onTouchEnded(touch);
+							}
 
-						handler->_claimedTouches.erase(claimedTouchIt);
+							handler->_claimedTouches.erase(claimedTouchIt);
 
-						touch->release();
-						_touches.erase(id);
+							touch->release();
+							_touches.erase(id);
+						}
 					}
-				}
 
-				if (claimed)
-				{
-					break;
+					if (claimed)
+					{
+						break;
+					}
 				}
 			}
 		}
-	}
-	else if (auto keyboardEvent = dynamic_cast<EventKeyboard*>(event))
-	{
-		auto eventType = keyboardEvent->getType();
-		auto keyCode = keyboardEvent->getKeyCode();
-
-		Object* obj;
-		AXARRAY_FOREACH(_handlers, obj)
+		else if (auto keyboardEvent = dynamic_cast<EventKeyboard*>(event))
 		{
-			if (auto handler = dynamic_cast<KeyboardHandler*>(obj))
+			auto eventType = keyboardEvent->getType();
+			auto keyCode = keyboardEvent->getKeyCode();
+
+			Object* obj;
+			AXARRAY_FOREACH(_handlers, obj)
 			{
-				if (eventType == KeyboardEventType::KEY_DOWN)
+				if (auto handler = dynamic_cast<KeyboardHandler*>(obj))
 				{
-					if (handler->onKeyDown) handler->onKeyDown(keyCode);
-				}
-				else if (eventType == KeyboardEventType::KEY_REPEAT)
-				{
-					if (handler->onKeyRepeat) handler->onKeyRepeat(keyCode);
-				}
-				else if (eventType == KeyboardEventType::KEY_UP)
-				{
-					if (handler->onKeyUp) handler->onKeyUp(keyCode);
+					if (eventType == KeyboardEventType::KEY_DOWN)
+					{
+						if (handler->onKeyDown) handler->onKeyDown(keyCode);
+					}
+					else if (eventType == KeyboardEventType::KEY_UP)
+					{
+						if (handler->onKeyUp) handler->onKeyUp(keyCode);
+					}
 				}
 			}
 		}
-	}
 
-	_locked = false;
+		_locked = false;
+	}
+	if (_handlersToAdd && _handlersToAdd->num > 0)
+	{
+		Object* obj;
+		AXARRAY_DATA_FOREACH(_handlersToAdd, obj)
+		{
+			_handlers->insertObject(obj, getIndex(static_cast<Handler*>(obj)));
+		}
+	}
+	if (_handlersToRemove && _handlersToRemove->num > 0)
+	{
+		Object* obj;
+		AXARRAY_DATA_FOREACH(_handlersToRemove, obj)
+		{
+			_handlers->removeObject(obj);
+		}
+	}
 }
 
 void EventDispatcher::addHandler(Handler* handler)
 {
-	if (_locked || !handler) return;
+	if (_locked)
+	{
+		axArrayAppendObjectWithResize(_handlersToAdd, handler);
+		return;
+	}
 
 	if (!_handlers->containsObject(handler))
 	{
-		int index = 0;
-
-		Object* obj;
-		AXARRAY_FOREACH(_handlers, obj)
-		{
-			if (((Handler*)obj)->priority < handler->priority)
-			{
-				index++;
-			}
-		}
-
-		_handlers->insertObject(handler, index);
+		_handlers->insertObject(handler, getIndex(handler));
 	}
 }
 
 void EventDispatcher::removeHandler(Handler* handler)
 {
-	if (_locked || !handler) return;
+	if (_locked)
+	{
+		axArrayAppendObjectWithResize(_handlersToRemove, handler);
+		return;
+	}
 
 	_handlers->removeObject(handler);
+}
+
+int EventDispatcher::getIndex(Handler* handler) const
+{
+	int ret = 0;
+	if (handler)
+	{
+		Object* obj;
+		AXARRAY_FOREACH(_handlers, obj)
+		{
+			if (static_cast<Handler*>(obj)->priority < handler->priority)
+			{
+				ret++;
+			}
+		}
+	}
+	return ret;
 }
 
 NS_AX_END
