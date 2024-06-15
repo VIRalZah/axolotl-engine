@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include "base/Director.h"
 #include "base/Dictionary.h"
 #include "base/String.h"
+#include "base/Value.h"
 #include "SAXParser.h"
 #include "support/tinyxml2/tinyxml2.h"
 #include "support/zip_support/unzip.h"
@@ -391,6 +392,13 @@ static tinyxml2::XMLElement* generateElementForObject(axolotl::Object *object, t
         node->LinkEndChild(content);
         return node;
     }
+    else if (Value* val = dynamic_cast<Value*>(object))
+    {
+        tinyxml2::XMLElement* node = pDoc->NewElement("string");
+        tinyxml2::XMLText* content = pDoc->NewText(val->stringValue().c_str());
+        node->LinkEndChild(content);
+        return node;
+    }
     
     // object is Array
     if (Array *array = dynamic_cast<Array *>(object))
@@ -594,14 +602,9 @@ std::string FileUtils::getPathForFilename(const std::string& filename, const std
 }
 
 
-std::string FileUtils::fullPathForFilename(const char* pszFileName, bool findForCurrentQuality/* = true*/)
+std::string FileUtils::fullPathForFilename(const char* pszFileName)
 {
     AXAssert(pszFileName != NULL, "FileUtils: Invalid path");
-
-    if (findForCurrentQuality)
-    {
-        return fullPathForCurrentQuality(pszFileName);
-    }
     
     std::string strFileName = pszFileName;
     if (isAbsolutePath(pszFileName))
@@ -646,60 +649,6 @@ std::string FileUtils::fullPathForFilename(const char* pszFileName, bool findFor
 
     // The file wasn't found, return the file name passed in.
     return pszFileName;
-}
-
-std::string FileUtils::fullPathForCurrentQuality(const char* fileName)
-{
-    std::string newFileName = fileName;
-
-    auto textureQuality = Director::sharedDirector()->getTextureQuality();
-
-    static std::map<TextureQuality, std::string> suffixes = {
-        { TextureQuality::LOW, "" },
-        { TextureQuality::MEDIUM, "-hd" },
-        { TextureQuality::HIGH, "-uhd" }
-    };
-
-    auto last = newFileName.find_last_of('.');
-    if (last != newFileName.npos)
-    {
-        std::string fileNameWithoutExt = newFileName.substr(0, last);
-        std::string extension = newFileName.substr(last, newFileName.size() - last);
-
-        std::string suffix = suffixes[textureQuality];
-
-        if (fileNameWithoutExt.size() >= suffix.size() &&
-            fileNameWithoutExt.compare(
-                fileNameWithoutExt.size() - suffix.size(),
-                suffix.size(),
-                suffix
-            ) == 0)
-        {
-            return fullPathForFilename(fileName, false);
-        }
-
-        for (
-            int quality = (int)textureQuality;
-            quality >= (int)TextureQuality::LOW;
-            quality--)
-        {
-            auto find = suffixes.find((TextureQuality)quality);
-            if (find != suffixes.end())
-            {
-                auto fullPath = fullPathForFilename(
-                    (fileNameWithoutExt + find->second + extension).c_str(),
-                    false
-                );
-
-                if (isFileExist(fullPath))
-                {
-                    return fullPath;
-                }
-            }
-        }
-    }
-
-    return newFileName;
 }
 
 const char* FileUtils::fullPathFromRelativeFile(const char *pszFilename, const char *pszRelativeFile)

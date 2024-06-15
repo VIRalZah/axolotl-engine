@@ -177,7 +177,7 @@ void Timer::update(float dt)
 
             if (!m_bRunForever && m_uTimesExecuted > m_uRepeat)
             {    //unschedule timer
-                Director::sharedDirector()->getScheduler()->unscheduleSelector(m_pfnSelector, m_pTarget);
+                Director::getInstance()->getScheduler()->unscheduleSelector(m_pfnSelector, m_pTarget);
             }
         }
     }
@@ -718,10 +718,7 @@ void Scheduler::update(float dt)
 {
     m_bUpdateHashLocked = true;
 
-    if (m_fTimeScale != 1.0f)
-    {
-        dt *= m_fTimeScale;
-    }
+    dt *= m_fTimeScale;
 
     // Iterate over all the Updates' selectors
     tListEntry *pEntry, *pTmp;

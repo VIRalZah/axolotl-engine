@@ -31,21 +31,22 @@ using namespace std;
 
 NS_AX_BEGIN
 
-typedef std::vector<std::string> strArray;
-
-// string toolkit
-static inline void split(std::string src, const char* token, strArray& vect)
+void splitString(const std::string& string, const char* token, strArray& array)
 {
-    int nend=0;
-    int nbegin=0;
-    while(nend != -1)
+    int end = 0;
+    int begin = 0;
+    while (end != std::string::npos)
     {
-        nend = src.find(token, nbegin);
-        if(nend == -1)
-            vect.push_back(src.substr(nbegin, src.length()-nbegin));
+        end = string.find(token, begin);
+        if (end == std::string::npos)
+        {
+            array.push_back(string.substr(begin, string.length() - begin));
+        }
         else
-            vect.push_back(src.substr(nbegin, nend-nbegin));
-        nbegin = nend + strlen(token);
+        {
+            array.push_back(string.substr(begin, end - begin));
+        }
+        begin = end + strlen(token);
     }
 }
 
@@ -82,7 +83,7 @@ static bool splitWithForm(const char* pStr, strArray& strs)
         // contain '{' or '}' 
         AX_BREAK_IF(nPos1 != (int)std::string::npos || nPos2 != (int)std::string::npos);
 
-        split(pointStr, ",", strs);
+        splitString(pointStr, ",", strs);
         if (strs.size() != 2 || strs[0].length() == 0 || strs[1].length() == 0)
         {
             strs.clear();

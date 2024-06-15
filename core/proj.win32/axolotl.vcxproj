@@ -149,7 +149,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\audio\desktop\AudioEngine-desktop.cpp" />
     <ClCompile Include="..\axolotl.cpp" />
     <ClCompile Include="..\base\AffineTransform.cpp" />
     <ClCompile Include="..\base\Array.cpp" />
@@ -167,6 +166,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\base\NS.cpp" />
     <ClCompile Include="..\base\Object.cpp" />
     <ClCompile Include="..\base\PoolManager.cpp" />
+    <ClCompile Include="..\base\Renderer.cpp" />
     <ClCompile Include="..\base\Scheduler.cpp" />
     <ClCompile Include="..\base\Set.cpp" />
     <ClCompile Include="..\base\String.cpp" />
@@ -205,7 +205,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\misc_nodes\MotionStreak.cpp" />
     <ClCompile Include="..\misc_nodes\ProgressTimer.cpp" />
     <ClCompile Include="..\misc_nodes\RenderTexture.cpp" />
-    <ClCompile Include="..\network\HttpClient.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleBatchNode.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleExamples.cpp" />
     <ClCompile Include="..\particle_nodes\ParticleSystem.cpp" />
@@ -264,8 +263,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClCompile Include="..\tileMap_parallax_nodes\TMXObjectGroup.cpp" />
     <ClCompile Include="..\tileMap_parallax_nodes\TMXTiledMap.cpp" />
     <ClCompile Include="..\tileMap_parallax_nodes\TMXXMLParser.cpp" />
-    <ClCompile Include="..\keypad_dispatcher\KeypadDelegate.cpp" />
-    <ClCompile Include="..\keypad_dispatcher\KeypadDispatcher.cpp" />
     <ClCompile Include="..\text_input_node\IMEDispatcher.cpp" />
     <ClCompile Include="..\text_input_node\TextFieldTTF.cpp" />
     <ClCompile Include="..\kazmath\src\aabb.c">
@@ -378,7 +375,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\audio\AudioEngine.h" />
     <ClInclude Include="..\axolotl.h" />
     <ClInclude Include="..\base\AffineTransform.h" />
     <ClInclude Include="..\base\Array.h" />
@@ -400,6 +396,7 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\base\NS.h" />
     <ClInclude Include="..\base\Object.h" />
     <ClInclude Include="..\base\PoolManager.h" />
+    <ClInclude Include="..\base\Renderer.h" />
     <ClInclude Include="..\base\Scheduler.h" />
     <ClInclude Include="..\base\Set.h" />
     <ClInclude Include="..\base\String.h" />
@@ -442,9 +439,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\misc_nodes\MotionStreak.h" />
     <ClInclude Include="..\misc_nodes\ProgressTimer.h" />
     <ClInclude Include="..\misc_nodes\RenderTexture.h" />
-    <ClInclude Include="..\network\HttpClient.h" />
-    <ClInclude Include="..\network\HttpRequest.h" />
-    <ClInclude Include="..\network\HttpResponse.h" />
     <ClInclude Include="..\particle_nodes\ParticleBatchNode.h" />
     <ClInclude Include="..\particle_nodes\ParticleExamples.h" />
     <ClInclude Include="..\particle_nodes\ParticleSystem.h" />
@@ -495,6 +489,53 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\sprite_nodes\SpriteFrame.h" />
     <ClInclude Include="..\sprite_nodes\SpriteFrameCache.h" />
     <ClInclude Include="..\support\base64.h" />
+    <ClInclude Include="..\support\json\json.hpp" />
+    <ClInclude Include="..\support\json\json_fwd.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\adl_serializer.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\byte_container_with_subtype.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\abi_macros.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\from_json.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\to_chars.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\to_json.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\exceptions.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\hash.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\binary_reader.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\input_adapters.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\json_sax.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\lexer.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\parser.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\input\position_t.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\internal_iterator.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iteration_proxy.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iterator_traits.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iter_impl.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\json_reverse_iterator.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\primitive_iterator.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\json_custom_base_class.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\json_pointer.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\json_ref.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\macro_scope.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\macro_unscope.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\call_std\begin.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\call_std\end.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\cpp_future.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\detected.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\identity_tag.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\is_sax.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\std_fs.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\type_traits.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\void_t.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\output\binary_writer.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\output\output_adapters.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\output\serializer.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\string_concat.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\string_escape.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\detail\value_t.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\json.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\json_fwd.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\ordered_map.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\thirdparty\hedley\hedley.hpp" />
+    <ClInclude Include="..\support\json\nlohmann\thirdparty\hedley\hedley_undef.hpp" />
     <ClInclude Include="..\support\NotificationCenter.h" />
     <ClInclude Include="..\support\PointExtension.h" />
     <ClInclude Include="..\support\Profiling.h" />
@@ -526,8 +567,6 @@ xcopy /Y /Q "$(ProjectDir)..\..\external\win32\libraries\*.*" "$(OutDir)"</Comma
     <ClInclude Include="..\tileMap_parallax_nodes\TMXObjectGroup.h" />
     <ClInclude Include="..\tileMap_parallax_nodes\TMXTiledMap.h" />
     <ClInclude Include="..\tileMap_parallax_nodes\TMXXMLParser.h" />
-    <ClInclude Include="..\keypad_dispatcher\KeypadDelegate.h" />
-    <ClInclude Include="..\keypad_dispatcher\KeypadDispatcher.h" />
     <ClInclude Include="..\text_input_node\IMEDelegate.h" />
     <ClInclude Include="..\text_input_node\IMEDispatcher.h" />
     <ClInclude Include="..\text_input_node\TextFieldTTF.h" />

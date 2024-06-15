@@ -49,11 +49,6 @@ static std::vector<unsigned int> axArray_to_std_vector(Array* pArray)
     return ret;
 }
 
-enum 
-{
-    kDefaultPadding =  5,
-};
-
 //
 //Menu
 //
@@ -126,7 +121,7 @@ bool Menu::initWithArray(Array* pArrayOfItems)
 
         m_bEnabled = true;
         // menu in the center of the screen
-        Size s = Director::sharedDirector()->getWinSize();
+        Size s = Director::getInstance()->getDesignSize();
 
         this->ignoreAnchorPointForPosition(true);
         setAnchorPoint(Vec2(0.5f, 0.5f));
@@ -174,7 +169,6 @@ void Menu::addChild(Node * child, int zOrder)
 
 void Menu::addChild(Node * child, int zOrder, int tag)
 {
-    AXAssert( dynamic_cast<MenuItem*>(child) != NULL, "Menu only supports MenuItem objects as children");
     Layer::addChild(child, zOrder, tag);
 }
 
@@ -277,82 +271,6 @@ void Menu::ccTouchMoved(Touch* touch)
     }
 }
 
-//Menu - Alignment
-void Menu::alignItemsVertically()
-{
-    this->alignItemsVerticallyWithPadding(kDefaultPadding);
-}
-
-void Menu::alignItemsVerticallyWithPadding(float padding)
-{
-    float height = -padding;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        Object* pObject = NULL;
-        AXARRAY_FOREACH(m_pChildren, pObject)
-        {
-            Node* pChild = dynamic_cast<Node*>(pObject);
-            if (pChild)
-            {
-                height += pChild->getContentSize().height * pChild->getScaleY() + padding;
-            }
-        }
-    }
-
-    float y = height / 2.0f;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        Object* pObject = NULL;
-        AXARRAY_FOREACH(m_pChildren, pObject)
-        {
-            Node* pChild = dynamic_cast<Node*>(pObject);
-            if (pChild)
-            {
-                pChild->setPosition(Vec2(0, y - pChild->getContentSize().height * pChild->getScaleY() / 2.0f));
-                y -= pChild->getContentSize().height * pChild->getScaleY() + padding;
-            }
-        }
-    }
-}
-
-void Menu::alignItemsHorizontally(void)
-{
-    this->alignItemsHorizontallyWithPadding(kDefaultPadding);
-}
-
-void Menu::alignItemsHorizontallyWithPadding(float padding)
-{
-
-    float width = -padding;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        Object* pObject = NULL;
-        AXARRAY_FOREACH(m_pChildren, pObject)
-        {
-            Node* pChild = dynamic_cast<Node*>(pObject);
-            if (pChild)
-            {
-                width += pChild->getContentSize().width * pChild->getScaleX() + padding;
-            }
-        }
-    }
-
-    float x = -width / 2.0f;
-    if (m_pChildren && m_pChildren->count() > 0)
-    {
-        Object* pObject = NULL;
-        AXARRAY_FOREACH(m_pChildren, pObject)
-        {
-            Node* pChild = dynamic_cast<Node*>(pObject);
-            if (pChild)
-            {
-                pChild->setPosition(Vec2(x + pChild->getContentSize().width * pChild->getScaleX() / 2.0f, 0));
-                 x += pChild->getContentSize().width * pChild->getScaleX() + padding;
-            }
-        }
-    }
-}
-
 void Menu::alignItemsInColumns(unsigned int columns, ...)
 {
     va_list args;
@@ -417,7 +335,7 @@ void Menu::alignItemsInColumnsWithArray(Array* rowsArray)
     // check if too many rows/columns for available menu items
     AXAssert(! columnsOccupied, "");
 
-    Size winSize = Director::sharedDirector()->getWinSize();
+    Size winSize = Director::getInstance()->getDesignSize();
 
     row = 0;
     rowHeight = 0;
@@ -539,7 +457,7 @@ void Menu::alignItemsInRowsWithArray(Array* columnArray)
     // check if too many rows/columns for available menu items.
     AXAssert(! rowsOccupied, "");
 
-    Size winSize = Director::sharedDirector()->getWinSize();
+    Size winSize = Director::getInstance()->getDesignSize();
 
     column = 0;
     columnWidth = 0;

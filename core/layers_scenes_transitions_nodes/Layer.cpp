@@ -27,7 +27,6 @@ THE SOFTWARE.
 #include <stdarg.h>
 #include "Layer.h"
 
-#include "keypad_dispatcher/KeypadDispatcher.h"
 #include "Accelerometer.h"
 #include "base/Director.h"
 #include "support/PointExtension.h"
@@ -45,12 +44,14 @@ NS_AX_BEGIN
 Layer::Layer()
 : _touchEnabled(false)
 , _keyboardEnabled(false)
+, _keypadEnabled(false)
 , m_bAccelerometerEnabled(false)
-, m_bKeypadEnabled(false)
 , _touchPriority(0)
 , _touchHandler(nullptr)
 , _keyboardPriority(0)
 , _keyboardHandler(nullptr)
+, _keypadPriority(0)
+, _keypadHandler(nullptr)
 {
     m_bIgnoreAnchorPointForPosition = true;
     setAnchorPoint(Vec2(0.5f, 0.5f));
@@ -66,8 +67,8 @@ bool Layer::init()
     do 
     {        
         Director * pDirector;
-        AX_BREAK_IF(!(pDirector = Director::sharedDirector()));
-        this->setContentSize(pDirector->getWinSize());
+        AX_BREAK_IF(!(pDirector = Director::getInstance()));
+        this->setContentSize(pDirector->getDesignSize());
         _touchEnabled = false;
         m_bAccelerometerEnabled = false;
         // success
@@ -99,14 +100,13 @@ void Layer::registerWithTouchDispatcher()
     {
         _touchHandler = new TouchHandler();
 
-        _touchHandler->onTouchBegan = std::bind(&Layer::ccTouchBegan, this, std::placeholders::_1);
-        _touchHandler->onTouchMoved = std::bind(&Layer::ccTouchMoved, this, std::placeholders::_1);
-        _touchHandler->onTouchEnded = std::bind(&Layer::ccTouchEnded, this, std::placeholders::_1);
+        _touchHandler->onTouchBegan = AX_CALLBACK_1(Layer::ccTouchBegan, this);
+        _touchHandler->onTouchMoved = AX_CALLBACK_1(Layer::ccTouchMoved, this);
+        _touchHandler->onTouchEnded = AX_CALLBACK_1(Layer::ccTouchEnded, this);
 
         _touchHandler->priority = _touchPriority;
     }
-
-    Director::sharedDirector()->getEventDispatcher()->addHandler(_touchHandler);
+    Director::getInstance()->getEventDispatcher()->addHandler(_touchHandler);
 }
 
 /// isTouchEnabled getter
@@ -120,7 +120,7 @@ void Layer::setTouchEnabled(bool enabled)
     if (_touchEnabled != enabled)
     {
         _touchEnabled = enabled;
-        if (m_bRunning)
+        if (_running)
         {
             if (enabled)
             {
@@ -128,7 +128,7 @@ void Layer::setTouchEnabled(bool enabled)
             }
             else
             {
-                Director::sharedDirector()->getEventDispatcher()->removeHandler(_touchHandler);
+                Director::getInstance()->getEventDispatcher()->removeHandler(_touchHandler);
                 AX_SAFE_RELEASE_NULL(_touchHandler);
             }
         }
@@ -141,7 +141,7 @@ void Layer::setTouchPriority(int priority)
     {
         _touchPriority = priority;
         
-		if( _touchEnabled)
+		if(_touchEnabled)
         {
 			setTouchEnabled(false);
 			setTouchEnabled(true);
@@ -154,6 +154,20 @@ int Layer::getTouchPriority()
     return _touchPriority;
 }
 
+void Layer::registerWithKeyboardDispatcher()
+{
+    if (!_keyboardHandler)
+    {
+        _keyboardHandler = new KeyboardHandler();
+
+        _keyboardHandler->onKeyDown = AX_CALLBACK_1(Layer::keyDown, this);
+        _keyboardHandler->onKeyUp = AX_CALLBACK_1(Layer::keyUp, this);
+
+        _keyboardHandler->priority = _keyboardPriority;
+    }
+    Director::getInstance()->getEventDispatcher()->addHandler(_keyboardHandler);
+}
+
 bool Layer::isKeyboardEnabled()
 {
     return _keyboardEnabled;
@@ -164,23 +178,15 @@ void Layer::setKeyboardEnabled(bool enabled)
     if (_keyboardEnabled != enabled)
     {
         _keyboardEnabled = enabled;
-        if (m_bRunning)
+        if (_running)
         {
             if (enabled)
             {
-                if (!_keyboardHandler)
-                {
-                    _keyboardHandler = new KeyboardHandler();
-
-                    _keyboardHandler->onKeyDown = std::bind(&Layer::keyDown, this, std::placeholders::_1);
-                    _keyboardHandler->onKeyUp = std::bind(&Layer::keyUp, this, std::placeholders::_1);
-
-                    _keyboardHandler->priority = _keyboardPriority;
-                }
+                registerWithKeyboardDispatcher();
             }
             else
             {
-                Director::sharedDirector()->getEventDispatcher()->removeHandler(_keyboardHandler);
+                Director::getInstance()->getEventDispatcher()->removeHandler(_keyboardHandler);
                 AX_SAFE_RELEASE_NULL(_keyboardHandler);
             }
         }
@@ -213,9 +219,9 @@ void Layer::setAccelerometerEnabled(bool enabled)
     {
         m_bAccelerometerEnabled = enabled;
 
-        if (m_bRunning)
+        if (_running)
         {
-            Director* pDirector = Director::sharedDirector();
+            Director* pDirector = Director::getInstance();
             if (enabled)
             {
                 pDirector->getAccelerometer()->setDelegate(this);
@@ -232,9 +238,9 @@ void Layer::setAccelerometerEnabled(bool enabled)
 void Layer::setAccelerometerInterval(double interval) {
     if (m_bAccelerometerEnabled)
     {
-        if (m_bRunning)
+        if (_running)
         {
-            Director* pDirector = Director::sharedDirector();
+            Director* pDirector = Director::getInstance();
             pDirector->getAccelerometer()->setAccelerometerInterval(interval);
         }
     }
@@ -246,28 +252,42 @@ void Layer::didAccelerate(Acceleration* pAccelerationValue)
    AX_UNUSED_PARAM(pAccelerationValue);
 }
 
+void Layer::registerWithKeypadDispatcher()
+{
+    if (!_keypadHandler)
+    {
+        _keypadHandler = new KeypadHandler();
+
+        _keypadHandler->onKeyBackClicked = AX_CALLBACK(Layer::keyBackClicked, this);
+        _keypadHandler->onKeyMenuClicked = AX_CALLBACK(Layer::keyMenuClicked, this);
+
+        _keypadHandler->priority = _keypadPriority;
+    }
+    Director::getInstance()->getEventDispatcher()->addHandler(_keypadHandler);
+}
+
 /// isKeypadEnabled getter
 bool Layer::isKeypadEnabled()
 {
-    return m_bKeypadEnabled;
+    return _keypadEnabled;
 }
 /// isKeypadEnabled setter
 void Layer::setKeypadEnabled(bool enabled)
 {
-    if (enabled != m_bKeypadEnabled)
+    if (enabled != _keypadEnabled)
     {
-        m_bKeypadEnabled = enabled;
+        _keypadEnabled = enabled;
 
-        if (m_bRunning)
+        if (_running)
         {
-            Director* pDirector = Director::sharedDirector();
             if (enabled)
             {
-                pDirector->getKeypadDispatcher()->addDelegate(this);
+                registerWithKeypadDispatcher();
             }
             else
             {
-                pDirector->getKeypadDispatcher()->removeDelegate(this);
+                Director::getInstance()->getEventDispatcher()->removeHandler(_keypadHandler);
+                AX_SAFE_RELEASE_NULL(_keypadHandler);
             }
         }
     }
@@ -284,7 +304,7 @@ void Layer::keyMenuClicked()
 /// Callbacks
 void Layer::onEnter()
 {
-    Director* pDirector = Director::sharedDirector();
+    Director* pDirector = Director::getInstance();
 
     if (_touchEnabled)
     {
@@ -293,46 +313,46 @@ void Layer::onEnter()
 
     if (_keyboardEnabled)
     {
-        pDirector->getEventDispatcher()->addHandler(_keyboardHandler);
+        registerWithKeyboardDispatcher();
     }
 
-    // then iterate over all the children
     Node::onEnter();
 
-    // add this layer to concern the Accelerometer Sensor
     if (m_bAccelerometerEnabled)
     {
         pDirector->getAccelerometer()->setDelegate(this);
     }
 
-    // add this layer to concern the keypad msg
-    if (m_bKeypadEnabled)
+    if (_keypadEnabled)
     {
-        pDirector->getKeypadDispatcher()->addDelegate(this);
+        registerWithKeypadDispatcher();
     }
 }
 
 void Layer::onExit()
 {
-    auto eventDispatcher = Director::sharedDirector()->getEventDispatcher();
+    auto eventDispatcher = Director::getInstance()->getEventDispatcher();
     if(_touchEnabled)
     {
         eventDispatcher->removeHandler(_touchHandler);
+        AX_SAFE_RELEASE_NULL(_touchHandler);
     }
 
     if (_keyboardEnabled)
     {
         eventDispatcher->removeHandler(_keyboardHandler);
+        AX_SAFE_RELEASE_NULL(_keyboardHandler);
     }
 
     if (m_bAccelerometerEnabled)
     {
-        Director::sharedDirector()->getAccelerometer()->setDelegate(NULL);
+        Director::getInstance()->getAccelerometer()->setDelegate(NULL);
     }
 
-    if (m_bKeypadEnabled)
+    if (_keypadEnabled)
     {
-        Director::sharedDirector()->getKeypadDispatcher()->removeDelegate(this);
+        eventDispatcher->removeHandler(_keypadHandler);
+        AX_SAFE_RELEASE_NULL(_keypadHandler);
     }
 
     Node::onExit();
@@ -342,7 +362,7 @@ void Layer::onEnterTransitionDidFinish()
 {
     if (m_bAccelerometerEnabled)
     {
-        Director* pDirector = Director::sharedDirector();
+        Director* pDirector = Director::getInstance();
         pDirector->getAccelerometer()->setDelegate(this);
     }
     
@@ -580,7 +600,7 @@ LayerColor * LayerColor::create(const ccColor4B& color)
 
 bool LayerColor::init()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     return initWithColor(ccc4(0,0,0,0), s.width, s.height);
 }
 
@@ -614,7 +634,7 @@ bool LayerColor::initWithColor(const ccColor4B& color, GLfloat w, GLfloat h)
 
 bool LayerColor::initWithColor(const ccColor4B& color)
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     this->initWithColor(color, s.width, s.height);
     return true;
 }

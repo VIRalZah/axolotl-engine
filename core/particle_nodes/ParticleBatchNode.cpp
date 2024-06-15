@@ -228,7 +228,7 @@ unsigned int ParticleBatchNode::addChildHelper(ParticleSystem* child, int z, int
 
     child->setParent(this);
 
-    if( m_bRunning ) 
+    if( _running ) 
     {
         child->onEnter();
         child->onEnterTransitionDidFinish();

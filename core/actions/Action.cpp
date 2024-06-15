@@ -240,7 +240,7 @@ bool Follow::initWithTarget(Node *pFollowedNode, const Rect& rect/* = Rect::ZERO
     
     m_bBoundaryFullyCovered = false;
 
-    Size winSize = Director::sharedDirector()->getWinSize();
+    Size winSize = Director::getInstance()->getDesignSize();
     m_obFullScreenSize = Vec2(winSize.width, winSize.height);
     m_obHalfScreenSize = PointMult(m_obFullScreenSize, 0.5f);
 

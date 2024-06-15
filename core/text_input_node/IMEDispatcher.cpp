@@ -215,6 +215,7 @@ void IMEDispatcher::removeDelegate(IMEDelegate* pDelegate)
 
 void IMEDispatcher::dispatchInsertText(std::string text)
 {
+    AXLOG("%s", text.c_str());
     do 
     {
         AX_BREAK_IF(!m_pImpl || !m_pImpl->m_DelegateWithIme);

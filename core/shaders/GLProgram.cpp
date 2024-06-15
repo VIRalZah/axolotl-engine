@@ -581,7 +581,7 @@ void GLProgram::setUniformsForBuiltins()
 	
 	if(m_bUsesTime)
     {
-		Director *director = Director::sharedDirector();
+		Director *director = Director::getInstance();
 		// This doesn't give the most accurate global time value.
 		// Cocos2D doesn't store a high precision time value, so this will have to do.
 		// Getting Mach time per frame per shader using time could be extremely expensive.

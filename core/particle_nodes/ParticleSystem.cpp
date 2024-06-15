@@ -355,6 +355,7 @@ bool ParticleSystem::initWithDictionary(Dictionary *dictionary, const char *dirn
                 {                        
                     const char *textureData = dictionary->valueForKey("textureImageData")->getCString();
                     AXAssert(textureData, "");
+                    AXLOG("%s", textureData);
                     
                     int dataLen = strlen(textureData);
                     if(dataLen != 0)

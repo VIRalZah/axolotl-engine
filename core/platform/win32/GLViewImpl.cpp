@@ -28,7 +28,6 @@ THE SOFTWARE.
 #include "base/EventDispatcher.h"
 #include "Application.h"
 #include "support/StringUtils.h"
-#include "keypad_dispatcher/KeypadDispatcher.h"
 #include <map>
 
 NS_AX_BEGIN
@@ -96,8 +95,7 @@ bool glew_dynamic_binding()
 static int _counter = 0;
 
 GLViewImpl::GLViewImpl()
-    : _monitor(nullptr)
-    , _window(nullptr)
+    : _window(nullptr)
     , _captured(false)
 {
     _viewName = "AxWin32";
@@ -128,10 +126,10 @@ GLViewImpl::~GLViewImpl()
     }
 }
 
-GLViewImpl* GLViewImpl::createWithFrameSize(const std::string& viewName, float width, float height)
+GLViewImpl* GLViewImpl::create(const std::string& viewName, float width, float height)
 {
     auto ret = new GLViewImpl();
-    if (ret && ret->initWithFrameSize(viewName, width, height))
+    if (ret && ret->init(viewName, width, height))
     {
         return ret;
     }
@@ -139,12 +137,12 @@ GLViewImpl* GLViewImpl::createWithFrameSize(const std::string& viewName, float w
     return nullptr;
 }
 
-GLViewImpl* GLViewImpl::createWithFrameSize(const std::string& viewName, const Size& size)
+GLViewImpl* GLViewImpl::create(const std::string& viewName, const Size& size)
 {
-    return GLViewImpl::createWithFrameSize(viewName, size.width, size.height);
+    return GLViewImpl::create(viewName, size.width, size.height);
 }
 
-bool GLViewImpl::initWithFrameSize(const std::string& viewName, float width, float height)
+bool GLViewImpl::init(const std::string& viewName, float width, float height)
 {
     bool ret = false;
     do
@@ -152,9 +150,11 @@ bool GLViewImpl::initWithFrameSize(const std::string& viewName, float width, flo
         GLView::setViewName(viewName);
         GLView::setFrameSize(width, height);
 
-        _window = glfwCreateWindow((int)width, (int)height, viewName.c_str(), _monitor, nullptr);
+        _window = glfwCreateWindow((int)width, (int)height, viewName.c_str(), nullptr, nullptr);
 
         AX_BREAK_IF(!initGL());
+
+        centerWindow();
 
         // for callbacks
         glfwSetWindowUserPointer(_window, this);
@@ -224,17 +224,9 @@ void GLViewImpl::setViewPortInPoints(float x , float y , float w , float h)
 void GLViewImpl::setScissorInPoints(float x , float y , float w , float h)
 {
     glScissor((GLint)(x * _scaleX + _viewPortRect.origin.x),
-              (GLint)(y * _scaleY + _viewPortRect.origin.y ),
-              (GLsizei)(w * _scaleX),
-              (GLsizei)(h * _scaleY));
-}
-
-void GLViewImpl::setAspectRatio(int numer, int denom)
-{
-    if (_window)
-    {
-        glfwSetWindowAspectRatio(_window, numer, denom);
-    }
+        (GLint)(y * _scaleY + _viewPortRect.origin.y),
+        (GLsizei)(w * _scaleX),
+        (GLsizei)(h * _scaleY));
 }
 
 void GLViewImpl::windowResized(int width, int height)
@@ -286,37 +278,63 @@ void GLViewImpl::key(int key, int scancode, int action, int mods)
     AX_UNUSED_PARAM(scancode);
     AX_UNUSED_PARAM(mods);
 
-    auto director = Director::sharedDirector();
+    auto director = Director::getInstance();
+    auto eventDispatcher = director->getEventDispatcher();
     
     if (action != GLFW_RELEASE)
     {
         switch (key)
         {
         case GLFW_KEY_BACKSPACE:
-            IMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+            eventDispatcher->dispatchEvent(&EventIME(IMEEventType::DELETE_BACKWARD));
             break;
         case GLFW_KEY_ESCAPE:
-            director->getKeypadDispatcher()->dispatchKeypadMSG(kTypeBackClicked);
+        case GLFW_KEY_F1:
+        case GLFW_KEY_F2:
+            eventDispatcher->dispatchEvent(&EventKeypad(
+                key == GLFW_KEY_ESCAPE || key == GLFW_KEY_F1
+                ? KeypadEventType::KEY_BACK_CLICKED : KeypadEventType::KEY_MENU_CLICKED));
+            break;
+        case GLFW_KEY_V:
+        {
+            if (auto clipboardText = glfwGetClipboardString(_window);
+                (glfwGetKey(_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS ||
+                glfwGetKey(_window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS))
+            {
+                eventDispatcher->dispatchEvent(&EventIME(IMEEventType::INPUT_TEXT, clipboardText));
+            }
+        }
             break;
         }
-
     }
 
-    static std::map<int, KeyCode> _keys = {
-        { GLFW_KEY_ESCAPE, KeyCode::ESCAPE }
+    static std::map<int, KeyCode> keys = {
+        { GLFW_KEY_ESCAPE, KeyCode::ESCAPE },
+        { GLFW_KEY_Q, KeyCode::Q },
+        { GLFW_KEY_W, KeyCode::W },
+        { GLFW_KEY_E, KeyCode::E },
+        { GLFW_KEY_R, KeyCode::R },
+        { GLFW_KEY_T, KeyCode::T },
+        { GLFW_KEY_Y, KeyCode::Y },
+        { GLFW_KEY_U, KeyCode::U },
+        { GLFW_KEY_I, KeyCode::I },
+        { GLFW_KEY_O, KeyCode::O },
+        { GLFW_KEY_P, KeyCode::P },
+        { GLFW_KEY_A, KeyCode::A },
+        { GLFW_KEY_S, KeyCode::S },
+        { GLFW_KEY_D, KeyCode::D }
     };
 
-    auto find = _keys.find(key);
-
-    director->getEventDispatcher()->dispatchEvent(&EventKeyboard(
-        action == GLFW_PRESS ? KeyboardEventType::KEY_DOWN : KeyboardEventType::KEY_UP,
-        find != _keys.end() ? find->second : KeyCode::NONE
-    ));
+    auto find = keys.find(key);
+    EventKeyboard event(action == GLFW_PRESS || action == GLFW_REPEAT ? KeyboardEventType::KEY_DOWN : KeyboardEventType::KEY_UP,
+        find != keys.end() ? find->second : KeyCode::NONE);
+    director->getEventDispatcher()->dispatchEvent(&event);
 }
 
 void GLViewImpl::text(unsigned int codepoint)
 {
-    IMEDispatcher::sharedDispatcher()->dispatchInsertText((char*)codepoint);
+    EventIME event(IMEEventType::INPUT_TEXT, reinterpret_cast<wchar_t*>(&codepoint));
+    Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
 
 void GLViewImpl::iconified(int iconified)
@@ -350,15 +368,6 @@ bool GLViewImpl::initGL()
     if (!_window) return false;
 
     glfwMakeContextCurrent(_window);
-
-    auto glVersion = (char*)glGetString(GL_VERSION);
-    if (atof(glVersion) < 1.5)
-    {
-        axMessageBox("OpenGL version too old.\nPlease upgrade the driver of your video card.", "OpenGL error");
-        return false;
-    }
-
-    log("OpenGL %s", glVersion);
 
     auto result = glewInit();
     if (result != GLEW_OK)
@@ -398,22 +407,70 @@ bool GLViewImpl::initGL()
 
 void GLViewImpl::updateFrameSize()
 {
-    int x = 0, y = 0;
+    resize(_screenSize.width, _screenSize.height);
+    centerWindow();
+}
 
-    auto baseMonitor = _monitor != nullptr ? _monitor : glfwGetPrimaryMonitor();
-    if (baseMonitor)
+void GLViewImpl::resize(float width, float height)
+{
+    if (_window)
     {
-        glfwGetMonitorPos(baseMonitor, &x, &y);
+        glfwSetWindowSize(_window, width, height);
+    }
+}
 
-        auto vidMode = glfwGetVideoMode(baseMonitor);
-        if (vidMode)
+static GLFWmonitor* getWindowMonitor(GLFWwindow* window)
+{
+    if (window)
+    {
+        int x, y, width, height;
+        glfwGetWindowPos(window, &x, &y);
+        glfwGetWindowSize(window, &width, &height);
+
+        int monitorCount;
+        auto monitors = glfwGetMonitors(&monitorCount);
+
+        for (int i = 0; i < monitorCount; i++)
         {
-            x += (int)((vidMode->width - _screenSize.width) / 2);
-            y += (int)((vidMode->height - _screenSize.height) / 2);
+            auto monitor = monitors[i];
+
+            int monitorX, monitorY;
+            glfwGetMonitorPos(monitor, &monitorX, &monitorY);
+
+            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+            if (x + width > monitorX &&
+                x < monitorX + mode->width &&
+                y + height > monitorY &&
+                y < monitorY + mode->height)
+            {
+                return monitor;
+            }
         }
     }
+    return nullptr;
+}
 
-    glfwSetWindowMonitor(_window, _monitor, x, y, (int)_screenSize.width, (int)_screenSize.height, GLFW_DONT_CARE);
+void GLViewImpl::centerWindow()
+{
+    if (_window)
+    {
+        auto monitor = getWindowMonitor(_window);
+        auto mode = glfwGetVideoMode(monitor);
+        if (mode)
+        {
+            int x, y;
+            glfwGetMonitorPos(monitor, &x, &y);
+
+            int windowWidth, windowHeight;
+            glfwGetWindowSize(_window, &windowWidth, &windowHeight);
+
+            x += (mode->width - windowWidth) / 2;
+            y += (mode->height - windowHeight) / 2;
+
+            glfwSetWindowPos(_window, x, y);
+        }
+    }
 }
 
 void GLViewImpl::setupCallbacks()
@@ -424,7 +481,7 @@ void GLViewImpl::setupCallbacks()
             _window,
             [](GLFWwindow* window, int width, int height)
             {
-                auto eglView = (GLViewImpl*)glfwGetWindowUserPointer(window);
+                auto eglView = static_cast<GLViewImpl*>(glfwGetWindowUserPointer(window));
                 if (eglView)
                 {
                     eglView->windowResized(width, height);
@@ -435,7 +492,7 @@ void GLViewImpl::setupCallbacks()
             _window,
             [](GLFWwindow* window, int button, int action, int mods)
             {
-                auto eglView = (GLViewImpl*)glfwGetWindowUserPointer(window);
+                auto eglView = static_cast<GLViewImpl*>(glfwGetWindowUserPointer(window));
                 if (eglView)
                 {
                     eglView->mouseButton(button, action, mods);
@@ -446,7 +503,7 @@ void GLViewImpl::setupCallbacks()
             _window,
             [](GLFWwindow* window, double x, double y)
             {
-                auto eglView = (GLViewImpl*)glfwGetWindowUserPointer(window);
+                auto eglView = static_cast<GLViewImpl*>(glfwGetWindowUserPointer(window));
                 if (eglView)
                 {
                     eglView->cursorMove((float)x, (float)y);
@@ -457,7 +514,7 @@ void GLViewImpl::setupCallbacks()
             _window,
             [](GLFWwindow* window, int key, int scancode, int action, int mods)
             {
-                auto eglView = (GLViewImpl*)glfwGetWindowUserPointer(window);
+                auto eglView = static_cast<GLViewImpl*>(glfwGetWindowUserPointer(window));
                 if (eglView)
                 {
                     eglView->key(key, scancode, action, mods);
@@ -498,16 +555,6 @@ void GLViewImpl::setupCallbacks()
             }
         );
     }
-}
-
-Size getMonitorResolution(GLFWmonitor* monitor)
-{
-    auto vidMode = glfwGetVideoMode(monitor);
-    if (vidMode)
-    {
-        return Size(vidMode->width, vidMode->height);
-    }
-    return Size::ZERO;
 }
 
 NS_AX_END

@@ -49,7 +49,6 @@ THE SOFTWARE.
 #include "label_nodes/LabelTTF.h"
 #include "actions/ActionManager.h"
 #include "base/Configuration.h"
-#include "keypad_dispatcher/KeypadDispatcher.h"
 #include "Accelerometer.h"
 #include "sprite_nodes/AnimationCache.h"
 #include "base/Touch.h"
@@ -64,6 +63,7 @@ THE SOFTWARE.
 #include "base/Configuration.h"
 #include "base/EventDispatcher.h"
 #include "support/StringUtils.h"
+#include "Renderer.h"
 
 using namespace std;
 
@@ -81,14 +81,12 @@ Director::~Director(void)
 {
     AXLOG("axolotl: deallocing Director %p", this);
 
-    AX_SAFE_RELEASE(_infoLabel);
+    AX_SAFE_RELEASE(_statsLabel);
 
     AX_SAFE_RELEASE(_runningScene);
-    AX_SAFE_RELEASE(_notificationNode);
     AX_SAFE_RELEASE(_scenesStack);
     AX_SAFE_RELEASE(_scheduler);
     AX_SAFE_RELEASE(_actionManager);
-    AX_SAFE_RELEASE(_keypadDispatcher);
     AX_SAFE_DELETE(_accelerometer);
     AX_SAFE_RELEASE(_eventDispatcher);
 
@@ -98,7 +96,7 @@ Director::~Director(void)
     _sharedDirector = NULL;
 }
 
-Director* Director::sharedDirector(void)
+Director* Director::getInstance(void)
 {
     if (!_sharedDirector)
     {
@@ -112,27 +110,26 @@ bool Director::init()
 {
 	setDefaultValues();
 
+    _renderer = new Renderer();
+    _glView = nullptr;
+
+    _terminateInNextLoop = false;
+
+    _statsLabel = nullptr;
+    _elapsedDt = 0.0f;
+    _shouldUpdateStatsLabel = false;
+
     _runningScene = nullptr;
     _nextScene = nullptr;
-
-    _notificationNode = nullptr;
 
     _scenesStack = new Array();
     _scenesStack->init();
 
-    _accumDt = 0.0f;
-    _frameRate = 0.0f;
-    _defaultLabelFont = "Times New Roman";
-    _infoLabel = nullptr;
-    _totalFrames = _frames = 0;
+    _totalFrames = 0;
 
     _paused = false;
-   
-    _purgeApplicationInNextLoop = false;
 
-    _winSizeInPoints = Size::ZERO;    
-
-    _openGLView = nullptr;
+    _designSizeInPoints = Size::ZERO;    
 
     _contentScaleFactor = 1.0f;
 
@@ -141,15 +138,11 @@ bool Director::init()
     _actionManager = new ActionManager();
     _scheduler->scheduleUpdateForTarget(_actionManager, kAXPrioritySystem, false);
 
-    _keypadDispatcher = new KeypadDispatcher();
-
     _accelerometer = new Accelerometer();
 
     _eventDispatcher = new EventDispatcher();
 
     _invalid = false;
-
-    _textureQuality = TextureQuality::DEFAULT_TEXTURE_QUALITY;
 
     PoolManager::sharedPoolManager()->push();
 
@@ -163,7 +156,7 @@ void Director::setDefaultValues(void)
 	double fps = config->getNumber("axolotl.fps", 60.0);
 	_oldAnimationInterval = _animationInterval = 1.0 / fps;
 
-	_displayDebugInfo = config->getBool("axolotl.display_stats", false);
+	_displayStats = config->getBool("axolotl.display_stats", true);
 
     auto& projection = config->getString("axolotl.gl.projection", "2d");
     if (projection == "2d")
@@ -193,7 +186,7 @@ void Director::setDefaultValues(void)
 
 void Director::setGLDefaultValues(void)
 {
-    AXAssert(_openGLView, "opengl view should not be null");
+    AXAssert(_glView, "opengl view should not be null");
 
     setAlphaBlending(true);
 
@@ -201,8 +194,6 @@ void Director::setGLDefaultValues(void)
     updateProjection();
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-    updateTextureQuality();
 }
 
 void Director::drawScene(void)
@@ -228,27 +219,21 @@ void Director::drawScene(void)
         _runningScene->visit();
     }
 
-    if (_notificationNode)
-    {
-        _notificationNode->visit();
-    }
-    
-    if (_displayDebugInfo)
-    {
-        showDebugInfo();
-    }
+    _renderer->render();
+
+    showStats();
 
     kmGLPopMatrix();
 
     _totalFrames++;
 
-    if (_openGLView)
+    if (_glView)
     {
-        _openGLView->swapBuffers();
+        _glView->swapBuffers();
     }
 }
 
-void Director::calculateDeltaTime(void)
+void Director::calculateDeltaTime()
 {
     auto now = std::chrono::steady_clock::now();
 
@@ -268,46 +253,12 @@ void Director::calculateDeltaTime(void)
     _lastUpdate = now;
 }
 
-float Director::getDeltaTime()
-{
-	return _deltaTime;
-}
-
-void Director::setOpenGLView(GLView* glView)
-{
-    AXAssert(glView, "opengl view should not be null");
-
-    if (_openGLView != glView)
-    {
-		Configuration* config = Configuration::sharedConfiguration();
-		config->gatherGPUInfo();
-		config->dumpInfo();
-
-        AX_SAFE_RELEASE(_openGLView);
-        _openGLView = glView;
-
-        if (_openGLView)
-        {
-            _winSizeInPoints = _openGLView->getDesignResolutionSize();
-            createDebugInfoLabel();
-            setGLDefaultValues();
-        }
-        
-        CHECK_GL_ERROR_DEBUG();
-    }
-}
-
 void Director::setViewport()
 {
-    if (_openGLView)
+    if (_glView)
     {
-        _openGLView->setViewPortInPoints(0, 0, _winSizeInPoints.width, _winSizeInPoints.height);
+        _glView->setViewPortInPoints(0, 0, _designSizeInPoints.width, _designSizeInPoints.height);
     }
-}
-
-void Director::setNextDeltaTimeZero(bool bNextDeltaTimeZero)
-{
-    _nextDeltaTimeZero = bNextDeltaTimeZero;
 }
 
 void Director::setProjection(Projection projection)
@@ -318,7 +269,7 @@ void Director::setProjection(Projection projection)
 
 void Director::updateProjection()
 {
-    Size size = _winSizeInPoints;
+    Size size = _designSizeInPoints;
 
     setViewport();
 
@@ -375,7 +326,7 @@ void Director::updateProjection()
 void Director::purgeCachedData(void)
 {
     BMFontCache::sharedBMFontCache()->removeAllConfigurations();
-    if (_sharedDirector->getOpenGLView())
+    if (_sharedDirector->getGLView())
     {
         SpriteFrameCache::sharedSpriteFrameCache()->purgeSharedSpriteFrameCache();
         TextureCache::sharedTextureCache()->removeUnusedTextures();
@@ -388,12 +339,12 @@ void Director::purgeCachedData(void)
 
 float Director::getZEye() const
 {
-    return (_winSizeInPoints.height / 1.1566f);
+    return (_designSizeInPoints.height / 1.1566f);
 }
 
-void Director::setAlphaBlending(bool bOn)
+void Director::setAlphaBlending(bool on)
 {
-    if (bOn)
+    if (on)
     {
         ccGLBlendFunc(AX_BLEND_SRC, AX_BLEND_DST);
     }
@@ -403,18 +354,6 @@ void Director::setAlphaBlending(bool bOn)
     }
 
     CHECK_GL_ERROR_DEBUG();
-}
-
-void Director::reshapeProjection(const Size& newWindowSize)
-{
-	AX_UNUSED_PARAM(newWindowSize);
-	if (_openGLView)
-	{
-		_winSizeInPoints = Size(newWindowSize.width * _contentScaleFactor,
-			newWindowSize.height * _contentScaleFactor);
-		
-        updateProjection();
-	}
 }
 
 void Director::setDepthTest(bool on)
@@ -448,7 +387,7 @@ GLToClipTransform(kmMat4 *transformOut)
 	kmMat4Multiply(transformOut, &projection, &modelview);
 }
 
-Vec2 Director::convertToGL(const Vec2& uiPoint)
+Vec2 Director::convertToGL(const Vec2& uiPoint) const
 {
     kmMat4 transform;
 	GLToClipTransform(&transform);
@@ -458,7 +397,7 @@ Vec2 Director::convertToGL(const Vec2& uiPoint)
 	
 	kmScalar zClip = transform.mat[14]/transform.mat[15];
 	
-    Size glSize = _openGLView->getDesignResolutionSize();
+    Size glSize = _glView->getDesignResolutionSize();
 	kmVec3 clipCoord = {2.0f*uiPoint.x/glSize.width - 1.0f, 1.0f - 2.0f*uiPoint.y/glSize.height, zClip};
 	
 	kmVec3 glCoord;
@@ -467,7 +406,7 @@ Vec2 Director::convertToGL(const Vec2& uiPoint)
 	return Vec2(glCoord.x, glCoord.y);
 }
 
-Vec2 Director::convertToUI(const Vec2& glPoint)
+Vec2 Director::convertToUI(const Vec2& glPoint) const
 {
     kmMat4 transform;
 	GLToClipTransform(&transform);
@@ -477,25 +416,25 @@ Vec2 Director::convertToUI(const Vec2& glPoint)
 	kmVec3 glCoord = {glPoint.x, glPoint.y, 0.0};
 	kmVec3TransformCoord(&clipCoord, &glCoord, &transform);
 	
-	Size glSize = _openGLView->getDesignResolutionSize();
+	Size glSize = _glView->getDesignResolutionSize();
 	return Vec2(glSize.width*(clipCoord.x*0.5 + 0.5), glSize.height*(-clipCoord.y*0.5 + 0.5));
 }
 
-Size Director::getWinSize(void) const
+Size Director::getDesignSize(void) const
 {
-    return _winSizeInPoints;
+    return _designSizeInPoints;
 }
 
-Size Director::getWinSizeInPixels() const
+Size Director::getDesignSizeInPixels() const
 {
-    return Size(_winSizeInPoints.width * _contentScaleFactor, _winSizeInPoints.height * _contentScaleFactor);
+    return Size(_designSizeInPoints.width * _contentScaleFactor, _designSizeInPoints.height * _contentScaleFactor);
 }
 
 Size Director::getVisibleSize() const
 {
-    if (_openGLView)
+    if (_glView)
     {
-        return _openGLView->getVisibleSize();
+        return _glView->getVisibleSize();
     }
     else 
     {
@@ -505,17 +444,15 @@ Size Director::getVisibleSize() const
 
 Vec2 Director::getVisibleOrigin() const
 {
-    if (_openGLView)
+    if (_glView)
     {
-        return _openGLView->getVisibleOrigin();
+        return _glView->getVisibleOrigin();
     }
     else 
     {
         return Vec2::ZERO;
     }
 }
-
-// scene management
 
 void Director::runWithScene(Scene *pScene)
 {
@@ -607,16 +544,33 @@ void Director::popToSceneStackLevel(int level)
 
 void Director::end()
 {
-    _purgeApplicationInNextLoop = true;
+    _terminateInNextLoop = true;
 }
 
-void Director::setDefaultLabelFont(const std::string& defaultLabelFont)
+void Director::setGLView(GLView* glView)
 {
-    _defaultLabelFont = defaultLabelFont;
-    createDebugInfoLabel();
+    AXAssert(glView, "opengl view should not be null");
+
+    if (_glView != glView)
+    {
+        Configuration* config = Configuration::sharedConfiguration();
+        config->gatherGPUInfo();
+        config->dumpInfo();
+
+        AX_SAFE_RELEASE(_glView);
+        _glView = glView;
+
+        if (_glView)
+        {
+            _designSizeInPoints = _glView->getDesignResolutionSize();
+            setGLDefaultValues();
+        }
+
+        CHECK_GL_ERROR_DEBUG();
+    }
 }
 
-void Director::purgeApplication()
+void Director::terminate()
 {
     Application::sharedApplication()->applicationWillTerminate();
 
@@ -637,8 +591,6 @@ void Director::purgeApplication()
 
     stopAnimation();
 
-    AX_SAFE_RELEASE_NULL(_infoLabel);
-
     BMFontCache::purgeBMFontCache();
 
     ccDrawFree();
@@ -656,43 +608,86 @@ void Director::purgeApplication()
     
     CHECK_GL_ERROR_DEBUG();
     
-    _openGLView->end();
-    _openGLView = nullptr;
+    _glView->end();
+    _glView = nullptr;
 
     release();
 }
 
+void Director::showStats()
+{
+    if (_displayStats)
+    {
+        if (!_statsLabel)
+        {
+            _statsLabel = new LabelTTF();
+            _statsLabel->initWithString("", "Arial", 32);
+            _statsLabel->setAnchorPoint(Vec2::ZERO);
+
+            _shouldUpdateStatsLabel = true;
+        }
+        else
+        {
+            _elapsedDt += _deltaTime;
+            if (_elapsedDt >= AX_DIRECTOR_STATS_INTERVAL)
+            {
+                _elapsedDt = 0.0f;
+
+                _shouldUpdateStatsLabel = true;
+            }
+        }
+
+        if (_shouldUpdateStatsLabel)
+        {
+            _shouldUpdateStatsLabel = false;
+
+            updateStatsLabel();
+        }
+
+        _statsLabel->visit();
+    }
+
+    _numberOfDraws = 0;
+}
+
+void Director::updateStatsLabel()
+{
+    if (!_statsLabel) return;
+
+    _statsLabel->setString(StringUtils::format(
+        "GL draws: %d\nFPS: %.1f",
+        _numberOfDraws,
+        1.0 / _deltaTime
+    ).c_str());
+    _statsLabel->setPosition(getVisibleOrigin());
+}
+
 void Director::setNextScene(void)
 {
-    bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != NULL;
-    bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != NULL;
+    bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
+    bool newIsTransition = dynamic_cast<TransitionScene*>(_nextScene) != nullptr;
 
-    // If it is not a transition, call onExit/cleanup
-     if (! newIsTransition)
-     {
-         if (_runningScene)
-         {
-             _runningScene->onExitTransitionDidStart();
-             _runningScene->onExit();
-         }
- 
-         // issue #709. the root node (scene) should receive the cleanup message too
-         // otherwise it might be leaked.
-         if (_sendCleanupToScene && _runningScene)
-         {
-             _runningScene->cleanup();
-         }
-     }
+    if (!newIsTransition && _runningScene)
+    {
+        _runningScene->onExitTransitionDidStart();
+        _runningScene->onExit();
+
+        if (_sendCleanupToScene)
+        {
+            _runningScene->cleanup();
+        }
+    }
 
     if (_runningScene)
     {
         _runningScene->release();
     }
-    _runningScene = _nextScene;
-    _nextScene->retain();
-    _nextScene = NULL;
 
-    if ((! runningIsTransition) && _runningScene)
+    _runningScene = _nextScene;
+    _runningScene->retain();
+    _nextScene = nullptr;
+
+    if (!runningIsTransition && _runningScene)
     {
         _runningScene->onEnter();
         _runningScene->onEnterTransitionDidFinish();
@@ -728,66 +723,6 @@ void Director::resume(void)
     _deltaTime = 0;
 }
 
-void Director::showDebugInfo()
-{
-    _frames++;
-    _accumDt += _deltaTime;
-    
-    if (_displayDebugInfo)
-    {
-        if (_infoLabel)
-        {
-            if (_accumDt >= AX_DIRECTOR_STATS_INTERVAL)
-            {   
-                _frameRate = _frames / _accumDt;
-                _frames = 0;
-                _accumDt = 0;
-
-                _infoLabel->setString(StringUtils::format(
-                    "%u\n%.1f",
-                    _numberOfDraws, // open gl draws
-                    _frameRate // frame rate
-                ));
-                _infoLabel->setPosition(getVisibleOrigin() + _infoLabel->getContentSize() / 2);
-            }
-
-            _infoLabel->visit();
-        }
-    }    
-    
-    _numberOfDraws = 0;
-}
-
-void Director::updateTextureQuality()
-{
-    auto min = MIN(_winSizeInPoints.width, _winSizeInPoints.height);
-
-    if (min <= 480.0f)
-    {
-        _textureQuality = TextureQuality::LOW;
-    }
-    else if (min <= 960.0f)
-    {
-        _textureQuality = TextureQuality::MEDIUM;
-    }
-    else
-    {
-        _textureQuality = TextureQuality::HIGH;
-    }
-}
-
-void Director::createDebugInfoLabel()
-{
-    if (_infoLabel)
-    {
-        AX_SAFE_RELEASE_NULL(_infoLabel);
-    }
-
-    _infoLabel = new LabelTTF();
-    _infoLabel->initWithString("0\n0.0", _defaultLabelFont.c_str(), 24);
-    _infoLabel->setPosition(getVisibleOrigin() + _infoLabel->getContentSize() / 2);
-}
-
 float Director::getContentScaleFactor() const
 {
     return _contentScaleFactor;
@@ -798,95 +733,7 @@ void Director::setContentScaleFactor(float scaleFactor)
     if (scaleFactor != _contentScaleFactor)
     {
         _contentScaleFactor = scaleFactor;
-        createDebugInfoLabel();
     }
-}
-
-Node* Director::getNotificationNode() 
-{ 
-    return _notificationNode; 
-}
-
-void Director::setNotificationNode(Node *node)
-{
-    AX_SAFE_RELEASE(_notificationNode);
-    _notificationNode = node;
-    AX_SAFE_RETAIN(_notificationNode);
-}
-
-void Director::setScheduler(Scheduler* pScheduler)
-{
-    if (_scheduler != pScheduler)
-    {
-        AX_SAFE_RETAIN(pScheduler);
-        AX_SAFE_RELEASE(_scheduler);
-        _scheduler = pScheduler;
-    }
-}
-
-Scheduler* Director::getScheduler()
-{
-    return _scheduler;
-}
-
-void Director::setActionManager(ActionManager* pActionManager)
-{
-    if (_actionManager != pActionManager)
-    {
-        AX_SAFE_RETAIN(pActionManager);
-        AX_SAFE_RELEASE(_actionManager);
-        _actionManager = pActionManager;
-    }    
-}
-
-ActionManager* Director::getActionManager()
-{
-    return _actionManager;
-}
-
-void Director::setKeypadDispatcher(KeypadDispatcher* pKeypadDispatcher)
-{
-    AX_SAFE_RETAIN(pKeypadDispatcher);
-    AX_SAFE_RELEASE(_keypadDispatcher);
-    _keypadDispatcher = pKeypadDispatcher;
-}
-
-KeypadDispatcher* Director::getKeypadDispatcher()
-{
-    return _keypadDispatcher;
-}
-
-void Director::setAccelerometer(Accelerometer* pAccelerometer)
-{
-    if (_accelerometer != pAccelerometer)
-    {
-        AX_SAFE_DELETE(_accelerometer);
-        _accelerometer = pAccelerometer;
-    }
-}
-
-Accelerometer* Director::getAccelerometer()
-{
-    return _accelerometer;
-}
-
-void Director::setEventDispatcher(EventDispatcher* eventDispatcher)
-{
-    if (_eventDispatcher != eventDispatcher)
-    {
-        AX_SAFE_DELETE(_eventDispatcher);
-        _eventDispatcher = eventDispatcher;
-    }
-}
-
-EventDispatcher* Director::getEventDispatcher()
-{
-    return _eventDispatcher;
-}
-
-TextureQuality Director::getTextureQuality()
-{
-    return _textureQuality;
 }
 
 void Director::stopAnimation()
@@ -905,10 +752,10 @@ void Director::startAnimation()
 
 void Director::mainLoop()
 {
-    if (_purgeApplicationInNextLoop)
+    if (_terminateInNextLoop)
     {
-        _purgeApplicationInNextLoop = false;
-        purgeApplication();
+        _terminateInNextLoop = false;
+        terminate();
     }
     else if (!_invalid)
     {

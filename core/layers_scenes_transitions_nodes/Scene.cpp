@@ -46,8 +46,8 @@ bool Scene::init()
      do 
      {
          Director * pDirector;
-         AX_BREAK_IF( ! (pDirector = Director::sharedDirector()) );
-         this->setContentSize(pDirector->getWinSize());
+         AX_BREAK_IF( ! (pDirector = Director::getInstance()) );
+         this->setContentSize(pDirector->getDesignSize());
          // success
          bRet = true;
      } while (0);

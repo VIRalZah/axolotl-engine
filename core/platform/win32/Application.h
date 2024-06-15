@@ -6,8 +6,6 @@
 
 NS_AX_BEGIN
 
-class Rect;
-
 class AX_DLL Application : public ApplicationProtocol
 {
 public:

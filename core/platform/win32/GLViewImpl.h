@@ -38,12 +38,12 @@ public:
     GLViewImpl();
     virtual ~GLViewImpl();
 
-    static GLViewImpl* createWithFrameSize(const std::string& viewName, float width, float height);
-    static GLViewImpl* createWithFrameSize(const std::string& viewName, const Size& size);
+    static GLViewImpl* create(const std::string& viewName, float width, float height);
+    static GLViewImpl* create(const std::string& viewName, const Size& size);
 
-    virtual bool initWithFrameSize(const std::string& viewName, float width, float height);
+    virtual bool init(const std::string& viewName, float width, float height);
 
-    virtual bool windowShouldClose() const;
+    bool windowShouldClose() const override;
 
     bool isOpenGLReady() override;
     void end() override;
@@ -53,16 +53,16 @@ public:
     void setIMEKeyboardState(bool open) override;
 
     GLFWwindow* getWindow() const { return _window; }
-    GLFWmonitor* getMonitor() const { return _monitor; }
 
     void setViewPortInPoints(float x, float y, float w, float h) override;
     void setScissorInPoints(float x, float y, float w, float h) override;
-    
-    void setAspectRatio(int numer, int denom) override;
 protected:
     bool initGL();
 
     void updateFrameSize();
+
+    void resize(float width, float height);
+    void centerWindow();
 
     void setupCallbacks();
 
@@ -79,7 +79,6 @@ protected:
 
     void focused(int focused);
 
-    GLFWmonitor* _monitor;
     GLFWwindow* _window;
 
     Vec2 _cursorPosition;

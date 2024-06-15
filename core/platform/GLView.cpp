@@ -177,7 +177,7 @@ void GLView::handleTouchesBegin(int num, int ids[], float xs[], float ys[])
             TouchType::BEGAN,
             id
         );
-        Director::sharedDirector()->getEventDispatcher()->dispatchEvent(&event);
+        Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
     }
 }
 
@@ -197,7 +197,7 @@ void GLView::handleTouchesMove(int num, int ids[], float xs[], float ys[])
             TouchType::MOVED,
             id
             );
-        Director::sharedDirector()->getEventDispatcher()->dispatchEvent(&event);
+        Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
     }
 }
 
@@ -218,7 +218,7 @@ void GLView::handleTouchesEnd(int num, int ids[], float xs[], float ys[])
             id
             );
 
-        Director::sharedDirector()->getEventDispatcher()->dispatchEvent(&event);
+        Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
     }
 }
 
@@ -254,11 +254,10 @@ void GLView::updateDesignResolutionSize()
 
     _viewPortRect.setRect((_screenSize.width - viewPortW) / 2, (_screenSize.height - viewPortH) / 2, viewPortW, viewPortH);
 
-    auto director = Director::sharedDirector();
-    if (director->getOpenGLView() == this)
+    auto director = Director::getInstance();
+    if (director->getGLView() == this)
     {
-        director->_winSizeInPoints = _designResolutionSize;
-        director->createDebugInfoLabel();
+        director->_designSizeInPoints = _designResolutionSize;
         director->setGLDefaultValues();
     }
 }

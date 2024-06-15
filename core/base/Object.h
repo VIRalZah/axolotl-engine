@@ -100,11 +100,11 @@ typedef void (Object::*SEL_CallFuncO)(Object*);
 typedef void (Object::*SEL_EventHandler)(Event*);
 typedef int (Object::*SEL_Compare)(Object*);
 
+typedef std::function<void()> axCallback;
 typedef std::function<void(Object*)> axMenuCallback;
 
-#define selector(_SELECTOR, _TARGET, ...) std::bind(&_SELECTOR, _TARGET, ##__VA_ARGS__)
-
-#define menu_selector(_SELECTOR, _TARGET) selector(_SELECTOR, _TARGET, std::placeholders::_1)
+#define AX_CALLBACK(_SELECTOR, _TARGET, ...) std::bind(&_SELECTOR, _TARGET, ##__VA_ARGS__)
+#define AX_CALLBACK_1(_SELECTOR, _TARGET) AX_CALLBACK(_SELECTOR, _TARGET, std::placeholders::_1)
 
 #define schedule_selector(_SELECTOR) (SEL_SCHEDULE)(&_SELECTOR)
 #define callfunc_selector(_SELECTOR) (SEL_CallFunc)(&_SELECTOR)

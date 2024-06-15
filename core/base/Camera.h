@@ -88,6 +88,11 @@ public:
     void setCenterXYZ(float fCenterX, float fCenterY, float fCenterZ);
     void setUpXYZ(float fUpX, float fUpY, float fUpZ);
 
+    void setZoom(float zoom);
+    float getZoom() const { return _zoom; };
+
+    void lookAt(Vec2 pos); // 2d
+
     void getEyeXYZ(float *pEyeX, float *pEyeY, float *pEyeZ);
     void getCenterXYZ(float *pCenterX, float *pCenterY, float *pCenterZ);
     void getUpXYZ(float *pUpX, float *pUpY, float *pUpZ);
@@ -96,7 +101,7 @@ public:
 protected:
     bool _dirty;
 
-    kmMat4 _lookupMatrix;
+    kmMat4 _matrix;
 
     float m_fEyeX;
     float m_fEyeY;
@@ -109,6 +114,8 @@ protected:
     float m_fUpX;
     float m_fUpY;
     float m_fUpZ;
+
+    float _zoom;
 };
 
 NS_AX_END

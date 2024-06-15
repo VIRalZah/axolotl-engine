@@ -27,10 +27,10 @@ bool HelloWorld::init()
 
     setKeypadEnabled(true); // for keyBackClicked()
     
-    auto director = Director::sharedDirector();
+    auto director = Director::getInstance();
 
-    auto origin = director->getVisibleOrigin();
-    auto visibleSize = director->getVisibleSize();
+    const auto origin = director->getVisibleOrigin();
+    const auto visibleSize = director->getVisibleSize();
 
     auto axolotl = Sprite::create("Axolotl.png"); // create sprite
 
@@ -46,5 +46,5 @@ bool HelloWorld::init()
 
 void HelloWorld::keyBackClicked()
 {
-    Director::sharedDirector()->end(); // close game in next frame
+    Director::getInstance()->getGLView()->setFrameSize(640, 320); // close game in next frame
 }

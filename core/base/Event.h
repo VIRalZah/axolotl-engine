@@ -97,7 +97,20 @@ enum KeyboardEventType
 enum KeyCode
 {
 	NONE = 0,
-	ESCAPE
+	ESCAPE,
+	Q,
+	W,
+	E,
+	R,
+	T,
+	Y,
+	U,
+	I,
+	O,
+	P,
+	A,
+	S,
+	D
 };
 
 typedef std::function<void(KeyCode)> axKeyCallback;
@@ -120,6 +133,78 @@ protected:
 	KeyboardEventType _type;
 	KeyCode _keyCode;
 };
+
+class AX_DLL KeypadHandler : public Handler
+{
+public:
+	axCallback onKeyBackClicked;
+	axCallback onKeyMenuClicked;
+};
+
+enum KeypadEventType
+{
+	KEY_BACK_CLICKED = 0,
+	KEY_MENU_CLICKED,
+};
+
+class AX_DLL EventKeypad : public Event
+{
+public:
+	EventKeypad(KeypadEventType eventType);
+
+	const KeypadEventType& getType() const { return _type; }
+protected:
+	KeypadEventType _type;
+};
+
+typedef std::function<void(const std::string& string)> axInputTextCallback;
+
+class AX_DLL IMEHandler : public Handler
+{
+public:
+	axInputTextCallback onInputText;
+	axCallback onDeleteBackward;
+};
+
+enum IMEEventType
+{
+	INPUT_TEXT = 0,
+	DELETE_BACKWARD
+};
+
+class AX_DLL EventIME : public Event
+{
+public:
+	EventIME(const IMEEventType& type);
+	EventIME(const IMEEventType& type, const wchar_t* text);
+	EventIME(const IMEEventType& type, const char* text);
+
+	const std::string& getString() const { return _utf8Text; }
+	const IMEEventType& getType() const { return _type; }
+protected:
+	std::string _utf8Text;
+	IMEEventType _type;
+};
+
+class AX_DLL CustomHandler : public Handler
+{
+public:
+	std::string target;
+	axCallback callback;
+};
+
+class AX_DLL EventCustom : public Event
+{
+public:
+	EventCustom(const std::string& target);
+
+	const std::string& getName() const { return _name; }
+protected:
+	std::string _name;
+};
+
+#define EVENT_APPLICATION_WILL_RESIGN_ACTIVE "Application_willResignActive"
+#define EVENT_APPLICATION_DID_BECOME_ACTIVE "Application_didBecomeActive"
 
 NS_AX_END
 

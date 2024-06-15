@@ -26,8 +26,13 @@ THE SOFTWARE.
 #define __PLATFOMR_AXNS_H__
 
 #include "Types.h"
+#include <vector>
 
 NS_AX_BEGIN
+
+typedef std::vector<std::string> strArray;
+
+void AX_DLL splitString(const std::string& string, const char* token, strArray& array);
 
 /**
  * @addtogroup data_structures

@@ -325,7 +325,7 @@ void Configuration::loadConfigFile( const char *filename )
 			AXLOG("Key already present. Ignoring '%s'", element->getStrKey() );
     }
     
-    Director::sharedDirector()->setDefaultValues();
+    Director::getInstance()->setDefaultValues();
 }
 
 NS_AX_END

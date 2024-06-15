@@ -111,7 +111,7 @@ do { \
   */
 #define AX_DIRECTOR_END()                                        \
 do {                                                            \
-    Director *__director = Director::sharedDirector();        \
+    Director *__director = Director::getInstance();        \
     __director->end();                                            \
 } while(0)
 
@@ -119,7 +119,7 @@ do {                                                            \
 On Mac it returns 1;
 On iPhone it returns 2 if RetinaDisplay is On. Otherwise it returns 1
 */
-#define AX_CONTENT_SCALE_FACTOR() Director::sharedDirector()->getContentScaleFactor()
+#define AX_CONTENT_SCALE_FACTOR() Director::getInstance()->getContentScaleFactor()
 
 /****************************/
 /** RETINA DISPLAY ENABLED **/

@@ -58,7 +58,7 @@ void EventDispatcher::dispatchEvent(Event* event)
 		if (auto touchEvent = dynamic_cast<EventTouch*>(event))
 		{
 			auto& position = touchEvent->getPosition();
-			auto type = touchEvent->getTouchType();
+			auto& type = touchEvent->getTouchType();
 			auto id = touchEvent->getID();
 
 			Touch* touch;
@@ -129,8 +129,8 @@ void EventDispatcher::dispatchEvent(Event* event)
 		}
 		else if (auto keyboardEvent = dynamic_cast<EventKeyboard*>(event))
 		{
-			auto eventType = keyboardEvent->getType();
-			auto keyCode = keyboardEvent->getKeyCode();
+			auto& eventType = keyboardEvent->getType();
+			auto& keyCode = keyboardEvent->getKeyCode();
 
 			Object* obj;
 			AXARRAY_FOREACH(_handlers, obj)
@@ -145,6 +145,58 @@ void EventDispatcher::dispatchEvent(Event* event)
 					{
 						if (handler->onKeyUp) handler->onKeyUp(keyCode);
 					}
+				}
+			}
+		}
+		else if (auto keypadEvent = dynamic_cast<EventKeypad*>(event))
+		{
+			auto& eventType = keypadEvent->getType();
+
+			Object* obj;
+			AXARRAY_FOREACH(_handlers, obj)
+			{
+				if (auto handler = dynamic_cast<KeypadHandler*>(obj))
+				{
+					if (eventType == KeypadEventType::KEY_BACK_CLICKED)
+					{
+						if (handler->onKeyBackClicked) handler->onKeyBackClicked();
+					}
+					else if (eventType == KeypadEventType::KEY_MENU_CLICKED)
+					{
+						if (handler->onKeyMenuClicked) handler->onKeyMenuClicked();
+					}
+				}
+			}
+		}
+		else if (auto imeEvent = dynamic_cast<EventIME*>(event))
+		{
+			auto& eventType = imeEvent->getType();
+
+			Object* obj;
+			AXARRAY_FOREACH(_handlers, obj)
+			{
+				if (auto handler = dynamic_cast<IMEHandler*>(obj))
+				{
+					if (eventType == IMEEventType::INPUT_TEXT)
+					{
+						if (handler->onInputText) handler->onInputText(imeEvent->getString());
+					}
+					else if (eventType == IMEEventType::DELETE_BACKWARD)
+					{
+						if (handler->onDeleteBackward) handler->onDeleteBackward();
+					}
+				}
+			}
+		}
+		else if (auto customEvent = dynamic_cast<EventCustom*>(event))
+		{
+			Object* obj;
+			AXARRAY_FOREACH(_handlers, obj)
+			{
+				auto handler = dynamic_cast<CustomHandler*>(obj);
+				if (handler && handler->target == customEvent->getName())
+				{
+					if (handler->callback) handler->callback();
 				}
 			}
 		}

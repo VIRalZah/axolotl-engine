@@ -957,7 +957,7 @@ Object* SplitRows::copyWithZone(Zone *pZone)
 void SplitRows::startWithTarget(Node *pTarget)
 {
     TiledGrid3DAction::startWithTarget(pTarget);
-    m_winSize = Director::sharedDirector()->getWinSizeInPixels();
+    m_winSize = Director::getInstance()->getDesignSizeInPixels();
 }
 
 void SplitRows::update(float time)
@@ -1034,7 +1034,7 @@ Object* SplitCols::copyWithZone(Zone *pZone)
 void SplitCols::startWithTarget(Node *pTarget)
 {
     TiledGrid3DAction::startWithTarget(pTarget);
-    m_winSize = Director::sharedDirector()->getWinSizeInPixels();
+    m_winSize = Director::getInstance()->getDesignSizeInPixels();
 }
 
 void SplitCols::update(float time)

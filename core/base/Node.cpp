@@ -79,7 +79,7 @@ Node::Node(void)
 , m_pShaderProgram(NULL)
 , m_eGLServerState(ccGLServerState(0))
 , m_uOrderOfArrival(0)
-, m_bRunning(false)
+, _running(false)
 , m_bTransformDirty(true)
 , m_bInverseDirty(true)
 , m_bAdditionalTransformDirty(false)
@@ -88,7 +88,7 @@ Node::Node(void)
 , m_bReorderChildDirty(false)
 , m_pComponentContainer(NULL)
 {
-    Director* director = Director::sharedDirector();
+    Director* director = Director::getInstance();
     _actionManager = director->getActionManager();
     _actionManager->retain();
     _scheduler = director->getScheduler();
@@ -419,7 +419,7 @@ void Node::setContentSize(const Size & size)
 // isRunning getter
 bool Node::isRunning()
 {
-    return m_bRunning;
+    return _running;
 }
 
 /// parent getter
@@ -597,7 +597,7 @@ void Node::addChild(Node *child, int zOrder, int tag)
     child->setParent(this);
     child->setOrderOfArrival(s_globalOrderOfArrival++);
 
-    if( m_bRunning )
+    if( _running )
     {
         child->onEnter();
         child->onEnterTransitionDidFinish();
@@ -692,7 +692,7 @@ void Node::removeAllChildrenWithCleanup(bool cleanup)
                 // IMPORTANT:
                 //  -1st do onExit
                 //  -2nd cleanup
-                if(m_bRunning)
+                if(_running)
                 {
                     pNode->onExitTransitionDidStart();
                     pNode->onExit();
@@ -717,7 +717,7 @@ void Node::detachChild(Node *child, bool doCleanup)
     // IMPORTANT:
     //  -1st do onExit
     //  -2nd cleanup
-    if (m_bRunning)
+    if (_running)
     {
         child->onExitTransitionDidStart();
         child->onExit();
@@ -899,7 +899,7 @@ void Node::transform()
 void Node::onEnter()
 {
     //fix setTouchEnabled not take effect when called the function in onEnter in JSBinding.
-    m_bRunning = true;
+    _running = true;
 
     //Judge the running state for prevent called onEnter method more than once,it's possible that this function called by addChild  
     if (m_pChildren && m_pChildren->count() > 0)
@@ -933,7 +933,7 @@ void Node::onExit()
 {
     this->pauseSchedulerAndActions();
 
-    m_bRunning = false;
+    _running = false;
 
     arrayMakeObjectsPerformSelector(m_pChildren, onExit, Node*);
 }
@@ -956,7 +956,7 @@ ActionManager* Node::getActionManager()
 Action * Node::runAction(Action* action)
 {
     AXAssert( action != NULL, "Argument must be non-nil");
-    _actionManager->addAction(action, this, !m_bRunning);
+    _actionManager->addAction(action, this, !_running);
     return action;
 }
 
@@ -1011,7 +1011,7 @@ void Node::scheduleUpdate()
 
 void Node::scheduleUpdateWithPriority(int priority)
 {
-    _scheduler->scheduleUpdateForTarget(this, priority, !m_bRunning);
+    _scheduler->scheduleUpdateForTarget(this, priority, !_running);
 }
 
 void Node::unscheduleUpdate()
@@ -1034,7 +1034,7 @@ void Node::schedule(SEL_SCHEDULE selector, float interval, unsigned int repeat, 
     AXAssert( selector, "Argument must be non-nil");
     AXAssert( interval >=0, "Argument must be positive");
 
-    _scheduler->scheduleSelector(selector, this, interval , repeat, delay, !m_bRunning);
+    _scheduler->scheduleSelector(selector, this, interval , repeat, delay, !_running);
 }
 
 void Node::scheduleOnce(SEL_SCHEDULE selector, float delay)
@@ -1212,7 +1212,7 @@ Vec2 Node::convertToWorldSpaceAR(const Vec2& nodePoint)
 Vec2 Node::convertToWindowSpace(const Vec2& nodePoint)
 {
     Vec2 worldPoint = this->convertToWorldSpace(nodePoint);
-    return Director::sharedDirector()->convertToUI(worldPoint);
+    return Director::getInstance()->convertToUI(worldPoint);
 }
 
 // convenience methods which take a Touch instead of Vec2
@@ -1256,6 +1256,83 @@ bool Node::removeComponent(Component *pComponent)
 void Node::removeAllComponents()
 {
     m_pComponentContainer->removeAll();
+}
+
+constexpr auto _defaultPadding = 5;
+
+void Node::alignItemsVertically()
+{
+    this->alignItemsVerticallyWithPadding(_defaultPadding);
+}
+
+void Node::alignItemsVerticallyWithPadding(float padding)
+{
+    float height = -padding;
+    if (m_pChildren && m_pChildren->count() > 0)
+    {
+        Object* pObject = NULL;
+        AXARRAY_FOREACH(m_pChildren, pObject)
+        {
+            Node* pChild = dynamic_cast<Node*>(pObject);
+            if (pChild)
+            {
+                height += pChild->getContentSize().height * pChild->getScaleY() + padding;
+            }
+        }
+    }
+
+    float y = height / 2.0f;
+    if (m_pChildren && m_pChildren->count() > 0)
+    {
+        Object* pObject = NULL;
+        AXARRAY_FOREACH(m_pChildren, pObject)
+        {
+            Node* pChild = dynamic_cast<Node*>(pObject);
+            if (pChild)
+            {
+                pChild->setPositionY(y - pChild->getContentSize().height * pChild->getScaleY() / 2.0f);
+                y -= pChild->getContentSize().height * pChild->getScaleY() + padding;
+            }
+        }
+    }
+}
+
+void Node::alignItemsHorizontally(void)
+{
+    this->alignItemsHorizontallyWithPadding(_defaultPadding);
+}
+
+void Node::alignItemsHorizontallyWithPadding(float padding)
+{
+
+    float width = -padding;
+    if (m_pChildren && m_pChildren->count() > 0)
+    {
+        Object* pObject = NULL;
+        AXARRAY_FOREACH(m_pChildren, pObject)
+        {
+            Node* pChild = dynamic_cast<Node*>(pObject);
+            if (pChild)
+            {
+                width += pChild->getContentSize().width * pChild->getScaleX() + padding;
+            }
+        }
+    }
+
+    float x = -width / 2.0f;
+    if (m_pChildren && m_pChildren->count() > 0)
+    {
+        Object* pObject = NULL;
+        AXARRAY_FOREACH(m_pChildren, pObject)
+        {
+            Node* pChild = dynamic_cast<Node*>(pObject);
+            if (pChild)
+            {
+                pChild->setPositionX(x + pChild->getContentSize().width * pChild->getScaleX() / 2.0f);
+                x += pChild->getContentSize().width * pChild->getScaleX() + padding;
+            }
+        }
+    }
 }
 
 // NodeRGBA

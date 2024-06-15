@@ -285,7 +285,7 @@ void TextureCache::addImageAsync(const char *path, Object *target, SEL_CallFuncO
 
     if (0 == s_nAsyncRefCount)
     {
-        Director::sharedDirector()->getScheduler()->scheduleSelector(schedule_selector(TextureCache::addImageAsyncCallBack), this, 0, false);
+        Director::getInstance()->getScheduler()->scheduleSelector(schedule_selector(TextureCache::addImageAsyncCallBack), this, 0, false);
     }
 
     ++s_nAsyncRefCount;
@@ -359,7 +359,7 @@ void TextureCache::addImageAsyncCallBack(float dt)
         --s_nAsyncRefCount;
         if (0 == s_nAsyncRefCount)
         {
-            Director::sharedDirector()->getScheduler()->unscheduleSelector(schedule_selector(TextureCache::addImageAsyncCallBack), this);
+            Director::getInstance()->getScheduler()->unscheduleSelector(schedule_selector(TextureCache::addImageAsyncCallBack), this);
         }
     }
 }

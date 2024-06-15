@@ -52,9 +52,6 @@
     <Filter Include="tilemap_parallax_nodes">
       <UniqueIdentifier>{f2671200-b2d8-4d2e-9728-06719cf6f835}</UniqueIdentifier>
     </Filter>
-    <Filter Include="keypad_dispatcher">
-      <UniqueIdentifier>{3c91932f-7667-4049-b9bd-caac4c8eab15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="text_input_node">
       <UniqueIdentifier>{535c04b0-fe2b-44c9-9a8c-9029e2b6de5c}</UniqueIdentifier>
     </Filter>
@@ -94,14 +91,11 @@
     <Filter Include="base">
       <UniqueIdentifier>{eeec18bb-9bea-41ac-ae39-8a329487bc50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="audio">
-      <UniqueIdentifier>{523db324-33d3-46c1-82be-e29a75420e0a}</UniqueIdentifier>
+    <Filter Include="support\json">
+      <UniqueIdentifier>{f97e8b20-a943-4e71-8720-866f2e76d640}</UniqueIdentifier>
     </Filter>
-    <Filter Include="audio\desktop">
-      <UniqueIdentifier>{ed07e2b0-9da0-4ec0-89e2-b7c0f50af162}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="network">
-      <UniqueIdentifier>{5827a89e-8287-4d11-9351-9ff0278fcf73}</UniqueIdentifier>
+    <Filter Include="support\json\nlohmann">
+      <UniqueIdentifier>{02ae559a-5bfc-4417-a6e1-5246f648dd32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -315,12 +309,6 @@
     <ClCompile Include="..\tileMap_parallax_nodes\TMXXMLParser.cpp">
       <Filter>tilemap_parallax_nodes</Filter>
     </ClCompile>
-    <ClCompile Include="..\keypad_dispatcher\KeypadDelegate.cpp">
-      <Filter>keypad_dispatcher</Filter>
-    </ClCompile>
-    <ClCompile Include="..\keypad_dispatcher\KeypadDispatcher.cpp">
-      <Filter>keypad_dispatcher</Filter>
-    </ClCompile>
     <ClCompile Include="..\text_input_node\IMEDispatcher.cpp">
       <Filter>text_input_node</Filter>
     </ClCompile>
@@ -494,11 +482,8 @@
     <ClCompile Include="..\base\Value.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="..\audio\desktop\AudioEngine-desktop.cpp">
-      <Filter>audio\desktop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\network\HttpClient.cpp">
-      <Filter>network</Filter>
+    <ClCompile Include="..\base\Renderer.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -754,12 +739,6 @@
     <ClInclude Include="..\tileMap_parallax_nodes\TMXXMLParser.h">
       <Filter>tilemap_parallax_nodes</Filter>
     </ClInclude>
-    <ClInclude Include="..\keypad_dispatcher\KeypadDelegate.h">
-      <Filter>keypad_dispatcher</Filter>
-    </ClInclude>
-    <ClInclude Include="..\keypad_dispatcher\KeypadDispatcher.h">
-      <Filter>keypad_dispatcher</Filter>
-    </ClInclude>
     <ClInclude Include="..\text_input_node\IMEDelegate.h">
       <Filter>text_input_node</Filter>
     </ClInclude>
@@ -990,17 +969,149 @@
     <ClInclude Include="..\base\Value.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="..\audio\AudioEngine.h">
-      <Filter>audio</Filter>
+    <ClInclude Include="..\support\json\json.hpp">
+      <Filter>support\json</Filter>
     </ClInclude>
-    <ClInclude Include="..\network\HttpClient.h">
-      <Filter>network</Filter>
+    <ClInclude Include="..\support\json\json_fwd.hpp">
+      <Filter>support\json</Filter>
     </ClInclude>
-    <ClInclude Include="..\network\HttpRequest.h">
-      <Filter>network</Filter>
+    <ClInclude Include="..\support\json\nlohmann\adl_serializer.hpp">
+      <Filter>support\json\nlohmann</Filter>
     </ClInclude>
-    <ClInclude Include="..\network\HttpResponse.h">
-      <Filter>network</Filter>
+    <ClInclude Include="..\support\json\nlohmann\byte_container_with_subtype.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\json.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\json_fwd.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\ordered_map.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\abi_macros.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\from_json.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\to_chars.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\conversions\to_json.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\exceptions.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\hash.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\binary_reader.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\input_adapters.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\json_sax.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\lexer.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\parser.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\input\position_t.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\internal_iterator.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iteration_proxy.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iterator_traits.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\iter_impl.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\json_reverse_iterator.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\iterators\primitive_iterator.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\json_custom_base_class.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\json_pointer.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\json_ref.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\macro_scope.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\macro_unscope.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\call_std\begin.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\call_std\end.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\cpp_future.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\detected.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\identity_tag.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\is_sax.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\std_fs.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\type_traits.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\meta\void_t.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\output\binary_writer.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\output\output_adapters.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\output\serializer.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\string_concat.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\string_escape.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\detail\value_t.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\thirdparty\hedley\hedley.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\support\json\nlohmann\thirdparty\hedley\hedley_undef.hpp">
+      <Filter>support\json\nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\base\Renderer.h">
+      <Filter>base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

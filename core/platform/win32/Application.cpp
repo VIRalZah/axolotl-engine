@@ -65,22 +65,20 @@ int Application::run()
 {
     PVRFrameEnableControlWindow(false);
 
-    auto last = glfwGetTime();
-
     if (!applicationDidFinishLaunching())
     {
-        return 0;
+        return 1;
     }
 
-    auto director = Director::sharedDirector();
-
-    auto glView = director->getOpenGLView();
+    auto director = Director::getInstance();
+    auto glView = director->getGLView();
     glView->retain();
+
+    auto last = glfwGetTime();
 
     while (!glView->windowShouldClose())
     {
         auto now = glfwGetTime();
-
         auto interval = now - last;
         if (interval >= _animationInterval)
         {
@@ -88,14 +86,6 @@ int Application::run()
 
             glView->pollEvents();
             director->mainLoop();
-        }
-        else
-        {
-            auto sleepTime = _animationInterval - interval;
-            if (sleepTime > 0.0)
-            {
-                Sleep(sleepTime);
-            }
         }
     }
 

@@ -111,8 +111,8 @@ bool GridBase::initWithSize(const Size& gridSize, Texture2D *pTexture, bool bFli
 
 bool GridBase::initWithSize(const Size& gridSize)
 {
-    Director *pDirector = Director::sharedDirector();
-    Size s = pDirector->getWinSizeInPixels();
+    Director *pDirector = Director::getInstance();
+    Size s = pDirector->getDesignSizeInPixels();
     
     unsigned long POTWide = ccNextPOT((unsigned int)s.width);
     unsigned long POTHigh = ccNextPOT((unsigned int)s.height);
@@ -161,7 +161,7 @@ void GridBase::setActive(bool bActive)
     m_bActive = bActive;
     if (! bActive)
     {
-        Director *pDirector = Director::sharedDirector();
+        Director *pDirector = Director::getInstance();
         Projection proj = pDirector->getProjection();
         pDirector->setProjection(proj);
     }
@@ -178,9 +178,9 @@ void GridBase::setTextureFlipped(bool bFlipped)
 
 void GridBase::set2DProjection()
 {
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
 
-    Size    size = director->getWinSizeInPixels();
+    Size    size = director->getDesignSizeInPixels();
 
     glViewport(0, 0, (GLsizei)(size.width), (GLsizei)(size.height) );
     kmGLMatrixMode(KM_GL_PROJECTION);
@@ -200,7 +200,7 @@ void GridBase::set2DProjection()
 void GridBase::beforeDraw(void)
 {
     // save projection
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
     m_directorProjection = director->getProjection();
 
     // 2d projection
@@ -214,7 +214,7 @@ void GridBase::afterDraw(axolotl::Node *pTarget)
     m_pGrabber->afterRender(m_pTexture);
 
     // restore projection
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
     director->setProjection(m_directorProjection);
 
     if (pTarget->getCamera()->isDirty())
@@ -232,8 +232,8 @@ void GridBase::afterDraw(axolotl::Node *pTarget)
     ccGLBindTexture2D(m_pTexture->getName());
 
     // restore projection for default FBO .fixed bug #543 #544
-//TODO:         Director::sharedDirector()->setProjection(Director::sharedDirector()->getProjection());
-//TODO:         Director::sharedDirector()->applyOrientation();
+//TODO:         Director::getInstance()->setProjection(Director::getInstance()->getProjection());
+//TODO:         Director::getInstance()->applyOrientation();
     blit();
 }
 

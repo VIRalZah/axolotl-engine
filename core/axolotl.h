@@ -67,6 +67,7 @@ THE SOFTWARE.
 #include "base/NS.h"
 #include "base/Object.h"
 #include "base/PoolManager.h"
+#include "base/Renderer.h"
 #include "base/Scheduler.h"
 #include "base/Set.h"
 #include "base/String.h"
@@ -92,10 +93,6 @@ THE SOFTWARE.
 // kazmath
 #include "kazmath/include/kazmath/kazmath.h"
 #include "kazmath/include/kazmath/GL/matrix.h"
-
-// keypad_dispatcher
-#include "keypad_dispatcher/KeypadDelegate.h"
-#include "keypad_dispatcher/KeypadDispatcher.h"
 
 // label_nodes
 #include "label_nodes/LabelAtlas.h"
@@ -176,6 +173,7 @@ THE SOFTWARE.
 
 // support
 #include "support/ccUTF8.h"
+#include "support/json/json.hpp"
 #include "support/NotificationCenter.h"
 #include "support/PointExtension.h"
 #include "support/Profiling.h"

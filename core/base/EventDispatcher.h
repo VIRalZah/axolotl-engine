@@ -35,15 +35,15 @@ class EventDispatcher : public Object
 {
 public:
 	EventDispatcher();
-	virtual ~EventDispatcher();
+	~EventDispatcher();
 
-	virtual void dispatchEvent(Event* event);
+	void dispatchEvent(Event* event);
 
-	virtual void addHandler(Handler* handler);
-	virtual void removeHandler(Handler* handler);
+	void addHandler(Handler* handler);
+	void removeHandler(Handler* handler);
 
-	virtual void setDispatchEvents(bool enabled) { _dispatchEvents = enabled; }
-	virtual bool isDispatchEvents() const { return _dispatchEvents; };
+	void setDispatchEvents(bool enabled) { _dispatchEvents = enabled; }
+	bool isDispatchEvents() const { return _dispatchEvents; };
 protected:
 	int getIndex(Handler* handler) const;
 

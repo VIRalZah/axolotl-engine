@@ -75,7 +75,7 @@ bool TransitionScene::initWithDuration(float t, Scene *scene)
         // retain
         m_pInScene = scene;
         m_pInScene->retain();
-        m_pOutScene = Director::sharedDirector()->getRunningScene();
+        m_pOutScene = Director::getInstance()->getRunningScene();
         if (m_pOutScene == NULL)
         {
             m_pOutScene = Scene::create();
@@ -140,7 +140,7 @@ void TransitionScene::setNewScene(float dt)
     this->unschedule(schedule_selector(TransitionScene::setNewScene));
     
     // Before replacing, save the "send cleanup to scene"
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
     m_bIsSendCleanupToScene = director->isSendCleanupToScene();
     
     director->replaceScene(m_pInScene);
@@ -162,7 +162,7 @@ void TransitionScene::onEnter()
     Scene::onEnter();
     
     // disable events while transitions
-    Director::sharedDirector()->getEventDispatcher()->setDispatchEvents(false);
+    Director::getInstance()->getEventDispatcher()->setDispatchEvents(false);
     
     // outScene should not receive the onEnter callback
     // only the onExitTransitionDidStart
@@ -177,7 +177,7 @@ void TransitionScene::onExit()
     Scene::onExit();
     
     // enable events while transitions
-    Director::sharedDirector()->getEventDispatcher()->setDispatchEvents(true);
+    Director::getInstance()->getEventDispatcher()->setDispatchEvents(true);
     
     m_pOutScene->onExit();
 
@@ -306,7 +306,7 @@ TransitionJumpZoom* TransitionJumpZoom::create(float t, Scene* scene)
 void TransitionJumpZoom::onEnter()
 {
     TransitionScene::onEnter();
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
 
     m_pInScene->setScale(0.5f);
     m_pInScene->setPosition(Vec2(s.width, 0));
@@ -389,7 +389,7 @@ ActionInterval* TransitionMoveInL::easeActionWithAction(ActionInterval* action)
 
 void TransitionMoveInL::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition(Vec2(-s.width,0));
 }
 
@@ -417,7 +417,7 @@ TransitionMoveInR* TransitionMoveInR::create(float t, Scene* scene)
 
 void TransitionMoveInR::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(s.width,0) );
 }
 
@@ -445,7 +445,7 @@ TransitionMoveInT* TransitionMoveInT::create(float t, Scene* scene)
 
 void TransitionMoveInT::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(0,s.height) );
 }
 
@@ -473,7 +473,7 @@ TransitionMoveInB* TransitionMoveInB::create(float t, Scene* scene)
 
 void TransitionMoveInB::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(0,-s.height) );
 }
 
@@ -521,13 +521,13 @@ void TransitionSlideInL::sceneOrder()
 
 void TransitionSlideInL:: initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(-(s.width-ADJUST_FACTOR),0) );
 }
 
 ActionInterval* TransitionSlideInL::action()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     return MoveBy::create(m_fDuration, Vec2(s.width-ADJUST_FACTOR,0));
 }
 
@@ -577,14 +577,14 @@ void TransitionSlideInR::sceneOrder()
 
 void TransitionSlideInR::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(s.width-ADJUST_FACTOR,0) );
 }
 
 
 ActionInterval* TransitionSlideInR:: action()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     return MoveBy::create(m_fDuration, Vec2(-(s.width-ADJUST_FACTOR),0));
 }
 
@@ -618,14 +618,14 @@ void TransitionSlideInT::sceneOrder()
 
 void TransitionSlideInT::initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(0,s.height-ADJUST_FACTOR) );
 }
 
 
 ActionInterval* TransitionSlideInT::action()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     return MoveBy::create(m_fDuration, Vec2(0,-(s.height-ADJUST_FACTOR)));
 }
 
@@ -658,14 +658,14 @@ void TransitionSlideInB::sceneOrder()
 
 void TransitionSlideInB:: initScenes()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     m_pInScene->setPosition( Vec2(0,-(s.height-ADJUST_FACTOR)) );
 }
 
 
 ActionInterval* TransitionSlideInB:: action()
 {
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     return MoveBy::create(m_fDuration, Vec2(0,s.height-ADJUST_FACTOR));
 }
 
@@ -1271,7 +1271,7 @@ void TransitionCrossFade::onEnter()
     // create a transparent color layer
     // in which we are going to add our rendertextures
     ccColor4B  color = {0,0,0,0};
-    Size size = Director::sharedDirector()->getWinSize();
+    Size size = Director::getInstance()->getDesignSize();
     LayerColor* layer = LayerColor::create(color);
 
     // create the first render texture for inScene
@@ -1376,7 +1376,7 @@ void TransitionTurnOffTiles::sceneOrder()
 void TransitionTurnOffTiles::onEnter()
 {
     TransitionScene::onEnter();
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     float aspect = s.width / s.height;
     int x = (int)(12 * aspect);
     int y = 12;
@@ -1520,7 +1520,7 @@ void TransitionFadeTR::onEnter()
 {
     TransitionScene::onEnter();
 
-    Size s = Director::sharedDirector()->getWinSize();
+    Size s = Director::getInstance()->getDesignSize();
     float aspect = s.width / s.height;
     int x = (int)(12 * aspect);
     int y = 12;

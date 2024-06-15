@@ -106,7 +106,7 @@ bool TextFieldTTF::attachWithIME()
     bool bRet = IMEDelegate::attachWithIME();
     if (bRet)
     {
-        auto glView = Director::sharedDirector()->getOpenGLView();
+        auto glView = Director::getInstance()->getGLView();
         if (glView)
         {
             glView->setIMEKeyboardState(true);
@@ -120,7 +120,7 @@ bool TextFieldTTF::detachWithIME()
     bool bRet = IMEDelegate::detachWithIME();
     if (bRet)
     {
-        auto glView = Director::sharedDirector()->getOpenGLView();
+        auto glView = Director::getInstance()->getGLView();
         if (glView)
         {
             glView->setIMEKeyboardState(false);

@@ -6,7 +6,6 @@
 
 # define global variables
 context = {
-"language"          : "undefined",
 "src_project_name"  : "undefined",
 "src_package_name"  : "undefined", 
 "dst_project_name"  : "undefined",
@@ -24,14 +23,12 @@ import json
 import shutil
 
 def dumpUsage():
-    print "Usage: create_project.py -project PROJECT_NAME -package PACKAGE_NAME -language PROGRAMMING_LANGUAGE"
+    print "Usage: create_project.py -project PROJECT_NAME -package PACKAGE_NAME"
     print "Options:"
     print "  -project   PROJECT_NAME          Project name, for example: MyGame"
     print "  -package   PACKAGE_NAME          Package name, for example: com.MyCompany.MyAwesomeGame"
-    print "  -language  PROGRAMMING_LANGUAGE   Major programming languages you want to use, should be [cpp | lua | javascript]"
     print ""
-    print "Sample 1: ./create_project.py -project MyGame -package com.MyCompany.AwesomeGame"
-    print "Sample 2: ./create_project.py -project MyGame -package com.MyCompany.AwesomeGame -language javascript"
+    print "Sample: ./create_project.py -project MyGame -package com.MyCompany.AwesomeGame"
     print ""
 
 def checkParams(context):
@@ -39,25 +36,17 @@ def checkParams(context):
     context["script_dir"] = os.getcwd() + "/"
     global platforms_list
     
-    # invalid invoke, tell users how to input params
-    if len(sys.argv) < 7:
+    if len(sys.argv) < 5:
         dumpUsage()
         sys.exit()
     
-    # find our params
     for i in range(1, len(sys.argv)):
         if "-project" == sys.argv[i]:
-            # read the next param as project_name
             context["dst_project_name"] = sys.argv[i+1]
             context["dst_project_path"] = os.getcwd() + "/../../projects/" + context["dst_project_name"]
         elif "-package" == sys.argv[i]:
-            # read the next param as g_PackageName
             context["dst_package_name"] = sys.argv[i+1]
-        elif "-language" == sys.argv[i]:
-            # choose a scripting language
-            context["language"] = sys.argv[i+1]
     
-    # print error log because our required parameters are not ready
     raise_error = False
     if context["dst_project_name"] == "undefined":
         print "Invalid -project parameter"
@@ -65,45 +54,15 @@ def checkParams(context):
     if context["dst_package_name"] == "undefined":
         print "Invalid -package parameter"
         raise_error = True
-    if context["language"] == "undefined":
-        print "Invalid -language parameter"
-        raise_error = True
+        
     if raise_error != False:
         sys.exit()
                                  
-    # fill in src_project_name and src_package_name according to "language"
-    if ("cpp" == context["language"]):
-        context["src_project_name"] = "HelloCpp"
-        context["src_package_name"] = "org.cocos2dx.hellocpp"
-        context["src_project_path"] = os.getcwd() + "/../../template/default"
-        platforms_list = ["ios",
-                          "android",
-                          "win32",
-                          "winrt",
-                          "wp8",
-                          "mac",
-                          "blackberry",
-                          "linux",
-                          "marmalade",
-                          "tizen",
-                          "wp8-xaml"]
-    elif ("lua" == context["language"]):
-        context["src_project_name"] = "HelloLua"
-        context["src_package_name"] = "org.cocos2dx.hellolua"
-        context["src_project_path"] = os.getcwd() + "/../../template/multi-platform-lua"
-        platforms_list = ["ios",
-                          "android",
-                          "win32",
-                          "blackberry",
-                          "linux",
-                          "marmalade"]
-    elif ("javascript" == context["language"]):
-        context["src_project_name"] = "HelloJavascript"
-        context["src_package_name"] = "org.cocos2dx.hellojavascript"
-        context["src_project_path"] = os.getcwd() + "/../../template/multi-platform-js"
-        platforms_list = ["ios",
-                          "android",
-                          "win32"]
+    context["src_project_name"] = "HelloCpp"
+    context["src_package_name"] = "org.cocos2dx.hellocpp"
+    context["src_project_path"] = os.getcwd() + "/../../template/default"
+    platforms_list = ["android",
+                      "win32"]
 # end of checkParams(context) function
 
 def replaceString(filepath, src_string, dst_string):

@@ -60,12 +60,14 @@ void Camera::restore(void)
     m_fUpY = 1.0f;
     m_fUpZ = 0.0f;
 
-    kmMat4Identity(&_lookupMatrix);
+    _zoom = 1.0f;
+
+    kmMat4Identity(&_matrix);
 
     _dirty = false;
 }
 
-void Camera::locate(void)
+void Camera::locate()
 {
     if (_dirty)
     {
@@ -77,9 +79,16 @@ void Camera::locate(void)
         kmVec3Fill(&center, m_fCenterX, m_fCenterY, m_fCenterZ);
 
         kmVec3Fill(&up, m_fUpX, m_fUpY, m_fUpZ);
-        kmMat4LookAt(&_lookupMatrix, &eye, &center, &up);
+
+        kmMat4 lookupMatrix;
+        kmMat4LookAt(&lookupMatrix, &eye, &center, &up);
+
+        kmMat4 scalingMatrix;
+        kmMat4Scaling(&scalingMatrix, _zoom, _zoom, _zoom);
+
+        kmMat4Multiply(&_matrix, &lookupMatrix, &scalingMatrix);
     }
-    kmGLMultMatrix(&_lookupMatrix);
+    kmGLMultMatrix(&_matrix);
 }
 
 float Camera::getZEye(void)
@@ -110,6 +119,21 @@ void Camera::setUpXYZ(float fUpX, float fUpY, float fUpZ)
     m_fUpX = fUpX;
     m_fUpY = fUpY;
     m_fUpZ = fUpZ;
+
+    _dirty = true;
+}
+
+void Camera::setZoom(float zoom)
+{
+    _zoom = zoom;
+    
+    _dirty = true;
+}
+
+void Camera::lookAt(Vec2 pos)
+{
+    m_fCenterX = m_fEyeX = pos.x;
+    m_fCenterY = m_fEyeY = pos.y;
 
     _dirty = true;
 }

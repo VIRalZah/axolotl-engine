@@ -39,17 +39,17 @@ Touch::~Touch()
 
 Vec2 Touch::getLocation() const
 {
-    return Director::sharedDirector()->convertToGL(_point);
+    return Director::getInstance()->convertToGL(_point);
 }
 
 Vec2 Touch::getPreviousLocation() const
 {
-    return Director::sharedDirector()->convertToGL(_prevPoint);
+    return Director::getInstance()->convertToGL(_prevPoint);
 }
 
 Vec2 Touch::getStartLocation() const
 {
-    return Director::sharedDirector()->convertToGL(_startPoint);
+    return Director::getInstance()->convertToGL(_startPoint);
 }
 
 Vec2 Touch::getDelta() const

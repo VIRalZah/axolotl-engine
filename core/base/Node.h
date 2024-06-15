@@ -293,7 +293,7 @@ public:
      * The original point (0,0) is at the left-bottom corner of screen.
      * For example, this codesnip sets the node in the center of screen.
      * @code
-     * Size size = Director::sharedDirector()->getWinSize();
+     * Size size = Director::getInstance()->getDesignSize();
      * node->setPosition( Vec2(size.width/2, size.height/2) )
      * @endcode
      *
@@ -976,7 +976,7 @@ public:
     /** 
      * Executes an action, and returns the action that is executed.
      *
-     * This node becomes the action's target. Refer to Action::getTarget()
+     * This node becomes the action's target. Refer to Action::getName()
      * @warning Actions don't retain their target.
      *
      * @return An Action pointer
@@ -1328,6 +1328,19 @@ public:
     virtual void removeAllComponents();
     /// @} end of component functions
 
+    /** align items vertically */
+    void alignItemsVertically();
+    /** align items vertically with padding
+    @since v0.7.2
+    */
+    void alignItemsVerticallyWithPadding(float padding);
+
+    /** align items horizontally */
+    void alignItemsHorizontally();
+    /** align items horizontally with padding
+    @since v0.7.2
+    */
+    void alignItemsHorizontallyWithPadding(float padding);
 private:
     /// lazy allocs
     void childrenAlloc(void);
@@ -1392,7 +1405,7 @@ protected:
     
     ActionManager *_actionManager;  ///< a pointer to ActionManager singleton, which is used to handle all the actions
     
-    bool m_bRunning;                    ///< is running
+    bool _running;                    ///< is running
     
     bool m_bTransformDirty;             ///< transform dirty flag
     bool m_bInverseDirty;               ///< transform dirty flag

@@ -367,7 +367,7 @@ void RenderTexture::begin()
 	kmGLMatrixMode(KM_GL_MODELVIEW);
     kmGLPushMatrix();
     
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
     director->setProjection(director->getProjection());
 
 #if AX_TARGET_PLATFORM == AX_PLATFORM_WP8
@@ -382,7 +382,7 @@ void RenderTexture::begin()
     const Size& texSize = m_pTexture->getContentSizeInPixels();
 
     // Calculate the adjustment ratios based on the old and new projections
-    Size size = director->getWinSizeInPixels();
+    Size size = director->getDesignSizeInPixels();
     float widthRatio = size.width / texSize.width;
     float heightRatio = size.height / texSize.height;
 
@@ -471,7 +471,7 @@ void RenderTexture::beginWithClear(float r, float g, float b, float a, float dep
 
 void RenderTexture::end()
 {
-    Director *director = Director::sharedDirector();
+    Director *director = Director::getInstance();
     
     glBindFramebuffer(GL_FRAMEBUFFER, m_nOldFBO);
 

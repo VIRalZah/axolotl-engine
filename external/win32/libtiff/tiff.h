@@ -1,4 +1,4 @@
-/* $Id: tiff.h,v 1.67 2011-01-24 21:06:32 olivier Exp $ */
+/* $Id: tiff.h,v 1.68 2012-08-19 16:56:35 bfriesen Exp $ */
 
 /*
  * Copyright (c) 1988-1997 Sam Leffler
@@ -158,16 +158,18 @@ typedef enum {
 #define	TIFFTAG_BITSPERSAMPLE		258	/* bits per channel (sample) */
 #define	TIFFTAG_COMPRESSION		259	/* data compression technique */
 #define	    COMPRESSION_NONE		1	/* dump mode */
-#define	    COMPRESSION_AXITTRLE	2	/* CCITT modified Huffman RLE */
-#define	    COMPRESSION_AXITTFAX3	3	/* CCITT Group 3 fax encoding */
-#define     COMPRESSION_AXITT_T4        3       /* CCITT T.4 (TIFF 6 name) */
-#define	    COMPRESSION_AXITTFAX4	4	/* CCITT Group 4 fax encoding */
-#define     COMPRESSION_AXITT_T6        4       /* CCITT T.6 (TIFF 6 name) */
+#define	    COMPRESSION_CCITTRLE	2	/* CCITT modified Huffman RLE */
+#define	    COMPRESSION_CCITTFAX3	3	/* CCITT Group 3 fax encoding */
+#define     COMPRESSION_CCITT_T4        3       /* CCITT T.4 (TIFF 6 name) */
+#define	    COMPRESSION_CCITTFAX4	4	/* CCITT Group 4 fax encoding */
+#define     COMPRESSION_CCITT_T6        4       /* CCITT T.6 (TIFF 6 name) */
 #define	    COMPRESSION_LZW		5       /* Lempel-Ziv  & Welch */
 #define	    COMPRESSION_OJPEG		6	/* !6.0 JPEG */
 #define	    COMPRESSION_JPEG		7	/* %JPEG DCT compression */
+#define     COMPRESSION_T85			9	/* !TIFF/FX T.85 JBIG compression */
+#define     COMPRESSION_T43			10	/* !TIFF/FX T.43 colour by layered JBIG compression */
 #define	    COMPRESSION_NEXT		32766	/* NeXT 2-bit RLE */
-#define	    COMPRESSION_AXITTRLEW	32771	/* #1 w/ word alignment */
+#define	    COMPRESSION_CCITTRLEW	32771	/* #1 w/ word alignment */
 #define	    COMPRESSION_PACKBITS	32773	/* Macintosh RLE */
 #define	    COMPRESSION_THUNDERSCAN	32809	/* ThunderScan RLE */
 /* codes 32895-32898 are reserved for ANSI IT8 TIFF/IT <dkelly@apago.com) */
@@ -197,7 +199,7 @@ typedef enum {
 #define	    PHOTOMETRIC_SEPARATED	5	/* !color separations */
 #define	    PHOTOMETRIC_YCBCR		6	/* !CCIR 601 */
 #define	    PHOTOMETRIC_CIELAB		8	/* !1976 CIE L*a*b* */
-#define	    PHOTOMETRIC_IAXLAB		9	/* ICC L*a*b* [Adobe TIFF Technote 4] */
+#define	    PHOTOMETRIC_ICCLAB		9	/* ICC L*a*b* [Adobe TIFF Technote 4] */
 #define	    PHOTOMETRIC_ITULAB		10	/* ITU L*a*b* */
 #define     PHOTOMETRIC_LOGL		32844	/* CIE Log2(L) */
 #define     PHOTOMETRIC_LOGLUV		32845	/* CIE Log2(L) (u',v') */
@@ -319,6 +321,30 @@ typedef enum {
 						   [Adobe TIFF Technote 3] */
 #define	TIFFTAG_JPEGTABLES		347	/* %JPEG table stream */
 #define	TIFFTAG_OPIPROXY		351	/* %OPI Proxy [Adobe TIFF technote] */
+/* Tags 400-435 are from the TIFF/FX spec */
+#define TIFFTAG_GLOBALPARAMETERSIFD	400	/* ! */
+#define TIFFTAG_PROFILETYPE			401	/* ! */
+#define     PROFILETYPE_UNSPECIFIED	0	/* ! */
+#define     PROFILETYPE_G3_FAX		1	/* ! */
+#define TIFFTAG_FAXPROFILE			402	/* ! */
+#define     FAXPROFILE_S			1	/* !TIFF/FX FAX profile S */
+#define     FAXPROFILE_F			2	/* !TIFF/FX FAX profile F */
+#define     FAXPROFILE_J			3	/* !TIFF/FX FAX profile J */
+#define     FAXPROFILE_C			4	/* !TIFF/FX FAX profile C */
+#define     FAXPROFILE_L			5	/* !TIFF/FX FAX profile L */
+#define     FAXPROFILE_M			6	/* !TIFF/FX FAX profile LM */
+#define TIFFTAG_CODINGMETHODS		403	/* !TIFF/FX coding methods */
+#define     CODINGMETHODS_T4_1D		(1 << 1)	/* !T.4 1D */
+#define     CODINGMETHODS_T4_2D		(1 << 2)	/* !T.4 2D */
+#define     CODINGMETHODS_T6		(1 << 3)	/* !T.6 */
+#define     CODINGMETHODS_T85 		(1 << 4)	/* !T.85 JBIG */
+#define     CODINGMETHODS_T42 		(1 << 5)	/* !T.42 JPEG */
+#define     CODINGMETHODS_T43		(1 << 6)	/* !T.43 colour by layered JBIG */
+#define TIFFTAG_VERSIONYEAR			404	/* !TIFF/FX version year */
+#define TIFFTAG_MODENUMBER			405	/* !TIFF/FX mode number */
+#define TIFFTAG_DECODE				433	/* !TIFF/FX decode */
+#define TIFFTAG_IMAGEBASECOLOR		434	/* !TIFF/FX image base colour */
+#define TIFFTAG_T82OPTIONS			435	/* !TIFF/FX T.82 options */
 /*
  * Tags 512-521 are obsoleted by Technical Note #2 which specifies a
  * revised JPEG-in-TIFF scheme.
@@ -340,6 +366,7 @@ typedef enum {
 #define	    YCBCRPOSITION_CENTERED	1	/* !as in PostScript Level 2 */
 #define	    YCBCRPOSITION_COSITED	2	/* !as in CCIR 601-1 */
 #define	TIFFTAG_REFERENCEBLACKWHITE	532	/* !colorimetry info */
+#define TIFFTAG_STRIPROWCOUNTS		559 /* !TIFF/FX strip row counts */
 #define	TIFFTAG_XMLPACKET		700	/* %XML packet
 						   [Adobe XMP Specification,
 						   January 2004 */
@@ -405,7 +432,8 @@ typedef enum {
 /* tags 34665, 34853 and 40965 are documented in EXIF specification */
 #define TIFFTAG_EXIFIFD			34665	/* Pointer to EXIF private directory */
 /* tag 34750 is a private tag registered to Adobe? */
-#define TIFFTAG_IAXPROFILE		34675	/* ICC profile data */
+#define TIFFTAG_ICCPROFILE		34675	/* ICC profile data */
+#define TIFFTAG_IMAGELAYER		34732	/* !TIFF/FX image layer information */
 /* tag 34750 is a private tag registered to Pixel Magic */
 #define	TIFFTAG_JBIGOPTIONS		34750	/* JBIG options */
 #define TIFFTAG_GPSIFD			34853	/* Pointer to GPS private directory */
@@ -495,10 +523,10 @@ typedef enum {
 						   of the sensor */
 #define TIFFTAG_MASKEDAREAS		50830	/* &list of coordinates
 						   of fully masked pixels */
-#define TIFFTAG_ASSHOTIAXPROFILE	50831	/* &these two tags used to */
+#define TIFFTAG_ASSHOTICCPROFILE	50831	/* &these two tags used to */
 #define TIFFTAG_ASSHOTPREPROFILEMATRIX	50832	/* map cameras's color space
 						   into ICC profile space */
-#define TIFFTAG_CURRENTIAXPROFILE	50833	/* & */
+#define TIFFTAG_CURRENTICCPROFILE	50833	/* & */
 #define TIFFTAG_CURRENTPREPROFILEMATRIX	50834	/* & */
 /* tag 65535 is an undefined tag used by Eastman Kodak */
 #define TIFFTAG_DCSHUESHIFTVALUES       65535   /* hue shift correction data */

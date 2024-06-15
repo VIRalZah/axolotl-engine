@@ -202,6 +202,7 @@ public: virtual void set##funName(varType var)   \
 #define AX_SAFE_RELEASE_NULL(p)        do { if(p) { (p)->release(); (p) = 0; } } while(0)
 #define AX_SAFE_RETAIN(p)            do { if(p) { (p)->retain(); } } while(0)
 #define AX_BREAK_IF(cond)            if(cond) break
+#define AX_CONTINUE_IF(cond)            if(cond) continue
 
 #define __AXLOGWITHFUNCTION(s, ...) \
     log("%s : %s",__FUNCTION__, String::createWithFormat(s, ##__VA_ARGS__)->getCString())
@@ -264,8 +265,10 @@ private: \
  */
 #if defined(__GNUC__) && (__GNUC__ >= 4)
 #define AX_FORMAT_PRINTF(formatPos, argPos) __attribute__((__format__(printf, formatPos, argPos)))
-#elif defined(__has_attribute) && __has_attribute(format)
+#elif defined(__has_attribute)
+  #if __has_attribute(format)
   #define AX_FORMAT_PRINTF(formatPos, argPos) __attribute__((__format__(printf, formatPos, argPos)))
+  #endif // __has_attribute(format)
 #else
 #define AX_FORMAT_PRINTF(formatPos, argPos)
 #endif

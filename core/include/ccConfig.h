@@ -99,7 +99,7 @@ To enabled set it to 1. Disabled by default.
  Default value: 0.1f
  */
 #ifndef AX_DIRECTOR_STATS_INTERVAL
-#define AX_DIRECTOR_STATS_INTERVAL (0.5f)
+#define AX_DIRECTOR_STATS_INTERVAL (0.25f)
 #endif
 
 /** @def AX_DIRECTOR_FPS_POSITION

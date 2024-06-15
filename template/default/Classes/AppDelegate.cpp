@@ -9,21 +9,17 @@ AppDelegate::~AppDelegate()
 {
 }
 
-static Size _designResolutionSize = Size(960, 640);
-static Size _frameSize = Size(960, 640);
-
 bool AppDelegate::applicationDidFinishLaunching()
 {
-    auto director = Director::sharedDirector();
-    if (!director->getOpenGLView())
+    auto director = Director::getInstance();
+    if (!director->getGLView())
     {
-        auto eglView = GLViewImpl::createWithFrameSize("Hello Axolotl", _frameSize);
-        director->setOpenGLView(eglView);
+        auto eglView = GLViewImpl::create("Hello Axolotl", 960, 640);
+        director->setGLView(eglView);
 
-        eglView->setDesignResolutionSize(_designResolutionSize.width, _designResolutionSize.height, kResolutionNoBorder);
+        eglView->setDesignResolutionSize(960, 640, kResolutionNoBorder);
     }
 
-    director->setDisplayDebugInfo(true);
     director->setAnimationInterval(1.0 / 60);
 
     auto scene = HelloWorld::scene();
@@ -47,10 +43,10 @@ void AppDelegate::applicationDidBecomeActive()
 
 void AppDelegate::applicationDidEnterBackground()
 {
-    Director::sharedDirector()->stopAnimation();
+    Director::getInstance()->stopAnimation();
 }
 
 void AppDelegate::applicationWillEnterForeground()
 {
-    Director::sharedDirector()->startAnimation();
+    Director::getInstance()->startAnimation();
 }

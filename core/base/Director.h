@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2010-2012 zahann.ru
+Copyright (c) 2024 zahann.ru
 
 http://www.zahann.ru
 
@@ -58,9 +58,9 @@ class LabelTTF;
 class Scene;
 class GLView;
 class Node;
+class Renderer;
 class Scheduler;
 class ActionManager;
-class KeypadDispatcher;
 class Accelerometer;
 class EventDispatcher;
 
@@ -68,158 +68,201 @@ class AX_DLL Director : public Object, public TypeInfo
 {
 public:
     Director();
-    virtual ~Director();
+    ~Director();
 
-    static Director* sharedDirector();
+    // get director instance
+    static Director* getInstance();
 
-    virtual bool init();
-
+    // class id? :)
     virtual long getClassTypeInfo()
     {
-		static const long id = axolotl::getHashCodeByString(typeid(axolotl::Director).name());
+		static const long id = getHashCodeByString(typeid(Director).name());
 		return id;
     }
 
-    inline Scene* getRunningScene() { return _runningScene; }
+    // running scene return
+    Scene* getRunningScene() { return _runningScene; }
 
-    inline double getAnimationInterval() const { return _animationInterval; }
-    virtual void setAnimationInterval(double value);
+    // animation interval funcs
+    double getAnimationInterval() const { return _animationInterval; }
+    void setAnimationInterval(double value);
 
-    inline bool isDisplayDebugInfo() const { return _displayDebugInfo; }
-    virtual void setDisplayDebugInfo(bool displayStats) { _displayDebugInfo = displayStats; }
+    // next delta time zero funcs
+    bool isNextDeltaTimeZero() const { return _nextDeltaTimeZero; }
+    void setNextDeltaTimeZero(bool nextDeltaTimeZero) { _nextDeltaTimeZero = nextDeltaTimeZero; };
+
+    // paused return
+    bool isPaused() const { return _paused; }
+
+    // total frames return
+    unsigned int getTotalFrames() const { return _totalFrames; }
     
-    inline GLView* getOpenGLView() const { return _openGLView; }
-    virtual void setOpenGLView(GLView* glView);
+    // projection funcs
+    Projection getProjection() const { return _projection; }
+    void setProjection(Projection projection);
 
-    inline bool isNextDeltaTimeZero() const { return _nextDeltaTimeZero; }
-    virtual void setNextDeltaTimeZero(bool bNextDeltaTimeZero);
-
-    inline bool isPaused() const { return _paused; }
-
-    inline unsigned int getTotalFrames() const { return _totalFrames; }
+    // update projection
+    void updateProjection();
     
-    inline Projection getProjection(void) { return _projection; }
-    void setProjection(Projection kProjection);
-
-    virtual void updateProjection();
-
-    void reshapeProjection(const Size& newWindowSize);
-    
+    // set gl viewport
     void setViewport();
 
+    // send cleanup to scene return
     inline bool isSendCleanupToScene() const { return _sendCleanupToScene; }
 
-    inline Node* getNotificationNode();
-    virtual void setNotificationNode(Node* node);
-
-    inline Size getWinSize() const;
-    inline Size getWinSizeInPixels() const;
+    // design size return
+    Size getDesignSize() const;
+    Size getDesignSizeInPixels() const;
     
-    inline Size getVisibleSize() const;
-    inline Vec2 getVisibleOrigin() const;
+    // visible size return
+    Size getVisibleSize() const;
+    Vec2 getVisibleOrigin() const;
 
-    virtual Vec2 convertToGL(const Vec2& obPoint);
-    virtual Vec2 convertToUI(const Vec2& obPoint);
+    // convert point
+    Vec2 convertToGL(const Vec2& obPoint) const;
+    Vec2 convertToUI(const Vec2& obPoint) const;
 
-    inline float getZEye() const;
+    // z eye return
+    float getZEye() const;
 
-    virtual void runWithScene(Scene* scene);
-    virtual void pushScene(Scene* scene);
+    // scene management
+    void runWithScene(Scene* scene);
+    void pushScene(Scene* scene);
+    void replaceScene(Scene* scene);
 
-    virtual void popScene();
-    virtual void popToRootScene();
-    virtual void popToSceneStackLevel(int level);
+    void popScene();
+    void popToRootScene();
+    void popToSceneStackLevel(int level);
 
-    virtual void replaceScene(Scene* scene);
+    // sets "_terminateInNextLoop" to true
+    void end();
 
-    virtual void end();
+    // pause and resume
+    void pause();
+    void resume();
 
-    virtual void pause();
-    virtual void resume();
+    // animation control
+    void stopAnimation();
+    void startAnimation();
 
-    virtual void stopAnimation();
-    virtual void startAnimation();
+    // draw scene. DO NOT CALL THIS FUNCTION MANUALLY!
+    void drawScene();
 
-    virtual void drawScene();
+    // purge cached data
+    void purgeCachedData();
 
-    virtual void purgeCachedData();
+    // default values set
+    void setDefaultValues();
+    void setGLDefaultValues();
 
-    virtual void setDefaultValues();
+    // alpha blending
+    void setAlphaBlending(bool on);
 
-    virtual void setGLDefaultValues();
+    // depth test
+    void setDepthTest(bool on);
 
-    virtual void setAlphaBlending(bool on);
+    // manu loop. DO NOT CALL THIS FUNCTION MANUALLY!
+    void mainLoop();
 
-    virtual void setDepthTest(bool on);
-
-    virtual void mainLoop();
-
+    // content scale factor funcs
     inline float getContentScaleFactor() const;
     virtual void setContentScaleFactor(float scaleFactor);
 
-    inline const std::string& getDefaultLabelFont() const { return _defaultLabelFont; }
-    virtual void setDefaultLabelFont(const std::string& defaultLabelFont);
+    // renderer return
+    Renderer* getRenderer() const { return _renderer; }
+
+    // glview funcs
+    GLView* getGLView() { return _glView; };
+    void setGLView(GLView* glView);
+
+    // scheduler return
+    Scheduler* getScheduler() const { return _scheduler; }
+
+    // action manager return
+    ActionManager* getActionManager() const { return _actionManager; }
+
+    // accelerometer return
+    Accelerometer* getAccelerometer() const { return _accelerometer; };
+
+    // event dispatcher return
+    EventDispatcher* getEventDispatcher() const { return _eventDispatcher; }
+
+    // original delta time return
+    float getDeltaTime() const { return _deltaTime; }
 protected:
-    virtual void purgeApplication();
+    // initalizes director
+    bool init();
+
+    // "terminate"
+    void terminate();
+
+    // stats
+    void showStats();
+    void updateStatsLabel();
     
-    virtual void setNextScene();
-    
-    virtual void showDebugInfo();
-    virtual void createDebugInfoLabel();
-    
-    virtual void updateTextureQuality();
+    // set next scene
+    void setNextScene();
 
-    virtual void calculateDeltaTime();
+    // calculate delta time
+    void calculateDeltaTime();
 
-    AX_PROPERTY(Scheduler*, _scheduler, Scheduler);
-    AX_PROPERTY(ActionManager*, _actionManager, ActionManager);
-    AX_PROPERTY(KeypadDispatcher*, _keypadDispatcher, KeypadDispatcher);
-    AX_PROPERTY(Accelerometer*, _accelerometer, Accelerometer);
-    AX_PROPERTY(EventDispatcher*, _eventDispatcher, EventDispatcher);
+    // renderer and glview
+    Renderer* _renderer;
+    GLView* _glView;
+    Scheduler* _scheduler;
+    ActionManager* _actionManager;
+    Accelerometer* _accelerometer;
+    EventDispatcher* _eventDispatcher;
 
-    AX_PROPERTY_READONLY(float, _deltaTime, DeltaTime);
+    // delta time
+    float _deltaTime;
 
-    AX_PROPERTY_READONLY(TextureQuality, _textureQuality, TextureQuality);
+    // terminate in next loop
+    bool _terminateInNextLoop;
 
-    bool _purgeApplicationInNextLoop;
+    // stats
+    bool _displayStats;
+    LabelTTF* _statsLabel;
+    float _elapsedDt;
+    bool _shouldUpdateStatsLabel;
 
-    GLView* _openGLView;
-
+    // animation interval
     double _animationInterval;
     double _oldAnimationInterval;
-
-    bool _displayDebugInfo;
-    float _accumDt;
-    float _frameRate;
     
-    std::string _defaultLabelFont;
-    LabelTTF* _infoLabel;
-    
+    // paused
     bool _paused;
 
+    // total frames
     unsigned int _totalFrames;
-    unsigned int _frames;
 
+    // scenes
     Scene* _runningScene;
     Scene* _nextScene;
     Array* _scenesStack;
 
+    // send cleanup to scene
     bool _sendCleanupToScene;
 
+    // last update :)
     std::chrono::steady_clock::time_point _lastUpdate;
     
+    // next delta time zero
     bool _nextDeltaTimeZero;
     
+    // current projection
     Projection _projection;
 
-    Size _winSizeInPoints;
+    // design size in points
+    Size _designSizeInPoints;
     
+    // content scale factor
     float _contentScaleFactor;
 
-    Node* _notificationNode;
-
+    // invalid???
     bool _invalid;
 
+    // mark GLView as a friend class
     friend class GLView;
 };
 

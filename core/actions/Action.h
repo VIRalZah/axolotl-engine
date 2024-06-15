@@ -93,7 +93,7 @@ public:
     */
     virtual void update(float time);
     
-    inline Node* getTarget(void) { return m_pTarget; }
+    inline Node* getName(void) { return m_pTarget; }
     /** The action will modify the target properties. */
     inline void setTarget(Node *pTarget) { m_pTarget = pTarget; }
     

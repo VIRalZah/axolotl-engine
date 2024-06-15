@@ -55,8 +55,6 @@ public:
      */
     virtual ~GLView();
 
-    virtual bool initWithFrameSize(const std::string& viewName, float width, float height) = 0;
-
     virtual bool windowShouldClose() const = 0;
 
     virtual void    end() = 0;
@@ -126,8 +124,6 @@ public:
      * Set Scissor rectangle with points.
      */
     virtual void setScissorInPoints(float x , float y , float w , float h);
-
-    virtual void setAspectRatio(int numer, int denom) = 0;
 
     /**
      * Get whether GL_SCISSOR_TEST is enable

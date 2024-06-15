@@ -113,7 +113,7 @@ bool ParticleFire::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 10;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, 60));
         this->m_tPosVar = Vec2(40, 20);
 
@@ -214,7 +214,7 @@ bool ParticleFireworks::initWithTotalParticles(unsigned int numberOfParticles)
         this->modeA.speedVar = 50;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
 
         // angle
@@ -323,7 +323,7 @@ bool ParticleSun::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 360;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -430,7 +430,7 @@ bool ParticleGalaxy::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 360;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -539,7 +539,7 @@ bool ParticleFlower::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 360;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -647,7 +647,7 @@ bool ParticleMeteor::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 360;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -756,7 +756,7 @@ bool ParticleSpiral::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 0;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -864,7 +864,7 @@ bool ParticleExplosion::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 360;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height/2));
         setPosVar(Vec2::ZERO);
 
@@ -969,7 +969,7 @@ bool ParticleSmoke::initWithTotalParticles(unsigned int numberOfParticles)
         m_fAngleVar = 5;
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, 0));
         setPosVar(Vec2(20, 0));
 
@@ -1074,7 +1074,7 @@ bool ParticleSnow::initWithTotalParticles(unsigned int numberOfParticles)
         setTangentialAccelVar(1);
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height + 10));
         setPosVar(Vec2(winSize.width/2, 0));
 
@@ -1186,7 +1186,7 @@ bool ParticleRain::initWithTotalParticles(unsigned int numberOfParticles)
 
 
         // emitter position
-        Size winSize = Director::sharedDirector()->getWinSize();
+        Size winSize = Director::getInstance()->getDesignSize();
         this->setPosition(Vec2(winSize.width/2, winSize.height));
         setPosVar(Vec2(winSize.width/2, 0));
 

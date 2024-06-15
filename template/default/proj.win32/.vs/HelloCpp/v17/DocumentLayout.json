@@ -3,10 +3,19 @@
   "WorkspaceRootPath": "D:\\GitHub\\axolotl-engine\\template\\default\\proj.win32\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\platform\\win32\\GLViewImpl.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\platform\\PlatformMacros.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{76A39BB2-9B84-4C65-98A5-654D86B86F2A}|HelloCpp.vcxproj|D:\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\include\\ccMacros.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\tileMap_parallax_nodes\\TileMapAtlas.cpp||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\base\\Director.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\base\\Director.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -16,33 +25,72 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GLViewImpl.cpp",
-              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\platform\\win32\\GLViewImpl.cpp",
-              "RelativeDocumentMoniker": "..\\..\\..\\core\\platform\\win32\\GLViewImpl.cpp",
-              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\platform\\win32\\GLViewImpl.cpp",
-              "RelativeToolTip": "..\\..\\..\\core\\platform\\win32\\GLViewImpl.cpp",
-              "ViewState": "AQIAAJUBAAAAAAAAAAAAAFQBAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-24T18:20:09.008Z",
+              "Title": "PlatformMacros.h",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\platform\\PlatformMacros.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\platform\\PlatformMacros.h",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\platform\\PlatformMacros.h",
+              "RelativeToolTip": "..\\..\\..\\core\\platform\\PlatformMacros.h",
+              "ViewState": "AQIAAP8AAAAAAAAAAAAAAAkBAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-15T16:50:16.956Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AppDelegate.cpp",
-              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
-              "RelativeDocumentMoniker": "..\\Classes\\AppDelegate.cpp",
-              "ToolTip": "D:\\GitHub\\axolotl-engine\\template\\default\\Classes\\AppDelegate.cpp",
-              "RelativeToolTip": "..\\Classes\\AppDelegate.cpp",
-              "ViewState": "AQIAABsAAAAAAAAAAAAAACgAAAABAAAA",
+              "Title": "ccMacros.h",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\include\\ccMacros.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\include\\ccMacros.h",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\include\\ccMacros.h",
+              "RelativeToolTip": "..\\..\\..\\core\\include\\ccMacros.h",
+              "ViewState": "AQIAAGkAAAAAAAAAAAAjwHkAAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-15T16:48:32.807Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Director.cpp",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\base\\Director.cpp",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\base\\Director.cpp",
+              "ViewState": "AQIAAG8BAAAAAAAAAAAjwFoBAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-05-24T18:19:07.089Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-15T16:43:48.509Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TileMapAtlas.cpp",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
+              "RelativeToolTip": "..\\..\\..\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
+              "ViewState": "AQIAAKoAAAAAAAAAAIAzwLsAAAA8AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-06-15T16:31:47.458Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Director.h",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\base\\Director.h",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.h",
+              "RelativeToolTip": "..\\..\\..\\core\\base\\Director.h",
+              "ViewState": "AQIAADgAAAAAAAAAAIAzwEgAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-15T15:55:09.167Z"
             }
           ]
         }

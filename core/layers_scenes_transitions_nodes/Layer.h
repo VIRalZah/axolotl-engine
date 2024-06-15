@@ -30,7 +30,6 @@ THE SOFTWARE.
 #include "base/Node.h"
 #include "Protocols.h"
 #include "platform/AccelerometerDelegate.h"
-#include "keypad_dispatcher/KeypadDelegate.h"
 #include "base/Array.h"
 #ifdef EMSCRIPTEN
 #include "base/GLBufferedNode.h"
@@ -57,7 +56,7 @@ All features from Node are valid, plus the following new features:
 - It can receive iPhone Touches
 - It can receive Accelerometer input
 */
-class AX_DLL Layer : public Node, public AccelerometerDelegate, public KeypadDelegate
+class AX_DLL Layer : public Node, public AccelerometerDelegate
 {
 public:
     /**
@@ -126,6 +125,8 @@ public:
     virtual void setTouchPriority(int priority);
     virtual int getTouchPriority();
 
+    virtual void registerWithKeyboardDispatcher();
+
     virtual bool isKeyboardEnabled();
     virtual void setKeyboardEnabled(bool value);
 
@@ -144,6 +145,8 @@ public:
     You can enable / disable accelerometer events with this property.
     it's new in cocos2d-x
     */
+    virtual void registerWithKeypadDispatcher();
+
     virtual bool isKeypadEnabled();
     virtual void setKeypadEnabled(bool value);
 
@@ -152,15 +155,17 @@ public:
 protected:   
     bool _touchEnabled;
     bool _keyboardEnabled;
-    bool m_bAccelerometerEnabled;
-    bool m_bKeypadEnabled;
-    
+    bool _keypadEnabled;
+    bool m_bAccelerometerEnabled;  
 private:
     int _touchPriority;
     TouchHandler* _touchHandler;
 
     int _keyboardPriority;
     KeyboardHandler* _keyboardHandler;
+
+    int _keypadPriority;
+    KeypadHandler* _keypadHandler;
 };
 
 #if (AX_TARGET_PLATFORM == AX_PLATFORM_IOS) || (AX_TARGET_PLATFORM == AX_PLATFORM_MAC)

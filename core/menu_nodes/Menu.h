@@ -103,20 +103,6 @@ public:
      */
     bool initWithArray(Array* pArrayOfItems);
 
-    /** align items vertically */
-    void alignItemsVertically();
-    /** align items vertically with padding
-    @since v0.7.2
-    */
-    void alignItemsVerticallyWithPadding(float padding);
-
-    /** align items horizontally */
-    void alignItemsHorizontally();
-    /** align items horizontally with padding
-    @since v0.7.2
-    */
-    void alignItemsHorizontallyWithPadding(float padding);
-
     /** align items in rows of columns 
      * @code
      * when this function bound to js,the input params are changed

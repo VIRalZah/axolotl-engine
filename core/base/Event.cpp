@@ -23,6 +23,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "Event.h"
+#include <codecvt>
 
 NS_AX_BEGIN
 
@@ -61,6 +62,40 @@ EventKeyboard::EventKeyboard(KeyboardEventType eventType, KeyCode keyCode)
 {
 	_type = eventType;
 	_keyCode = keyCode;
+}
+
+// EventKeypad
+
+EventKeypad::EventKeypad(KeypadEventType eventType)
+{
+	_type = eventType;
+}
+
+// EventIME
+
+EventIME::EventIME(const IMEEventType& type)
+{
+	_type = type;
+}
+
+EventIME::EventIME(const IMEEventType& type, const wchar_t* text)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	_utf8Text = converter.to_bytes(text);
+	_type = type;
+}
+
+EventIME::EventIME(const IMEEventType& type, const char* text)
+{
+	_utf8Text = text;
+	_type = type;
+}
+
+// EventCustom
+
+EventCustom::EventCustom(const std::string& target)
+{
+	_name = target;
 }
 
 NS_AX_END
