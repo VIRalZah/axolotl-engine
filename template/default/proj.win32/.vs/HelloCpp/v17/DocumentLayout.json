@@ -3,6 +3,9 @@
   "WorkspaceRootPath": "D:\\GitHub\\axolotl-engine\\template\\default\\proj.win32\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\actions\\Action.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{98A51BA8-FC3A-415B-AC8F-8C7BD464E93E}|..\\..\\..\\core\\proj.win32\\axolotl.vcxproj|D:\\GitHub\\axolotl-engine\\core\\platform\\PlatformMacros.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
@@ -34,6 +37,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Action.h",
+              "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\actions\\Action.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\core\\actions\\Action.h",
+              "ToolTip": "D:\\GitHub\\axolotl-engine\\core\\actions\\Action.h",
+              "RelativeToolTip": "..\\..\\..\\core\\actions\\Action.h",
+              "ViewState": "AQIAAE4AAAAAAAAAAAAAAF8AAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-06-15T17:33:47.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "PlatformMacros.h",
               "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\platform\\PlatformMacros.h",
               "RelativeDocumentMoniker": "..\\..\\..\\core\\platform\\PlatformMacros.h",
@@ -46,7 +62,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ccMacros.h",
               "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\include\\ccMacros.h",
               "RelativeDocumentMoniker": "..\\..\\..\\core\\include\\ccMacros.h",
@@ -58,7 +74,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Director.cpp",
               "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.cpp",
               "RelativeDocumentMoniker": "..\\..\\..\\core\\base\\Director.cpp",
@@ -70,7 +86,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "TileMapAtlas.cpp",
               "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
               "RelativeDocumentMoniker": "..\\..\\..\\core\\tilemap_parallax_nodes\\TileMapAtlas.cpp",
@@ -82,7 +98,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Director.h",
               "DocumentMoniker": "D:\\GitHub\\axolotl-engine\\core\\base\\Director.h",
               "RelativeDocumentMoniker": "..\\..\\..\\core\\base\\Director.h",

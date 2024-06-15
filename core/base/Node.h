@@ -976,7 +976,7 @@ public:
     /** 
      * Executes an action, and returns the action that is executed.
      *
-     * This node becomes the action's target. Refer to Action::getName()
+     * This node becomes the action's target. Refer to Action::getTarget()
      * @warning Actions don't retain their target.
      *
      * @return An Action pointer
